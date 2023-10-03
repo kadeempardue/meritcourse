@@ -1,0 +1,214 @@
+<div class="section-small pt-1">
+  <% if @stripe_connect_account.present? %>
+    <div class="uk-child-width-1-1@s uk-child-width-1-2@m" uk-grid>
+      <div>
+          <a href="#">
+            <div
+                class="uk-card-default py-0 rounded p-3 uk-flex uk-flex-between uk-flex-middle animate-this" style="height:100%;">
+                <div>
+                  <div>
+                    <h5 class="mb-1 pt-3"> Your Balance </h5>
+                    <h4 class="uk-block mb-0 pb-0">
+                       <%= number_to_currency(@available_balance + @pending_balance, precision: 2) %>
+                    </h4>
+                    <span class="uk-block text-muted mb-3">
+                      <%= number_to_currency(@available_balance, precision: 2) %> available
+                    </span>
+                  </div>
+
+                </div>
+                <div>
+                    <div class="bg-soft-success p-5 circle">
+                        <i class="icon-feather-dollar-sign text-primary icon-medium"></i>
+                    </div>
+                </div>
+            </div>
+          </a>
+      </div>
+      <div>
+
+          <a href="#">
+              <div
+                  class="uk-card-default py-0 rounded p-3 uk-flex uk-flex-between uk-flex-middle animate-this" style="height:100%;">
+                  <div>
+                    <div>
+                      <h5 class="mb-1 pt-3"> Payouts </h5>
+                      <h1 class="text-success" uk-tooltip="title: Stripe Balance Awaiting Payout. :)"><%= number_to_currency(@stripe_balance, precision: 0) %></h1>
+                      <span class="uk-block text-success"">
+                        Estimated future payouts
+                      </span>
+                    </div>
+
+                  </div>
+                  <div>
+                      <div class="bg-soft-success p-5 circle">
+                          <i class="icon-feather-dollar-sign text-primary icon-medium"></i>
+                      </div>
+                  </div>
+              </div>
+          </a>
+      </div>
+    </div>
+  <% end %>
+    <div class="uk-child-width-1-1@s uk-child-width-1-2@m" uk-grid uk-height-match="target: > div > a > .uk-card-default">
+      <div class="dashboard-card">
+
+          <a href="#">
+              <div
+                  class="uk-card-default rounded p-3 animate-this">
+                  <div>
+                      <h5 class="mb-1"> Rating </h5>
+                        <div class="review-summary-container">
+                            <div class="review-summary-avg">
+                                <div class="avg-number" uk-tooltip="title: Avg Rating For All Courses">
+                                    <%= Course.all_avg_rating %>
+                                </div>
+                                <div class="review-star">
+                                    <div class="star-rating">
+                                      <%= star_rating(Course.all_avg_rating, avg: false) %>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="review-summary-rating">
+                              <% 5.times.reverse_each do |i| %>
+                                <% i += 1 %>
+                                <% rating_group = star_rating_group_for_all_courses(i) %>
+                                <div class="review-summary-rating-wrap">
+                                    <div class="review-bars">
+                                        <div class="full_bar">
+                                            <div class="bar_filler" style="width:<%= rating_group[:percentage] %>%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="review-stars">
+                                      <%= rating_group[:html] %>
+                                    </div>
+                                    <div class="review-avgs">
+                                      <%= rating_group[:review_count] %> %
+                                    </div>
+                                </div>
+                              <% end %>
+                            </div>
+                        </div>
+                  </div>
+              </div>
+          </a>
+      </div>
+      <div class="dashboard-card">
+          <a href="<%= students_path %>">
+              <div
+                  class="uk-card-default rounded p-3 uk-flex uk-flex-between uk-flex-middle animate-this">
+                  <div>
+                      <h5 class="mb-1"> Students </h5>
+                      <h1><%= students.count %></h1>
+                  </div>
+                  <div>
+                      <div class="bg-soft-success p-5 circle">
+                          <i class="uil-users-alt text-success icon-medium"></i>
+                      </div>
+                  </div>
+              </div>
+          </a>
+      </div>
+    </div>
+</div>
+
+<div class="section-small">
+  <div class="uk-child-width-1-2@s uk-child-width-1-2@m" uk-grid>
+
+
+      <div>
+          <a href="<%= courses_path %>">
+              <div
+                  class="uk-card-default rounded p-3 uk-flex uk-flex-between uk-flex-middle animate-this">
+                  <div>
+                      <h5 class="mb-1"> Courses </h5>
+                      <h1 class="total_count"><%= courses.count %></h1>
+                  </div>
+                  <div>
+                      <div class="bg-soft-danger p-5 circle">
+                          <i class="uil-youtube-alt text-danger icon-medium"></i>
+                      </div>
+                  </div>
+              </div>
+          </a>
+      </div>
+
+      <div>
+          <a href="<%= courses_path %>">
+              <div
+                  class="uk-card-default rounded p-3 uk-flex uk-flex-between uk-flex-middle animate-this">
+                  <div>
+                      <h5 class="mb-1"> Lessons </h5>
+                      <h1 class="total_count"><%= lessons.count %></h1>
+                  </div>
+                  <div>
+                      <div class="bg-soft-secondary p-5 circle">
+                          <i class="icon-line-awesome-list-ul text-secondary icon-medium"></i>
+                      </div>
+                  </div>
+              </div>
+          </a>
+      </div>
+
+  </div>
+</div>
+
+<div class="section-small">
+
+    <div class="uk-child-width-1-2@s uk-child-width-1-3@m" uk-grid>
+        <div>
+            <a href="#">
+                <div
+                    class="uk-card-default rounded p-3 uk-flex uk-flex-between uk-flex-middle animate-this">
+                    <div>
+                        <h5 class="mb-1"> Enrollments </h5>
+                        <h1><%= enrollments.count %></h1>
+                    </div>
+                    <div>
+                        <div class="bg-soft-success p-5 circle">
+                            <i class="icon-material-outline-school text-success icon-medium"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div>
+            <a href="<%= subjects_path %>">
+                <div
+                    class="uk-card-default rounded p-3 uk-flex uk-flex-between uk-flex-middle animate-this">
+                    <div>
+                        <h5 class="mb-1"> Subjects </h5>
+                        <h1 class="total_count"><%= subject.count %></h1>
+                    </div>
+                    <div>
+                        <div class="bg-soft-danger p-5 circle">
+                            <i class="icon-line-awesome-html5 text-danger icon-medium"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div>
+            <a href="#">
+                <div
+                    class="uk-card-default rounded p-3 uk-flex uk-flex-between uk-flex-middle animate-this">
+                    <div>
+                        <h5 class="mb-1"> Reviews </h5>
+                        <h1 class="total_count"><%= reviews.count %></h1>
+                    </div>
+                    <div>
+                        <div class="bg-soft-warning p-5 circle">
+                            <i class="icon-material-outline-rate-review text-warning icon-medium"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+
+    </div>
+
+</div>

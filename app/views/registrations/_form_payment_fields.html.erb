@@ -1,0 +1,115 @@
+<% content_for(:extra_js) do %>
+  <script type="text/javascript">
+    var stripe_elements = stripe.elements();
+
+    var styles = {
+      base: {
+        color: '#3e413c',
+        fontSize: '16px',
+        fontWeight: 400,
+        lineHeight: '2.5',
+        fontSmoothing: 'antialiased'
+      }
+    };
+
+    window['cardNumber<%= plan.id %>'] = stripe_elements.create('cardNumber', { style: styles });
+    window['cardNumber<%= plan.id %>'].mount('#stripe-cc-number-<%= plan.id %>');
+    window['cardNumber<%= plan.id %>'].addEventListener('change', function(event) {
+      // if (event.error) {
+      //   displayError.textContent = event.error.message;
+      // } else {
+      //   displayError.textContent = '';
+      // }
+    });
+
+
+    window['cardExpiry<%= plan.id %>'] = stripe_elements.create('cardExpiry', { style: styles });
+    window['cardExpiry<%= plan.id %>'].mount('#stripe-cc-expiration-<%= plan.id %>');
+    window['cardExpiry<%= plan.id %>'].addEventListener('change', function(event) {
+      // if (event.error) {
+      //   displayError.textContent = event.error.message;
+      // } else {
+      //   displayError.textContent = '';
+      // }
+    });
+
+    window['cardCvc<%= plan.id %>'] = stripe_elements.create('cardCvc', { style: styles });
+    window['cardCvc<%= plan.id %>'].mount('#stripe-cc-cvc-<%= plan.id %>');
+    window['cardCvc<%= plan.id %>'].addEventListener('change', function(event) {
+      // if (event.error) {
+      //   displayError.textContent = event.error.message;
+      // } else {
+      //   displayError.textContent = '';
+      // }
+    });
+
+    $("#form-new-account-<%= plan.id %>").submit(function(event) {
+      event.preventDefault();
+      $that = $(this);
+
+      stripe.createSource(window['cardNumber<%= plan.id %>'], {
+        currency: 'USD',
+        owner: {
+          name: $("#cc-name-<%= plan.id %>").val(),
+          address: {
+            postal_code: $("#zip-<%= plan.id %>").val(),
+            country: 'US'
+          }
+        },
+        statement_descriptor: '<%= @tenant&.name %> Membership',
+        usage: 'reusable'
+      }).then(function(result) {
+        console.log(result);
+        if (result.source) {
+          $("#source-<%= plan.id %>").val(result.source.id);
+          $that.off('submit').submit();
+          UIkit.toggle(document.getElementById("payment-button-<%= plan.id %>")).toggle();
+        }
+      })
+    })
+  </script>
+<% end %>
+
+<h5 style="color:<%= plan.color %>">Payment Details</h5>
+<div class="uk-margin">
+  <input
+    type="text"
+    class="uk-input uk-form-width-large text-black"
+    id="cc-name-<%= plan.id %>"
+    name="cc-name-<%= plan.id %>"
+    placeholder="Name on Card"
+    required=""
+    maxlength="100">
+</div>
+<div class="uk-margin uk-position-relative">
+  <div class="uk-inline">
+    <div id="stripe-cc-number-<%= plan.id %>" class="uk-input uk-form-width-large "></div>
+    <span class="uk-form-icon cards-icon">
+      <%= image_tag "/assets/default/credit-card-logo-major-credit-cards.png", class: "icon cc-card-icons " %>
+    </span>
+  </div>
+
+
+</div>
+<div class="uk-margin">
+  <div class="uk-inline uk-flex uk-flex-middle uk-form-width-large uk-margin-auto">
+      <div id="stripe-cc-expiration-<%= plan.id %>" class="uk-input uk-form-width-large"></div>
+
+      <div id="stripe-cc-cvc-<%= plan.id %>" class="uk-input uk-form-width-large"></div>
+
+      <div id="stripe-zip" style="margin-top:8px;">
+        <input
+          type="tel"
+          class="uk-input uk-form-width-medium text-black"
+          id="zip-<%= plan.id %>"
+          name="zip"
+          placeholder="Zip Code"
+          required=""
+          data-parsley-type="digits"
+          data-parsley-pattern="\d+"
+          maxlength="5">
+      </div>
+  </div>
+</div>
+
+<input type="hidden" id="source-<%= plan.id %>" name="source">

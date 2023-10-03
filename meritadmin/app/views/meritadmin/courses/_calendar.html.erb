@@ -1,0 +1,20 @@
+<%= month_calendar events: schedules do |day, events| %>
+  <div class="">
+    <strong><%= day.strftime("%e") %></strong>
+    <br>
+    <ul uk-accordion>
+      <% events.each do |event| %>
+      <li>
+        <a class="uk-accordion-title button small soft-grey mb-0" href="#">
+          <%= event.lesson.name %>: <%= friendly_time(event.start_time) %> - <%= friendly_time(event.end_time) %>
+        </a>
+        <div class="uk-accordion-content">
+            <p>Lesson: <%= event.lesson.name %></p>
+            <p>Time:  <%= friendly_time(event.start_time) %> - <%= friendly_time(event.end_time) %></p>
+            <p>Length: <%= friendly_duration_for((event.end_time - event.start_time) / 60) %></p>
+        </div>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

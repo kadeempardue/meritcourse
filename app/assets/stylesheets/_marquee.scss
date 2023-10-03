@@ -1,0 +1,79 @@
+.notice-banner-wrapper {
+  // width: calc(100%-40px);
+  height: 100%;
+  z-index: 11;
+  position: relative;
+  visibility: hidden;
+  overflow: hidden;
+  background: #111115;
+  padding-right: 40px;
+}
+
+.notice-banner-wrapper.visible{
+  visibility: visible;
+}
+
+.notice-banner-wrapper .notice-content {
+    overflow: hidden;
+    height: 35px;
+    width: 100%;
+}
+.notice-banner-wrapper li {
+    width: 300px;
+    display: inline-block;
+    line-height: 1;
+    font-size: 1rem;
+    padding: 10px 0;
+    color: white;
+}
+
+.notice-marquee-wrapper {
+  position: absolute;
+}
+
+ul.notice-marquee {
+  white-space: nowrap;
+  font-size:0;
+  animation:notice-marquee 60s linear infinite;
+  margin: 0;
+}
+
+ul.notice-marquee li a {
+  color: white;
+}
+
+@keyframes notice-marquee {
+0% {transform: translate(0);}
+100% {transform: translate(-100%);}
+}
+
+.notice-marquee:hover  {
+-moz-animation-play-state: paused;
+-webkit-animation-play-state: paused;
+  animation-play-state: paused;
+}
+
+
+.notice-banner-wrapper .icon-close {
+    position: absolute;
+    top: 50%;
+  right:0;
+    padding:12px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 12;
+    color: white;
+}
+
+.icon-close::before {
+  content: "\2573"
+}
+
+.icon, .row-select:not(.select-inline-wrapper)::after, [class*=ui-icon], [class*=owl-next], [class*=owl-prev], [class^=icon-], [class*=" icon-"] {
+  display: inline-block;
+font-size: inherit;
+font-style: normal;
+font-weight: 400;
+line-height: 1;
+vertical-align: baseline
+}

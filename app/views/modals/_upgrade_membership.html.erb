@@ -1,0 +1,18 @@
+<% return unless setting.is_membership_portal? %>
+
+<div id="modal-upgrade-plan" class="uk-flex-top" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+
+        <button class="uk-modal-close-default" uk-close type="button"></button>
+
+        <div class="uk-modal-body uk-text-center">
+            <h4 class="text-gold uk-text-lead"><i class="icon-material-outline-lock"></i> This lesson is for paid members.</h4>
+            <p class="uk-text-large">Upgrade to our <b>🎓 Black Plan</b> to access this lesson!</p>
+            <p>
+              <a href="/upgrade-membership" id="ember706" class="ember-view button grey mt-2 uk-modal-close">
+                Upgrade Membership
+              </a>
+            </p>
+        </div>
+    </div>
+</div>

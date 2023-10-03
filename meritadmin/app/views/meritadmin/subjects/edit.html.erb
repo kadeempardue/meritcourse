@@ -1,0 +1,33 @@
+<div class="uk-flex uk-flex-middle">
+  <a href="<%= subjects_path(page: params[:page], scope: params[:scope]) %>" class="button grey"
+      uk-tooltip="title: View All Subjects ; delay: 500 ; pos: top ;">
+      Back To All Subjects
+  </a>
+</div>
+
+<div class="uk-card-default rounded mt-4">
+    <div class="uk-card-header">
+        <i class="icon-feather-user mr-2"></i> <%= @subject.name %>
+    </div>
+    <div class="uk-card-body">
+        <div uk-grid>
+          <div class="uk-width-1-4@m">
+            <div class="uk-position-relative text-center">
+              <%= cl_image_tag(@subject.icon_url, { quality: "auto:best", id: "custom-cloudinary-upload" }) %>
+                <div class="uk-position-center">
+                    <div uk-form-custom>
+                        <input name="file" type="file" accept=".jpg,.jpeg,.png" class="cloudinary-fileupload" data-cloudinary-field="subject[icon_url]"
+                            data-form-data="{ &quot;upload_preset&quot;:  &quot;<%= ENV['CLOUDINARY_API_UNSIGNED_UPLOAD_PRESET'] %>&quot;, &quot;callback&quot;: &quot;<%= request.base_url %>/cloudinary_cors.html&quot;}" ></input>
+                        <span class="preview-icon uk-link icon-feather-camera icon-medium text-white">
+                        </span>
+                    </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="uk-width-expand@m">
+              <%= render "form" %>
+            </div>
+        </div>
+    </div>
+</div>

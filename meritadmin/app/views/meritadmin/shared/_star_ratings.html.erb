@@ -1,0 +1,33 @@
+<div class="review-summary-container">
+    <div class="review-summary-avg">
+        <div class="avg-number">
+            <%= @course.avg_rating %>
+        </div>
+        <div class="review-star">
+            <div class="star-rating">
+              <%= star_rating(@course.avg_rating, avg: false) %>
+            </div>
+        </div>
+    </div>
+
+    <div class="review-summary-rating">
+      <% 5.times.reverse_each do |i| %>
+        <% i += 1 %>
+        <% rating_group = star_rating_group_for_course(@course, i) %>
+        <div class="review-summary-rating-wrap">
+            <div class="review-bars">
+                <div class="full_bar">
+                    <div class="bar_filler" style="width:<%= rating_group[:percentage] %>%"></div>
+                </div>
+            </div>
+            <div class="review-stars">
+              <%= rating_group[:html] %>
+            </div>
+            <div class="review-avgs">
+              <%= rating_group[:review_count] %> %
+            </div>
+        </div>
+      <% end %>
+    </div>
+
+</div>

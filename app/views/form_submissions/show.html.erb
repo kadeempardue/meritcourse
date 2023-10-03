@@ -1,0 +1,49 @@
+<div id="wrapper">
+  <div class="page-content">
+    <div class="container pt-4 pb-10" uk-height-viewport="expand: true">
+      <div class="m-0 uk-margin-auto p-8 uk-text-left uk-card uk-card-default uk-flex uk-flex-column">
+        <div class="uk-width-expand@m uk-text-left pb-4">
+          <a href="/" class="active logo">
+            <img src="<%= setting.logo_url %>" width="300" alt="<%= @tenant&.name %>">
+          </a>
+        </div>
+        <div class="uk-width-expand@m uk-text-left pb-4">
+          <h4><%= @form.name %></h4>
+        </div>
+        <div class="uk-width-expand@m">
+            <div id="form-wrapper"></div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+
+<% content_for(:extra_js) do %>
+  <script type="text/javascript">
+    var formSubmissionInputs = <%= raw @form_submission.submission.to_json rescue {} %>;
+
+    $(document).ready(function(){
+      var wrap = $('#form-wrapper');
+      var formRender = wrap.formRender();
+
+      wrap.formRender({
+        dataType: 'json',
+        formData: <%= raw add_classes_to_form_fields(@form.data).to_json %>
+      });
+
+      for (const property in formSubmissionInputs) {
+        if (Array.isArray(formSubmissionInputs[property])) {
+          for (let i = 0; i < formSubmissionInputs[property].length; i++) {
+            $("[name='" + property + "[]'][value='" + formSubmissionInputs[property][i] + "']").attr("checked", true); // checks
+          }
+        } else {
+          $("[name='" + property + "'][value='" + formSubmissionInputs[property] + "']").attr("checked", true); // radio
+          $("[name='" + property + "']").val(formSubmissionInputs[property]); // input
+        }
+      }
+
+    });
+  </script>
+<% end %>

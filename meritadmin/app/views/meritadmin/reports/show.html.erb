@@ -1,0 +1,52 @@
+<div class="uk-flex uk-flex-middle">
+  <a href="<%= articles_path(page: params[:page], scope: params[:scope]) %>" class="button grey"
+      uk-tooltip="title: View All Articles ; delay: 500 ; pos: top ;">
+      Back To All Articles
+  </a>
+</div>
+
+<div class="mt-4" uk-grid>
+    <div class="uk-width-expand@m">
+
+        <div class="uk-card-default rounded">
+            <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+                <h5 class="mb-0">
+                  Article details
+                </h5>
+                    <a href="<%= edit_article_path(@article) %>" uk-tooltip="title:Edit Article; pos: left"> <i
+                            class="icon-feather-settings"></i> </a>
+            </div>
+            <hr class="m-0">
+            <div class="uk-grid-small p-4" uk-grid>
+                <div class="uk-width-3-5">
+                    <h6 class="uk-text-bold"> Title </h6>
+                        <p> <%= @article.title %> </p>
+                </div>
+                <div class="uk-width-1-1">
+                    <h6 class="uk-text-bold"> Category </h6>
+                        <p> <%= @article.category %> </p>
+                </div>
+                  <div class="uk-width-2-5">
+                      <h6 class="uk-text-bold"> Status </h6>
+                          <p> <%= @article.post_status %> </p>
+                  </div>
+
+
+            </div>
+            <div class="uk-grid-small p-4" uk-grid>
+              <div class="uk-width-4-5 uk-grid-small pt-0" uk-grid>
+                <div>
+                    <h6 class="uk-text-bold"> Body </h6>
+                        <p> <%= @article.body %> </p>
+                </div>
+              </div>
+              <div class="uk-width-1-5 uk-grid-small pt-0" uk-grid>
+                <h6 class="uk-text-bold"> Featured Image </h6>
+                <%= cl_image_tag(@article.featured_image, { quality: "auto:best", transformation: [{ width: 300, crop: "scale" }] }) %>
+              </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>

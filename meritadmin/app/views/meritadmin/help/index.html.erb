@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="uk-container uk-margin-auto">
+        <h3> Help Center </h3>
+        <article class="uk-card-default p-4 rounded">
+            <ul class="uk-list-divider uk-list-large uk-accordion" uk-accordion>
+              <li>
+                  <a class="uk-accordion-title" href="#">How Do I Reset A Student's Password?</a>
+                  <div class="uk-accordion-content">
+                    <hr>
+                    <p>Administrators can trigger an "Account Setup" flow for any <span class="uk-label uk-label-secondary">Student</span>.</p>
+                    <p class="mt-4 uk-alert-warning" uk-alert>
+                      For security purposes, administrators cannot explicitly change a <span class="uk-label uk-label-secondary">Student</span>'s password.<br/>
+                      A <span class="uk-label uk-label-secondary">Student</span> must go through an account setup flow.
+                    </p>
+                    <p class="mt-4">To trigger an account setup flow click
+                      <button type="button" class="button grey" name="button">Send Account Setup Email</button>
+                      from the <span class="uk-label uk-label-secondary">Student</span> profile.
+                    </p>
+                    <p class="mt-4">
+                      <%= cl_image_tag("Student_Show_Admin_Setup_Button_zp2yvs.png", { quality: "auto:best", width: 500 }) %>
+                    </p>
+                    <p class="mt-4">
+                      Students will immediately receive an email:
+                    </p>
+                    <p class="mt-4">
+                      <%= cl_image_tag("Reset_Password_Screenshot_tsksq1.png", { quality: "auto:best", width: 500 }) %>
+                    </p>
+                  </div>
+              </li>
+            </ul>
+        </article>
+    </div>
+</div>

@@ -1,0 +1,385 @@
+<% if @stripe_connect_account.present? %>
+  <% content_for(:extra_js) do %>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script type="text/javascript">
+      var stripe = Stripe('<%= @stripe_connect_account.stripe_publishable_key %>');
+    </script>
+  <% end %>
+<% end %>
+
+<div uk-height-viewport="expand: true">
+  <% if setting.is_membership_portal? %>
+    <%= render "modals/plan_sign_up", plan: @first_plan if @first_plan.present? && @first_plan != @current_plan %>
+    <%= render "modals/plan_sign_up", plan: @recommended_plan if @recommended_plan.present? && @recommended_plan != @current_plan %>
+    <%= render "modals/plan_sign_up", plan: @last_plan if @last_plan.present? && @last_plan != @current_plan %>
+
+    <% if @stripe_connect_account.present? && (@first_plan.present? || @recommended_plan.present? || @last_plan.present?) %>
+      <div class="<%= 'container  mb-5 header-padding-top' if @first_plan.present? || @recommended_plan.present? || @last_plan.present? %>">
+
+          <% if @first_plan.present? %>
+            <div class="section-title pt-4 pb-2 uk-text-center">
+                <h1 class="text-black"> Select A Membership Plan </h1>
+            </div>
+
+            <div class="pricing-plans-container">
+              <% if @recommended_plan.present? %>
+                <div class="pricing-plan recommended">
+                    <div class="recommended-badge" style="background-color: <%= @recommended_plan.color %>">RECOMMENDED FOR SERIOUS LEARNERS</div>
+                    <h3 class="text-brown mb-1" style="color: <%= @recommended_plan.color %>!important;"><%= @recommended_plan.name %></h3>
+                    <div class="description">
+                      <%= @recommended_plan.description %>
+                    </div>
+                    <ul class="uk-switcher" id="change-plan">
+                        <li class="uk-active">
+                          <div class="pricing-plan-label"><strong style="color:<%= @recommended_plan.color %>;"><%= @recommended_plan.free? ? "FREE" : number_to_currency(@recommended_plan.amount, precision: 0) %><%= @recommended_plan.friendly_interval %></strong></div>
+                        </li>
+                    </ul>
+                    <p>
+                      <a class="btns btn-black"
+                        href='<%= @recommended_plan == @current_plan ? '#' : "#modal-pick-plan-#{@recommended_plan.id}" %>'
+                        <%= 'uk-toggle' unless @recommended_plan == @current_plan  %>
+                        <%= 'disabled' if @recommended_plan == @current_plan  %>
+                        style="background: <%= @recommended_plan.color %>;color:#FFF;border-color: <%= @recommended_plan.color %>;1.5px solid <%= @recommended_plan.color %>;">
+                        <%= @recommended_plan == @current_plan ? "CURRENT PLAN" : "SELECT PLAN" %>
+                      </a>
+                    </p>
+
+                    <% if @recommended_plan.has_features? %>
+                      <div class="pricing-plan-features mt-3">
+                          <strong>Features of <%= @recommended_plan.name %></strong>
+                          <ul>
+                              <li><%= @recommended_plan.feature_1 %>
+                                <% if @recommended_plan.feature_1_help_text.present? %>
+                                  <i uk-tooltip="<%= @recommended_plan.feature_1_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                                <% end %>
+                              </li>
+                              <li><%= @recommended_plan.feature_2 %>
+                                <% if @recommended_plan.feature_2_help_text.present? %>
+                                  <i uk-tooltip="<%= @recommended_plan.feature_2_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                                <% end %>
+                              </li>
+                              <li><%= @recommended_plan.feature_3 %>
+                                <% if @recommended_plan.feature_3_help_text.present? %>
+                                  <i uk-tooltip="<%= @recommended_plan.feature_3_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                                <% end %>
+                              </li>
+                              <li><%= @recommended_plan.feature_4 %>
+                                <% if @recommended_plan.feature_4_help_text.present? %>
+                                  <i uk-tooltip="<%= @recommended_plan.feature_4_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                                <% end %>
+                              </li>
+                              <li><%= @recommended_plan.feature_5 %>
+                                <% if @recommended_plan.feature_5_help_text.present? %>
+                                  <i uk-tooltip="<%= @recommended_plan.feature_5_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                                <% end %>
+                              </li>
+                          </ul>
+                      </div>
+                    <% end %>
+                </div>
+              <% end %>
+
+              <% if @first_plan.present? %>
+                <div class="pricing-plan uk-flex-first@s px-6">
+                  <h3 class="text-brown mb-1" style="color: <%= @first_plan.color %>!important;"><%= @first_plan.name %></h3>
+                  <div class="description">
+                    <%= @first_plan.description %>
+                  </div>
+                  <ul class="uk-switcher" id="change-plan" style="touch-action: pan-y pinch-zoom;">
+                      <li class="uk-active">
+                        <div class="pricing-plan-label"><strong style="color:<%= @first_plan.color %>;"><%= @first_plan.free? ? "FREE" : number_to_currency(@first_plan.amount, precision: 0) %><%= @first_plan.friendly_interval %></strong></div>
+                      </li>
+                  </ul>
+                  <p>
+                    <a class="btns btn-brown"
+                      href='<%= @first_plan == @current_plan ? '#' : "#modal-pick-plan-#{@first_plan.id}" %>'
+                      <%= 'uk-toggle' unless @first_plan == @current_plan  %>
+                      <%= 'disabled' if @first_plan == @current_plan  %>
+                      style="background: <%= @first_plan.color %>;color:#FFF;border-color: <%= @first_plan.color %>;1.5px solid <%= @first_plan.color %>;">
+                      <%= @first_plan == @current_plan ? "CURRENT PLAN" : "SELECT PLAN" %>
+                    </a>
+                  </p>
+                  <% if @first_plan.has_features? %>
+                    <div class="pricing-plan-features mt-3">
+                        <strong>Features of <%= @first_plan.name %></strong>
+                        <ul>
+                            <li><%= @first_plan.feature_1 %>
+                              <% if @first_plan.feature_1_help_text.present? %>
+                                <i uk-tooltip="<%= @first_plan.feature_1_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                              <% end %>
+                            </li>
+                            <li><%= @first_plan.feature_2 %>
+                              <% if @first_plan.feature_2_help_text.present? %>
+                                <i uk-tooltip="<%= @first_plan.feature_2_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                              <% end %>
+                            </li>
+                            <li><%= @first_plan.feature_3 %>
+                              <% if @first_plan.feature_3_help_text.present? %>
+                                <i uk-tooltip="<%= @first_plan.feature_3_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                              <% end %>
+                            </li>
+                            <li><%= @first_plan.feature_4 %>
+                              <% if @first_plan.feature_4_help_text.present? %>
+                                <i uk-tooltip="<%= @first_plan.feature_4_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                              <% end %>
+                            </li>
+                            <li><%= @first_plan.feature_5 %>
+                              <% if @first_plan.feature_5_help_text.present? %>
+                                <i uk-tooltip="<%= @first_plan.feature_5_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                              <% end %>
+                            </li>
+                        </ul>
+                    </div>
+                  <% end %>
+                </div>
+              <% end %>
+
+              <% if @last_plan.present? %>
+              <div class="pricing-plan">
+                <h3 class="text-gold mb-1" style="color: <%= @last_plan.color %>!important;"><%= @last_plan.name %></h3>
+                <div class="description">
+                  <%= @last_plan.description %>
+                </div>
+                <ul class="uk-switcher" id="change-plan" style="touch-action: pan-y pinch-zoom;">
+                    <li class="uk-active">
+                      <div class="pricing-plan-label"><strong style="color:<%= @last_plan.color %>;"><%= @last_plan.free? ? "FREE" : number_to_currency(@last_plan.amount, precision: 0) %><%= @last_plan.friendly_interval %></strong></div>
+                    </li>
+                </ul>
+                <p>
+                  <a class="btns btn-gold"
+                    href='<%= @last_plan == @current_plan ? '#' : "#modal-pick-plan-#{@last_plan.id}" %>'
+                    <%= 'uk-toggle' unless @last_plan == @current_plan  %>
+                    <%= 'disabled' if @last_plan == @current_plan  %>
+                    style="background: <%= @last_plan.color %>;color:#FFF;border-color: <%= @last_plan.color %>;1.5px solid <%= @last_plan.color %>;">
+                    <%= @last_plan == @current_plan ? "CURRENT PLAN" : "SELECT PLAN" %>
+                  </a>
+                </p>
+                <% if @last_plan.has_features? %>
+                  <div class="pricing-plan-features mt-3">
+                      <strong>Features of <%= @last_plan.name %></strong>
+                      <ul>
+                          <li><%= @last_plan.feature_1 %>
+                            <% if @last_plan.feature_1_help_text.present? %>
+                              <i uk-tooltip="<%= @last_plan.feature_1_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                            <% end %>
+                          </li>
+                          <li><%= @last_plan.feature_2 %>
+                            <% if @last_plan.feature_2_help_text.present? %>
+                              <i uk-tooltip="<%= @last_plan.feature_2_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                            <% end %>
+                          </li>
+                          <li><%= @last_plan.feature_3 %>
+                            <% if @last_plan.feature_3_help_text.present? %>
+                              <i uk-tooltip="<%= @last_plan.feature_3_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                            <% end %>
+                          </li>
+                          <li><%= @last_plan.feature_4 %>
+                            <% if @last_plan.feature_4_help_text.present? %>
+                              <i uk-tooltip="<%= @last_plan.feature_4_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                            <% end %>
+                          </li>
+                          <li><%= @last_plan.feature_5 %>
+                            <% if @last_plan.feature_5_help_text.present? %>
+                              <i uk-tooltip="<%= @last_plan.feature_5_help_text %>" class="icon-feather-info" title="" aria-expanded="false"></i>
+                            <% end %>
+                          </li>
+                      </ul>
+                  </div>
+                <% end %>
+              </div>
+              <% end %>
+            </div>
+          <% end %>
+      </div>
+    <% else %>
+    <div id="wrapper">
+      <div uk-height-viewport="expand: true" class="uk-flex uk-flex-middle" data-height-expand="" style="min-height: 364px;">
+          <div class="uk-width-1-2@m uk-width-1-2@s m-auto text-center">
+              <i class="icon-feather-shopping-bag icon-xxlarge text-grey "></i>
+              <h3>Membership Plans Coming Soon.</h3>
+              <a href="/" class="button grey transition-3d-hover my-4 large uk-flex-inline uk-flex-middle uk-flex-justify-center">
+              <i class="icon-feather-home icon-small mr-2 mb-1"></i> Return Home</a>
+          </div>
+      </div>
+    </div>
+
+    <% end %>
+  <% else %>
+    <%= render "modals/no_plan_sign_up" %>
+
+    <div class="container mb-5 header-padding-top">
+      <div class="section-title pt-4 pb-2 uk-text-center">
+          <h1 class="text-black"> Select A Membership Plan </h1>
+      </div>
+
+      <div class="pricing-plans-container uk-width-1-3">
+        <div class="pricing-plan uk-flex-first@s px-6 uk-width-1-3">
+          <h3 class="text-brown mb-1">Basic Student</h3>
+          <ul class="uk-switcher" id="change-plan" style="touch-action: pan-y pinch-zoom;">
+              <li class="uk-active">
+                <div class="pricing-plan-label"><strong>FREE</strong></div>
+              </li>
+          </ul>
+          <p><a class="btns btn-brown" href="#modal-pick-plan" uk-toggle>SELECT PLAN</a></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @faqs.present? %>
+    <div class="section white">
+      <div class="container">
+          <div class="text-center mb-lg-5 pb-2 delimiter-bottom">
+              <h2>Frequently Asked Questions :</h2>
+          </div>
+
+          <div class="uk-child-width-1-2@s mt-3" uk-grid>
+            <% @faqs.each do |faq| %>
+              <div>
+                  <h4><%= faq.name %></h4>
+                  <p><%= faq.description %></p>
+              </div>
+            <% end %>
+          </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<% content_for(:extra_js) do %>
+  <script>
+    jQuery(document).ready(function(){
+      jQuery(".footer").addClass("mt-0");
+    });
+
+      window.onload = function () {
+          crear_select();
+      }
+
+      var Navegador_ = (window.navigator.userAgent || window.navigator.vendor || window.opera),
+          Firfx = /Firefox/i.test(Navegador_),
+          Mobile_ = /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(Navegador_),
+          FirfoxMobile = (Firfx && Mobile_);
+
+      var li = new Array();
+
+      function crear_select() {
+          var div_cont_select = document.querySelectorAll("[data-mate-select='active']");
+          var select_ = '';
+          for (var e = 0; e < div_cont_select.length; e++) {
+              div_cont_select[e].setAttribute('data-indx-select', e);
+              div_cont_select[e].setAttribute('data-selec-open', 'false');
+              var ul_cont = document.querySelectorAll("[data-indx-select='" + e +
+                  "'] > .cont_list_select_mate > ul");
+              select_ = document.querySelectorAll("[data-indx-select='" + e + "'] >select")[0];
+              if (Mobile_ || FirfoxMobile) {
+                  select_.addEventListener('change', function () {
+                      _select_option(select_.selectedIndex, e);
+                  });
+              }
+              var select_optiones = select_.options;
+              document.querySelectorAll("[data-indx-select='" + e + "']  > .selecionado_opcion ")[0].setAttribute(
+                  'data-n-select', e);
+              document.querySelectorAll("[data-indx-select='" + e + "']  > .icon_select_mate ")[0].setAttribute(
+                  'data-n-select', e);
+              for (var i = 0; i < select_optiones.length; i++) {
+                  li[i] = document.createElement('li');
+                  if (select_optiones[i].selected == true || select_.value == select_optiones[i].innerHTML) {
+                      li[i].className = 'active';
+                      document.querySelector("[data-indx-select='" + e + "']  > .selecionado_opcion ").innerHTML =
+                          select_optiones[i].innerHTML;
+                  };
+                  li[i].setAttribute('data-index', i);
+                  li[i].setAttribute('data-selec-index', e);
+                  // funcion click al selecionar
+                  li[i].addEventListener('click', function () {
+                      _select_option(this.getAttribute('data-index'), this.getAttribute(
+                          'data-selec-index'));
+                  });
+
+                  li[i].innerHTML = select_optiones[i].innerHTML;
+                  ul_cont[0].appendChild(li[i]);
+
+              }; // Fin For select_optiones
+          }; // fin for divs_cont_select
+      } // Fin Function
+
+
+
+      var cont_slc = 0;
+
+      function open_select(idx) {
+          var idx1 = idx.getAttribute('data-n-select');
+          var ul_cont_li = document.querySelectorAll("[data-indx-select='" + idx1 + "'] .cont_select_int > li");
+          var hg = 0;
+          var slect_open = document.querySelectorAll("[data-indx-select='" + idx1 + "']")[0].getAttribute(
+              'data-selec-open');
+          var slect_element_open = document.querySelectorAll("[data-indx-select='" + idx1 + "'] select")[0];
+          if (Mobile_ || FirfoxMobile) {
+              if (window.document.createEvent) { // All
+                  var evt = window.document.createEvent("MouseEvents");
+                  evt.initMouseEvent("mousedown", false, true, window, 0, 0, 0, 0, 0, false, false, false, false,
+                      0,
+                      null);
+                  slect_element_open.dispatchEvent(evt);
+              } else if (slect_element_open.fireEvent) { // IE
+                  slect_element_open.fireEvent("onmousedown");
+              }
+          } else {
+
+
+              for (var i = 0; i < ul_cont_li.length; i++) {
+                  hg += ul_cont_li[i].offsetHeight;
+              };
+              if (slect_open == 'false') {
+                  document.querySelectorAll("[data-indx-select='" + idx1 + "']")[0].setAttribute(
+                      'data-selec-open',
+                      'true');
+                  document.querySelectorAll("[data-indx-select='" + idx1 + "'] > .cont_list_select_mate > ul")[0]
+                      .style.height = hg + "px";
+                  document.querySelectorAll("[data-indx-select='" + idx1 + "'] > .icon_select_mate")[0].style
+                      .transform = 'rotate(180deg)';
+              } else {
+                  document.querySelectorAll("[data-indx-select='" + idx1 + "']")[0].setAttribute(
+                      'data-selec-open',
+                      'false');
+                  document.querySelectorAll("[data-indx-select='" + idx1 + "'] > .icon_select_mate")[0].style
+                      .transform = 'rotate(0deg)';
+                  document.querySelectorAll("[data-indx-select='" + idx1 + "'] > .cont_list_select_mate > ul")[0]
+                      .style.height = "0px";
+              }
+          }
+
+      } // fin function open_select
+
+      function salir_select(indx) {
+          var select_ = document.querySelectorAll("[data-indx-select='" + indx + "'] > select")[0];
+          document.querySelectorAll("[data-indx-select='" + indx + "'] > .cont_list_select_mate > ul")[0].style
+              .height = "0px";
+          document.querySelector("[data-indx-select='" + indx + "'] > .icon_select_mate").style.transform =
+              'rotate(0deg)';
+          document.querySelectorAll("[data-indx-select='" + indx + "']")[0].setAttribute('data-selec-open',
+              'false');
+      }
+
+
+      function _select_option(indx, selc) {
+          if (Mobile_ || FirfoxMobile) {
+              selc = selc - 1;
+          }
+          var li_s = document.querySelectorAll("[data-indx-select='" + selc + "'] .cont_select_int > li");
+          var p_act = document.querySelectorAll("[data-indx-select='" + selc + "'] > .selecionado_opcion")[0]
+              .innerHTML = li_s[indx].innerHTML;
+          var select_optiones = document.querySelectorAll("[data-indx-select='" + selc + "'] > select > option");
+          for (var i = 0; i < li_s.length; i++) {
+              if (li_s[i].className == 'active') {
+                  li_s[i].className = '';
+              };
+              li_s[indx].className = 'active';
+
+          };
+          select_optiones[indx].selected = true;
+          salir_select(selc);
+      }
+  </script>
+<% end %>

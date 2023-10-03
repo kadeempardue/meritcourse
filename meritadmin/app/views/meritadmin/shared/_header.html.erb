@@ -1,0 +1,104 @@
+<% return unless admin_user_signed_in? %>
+
+<!-- mobile header -->
+<div class="mobile-header nav-overlay">
+
+    <!-- menu icon -->
+    <span class="btn-mobile" uk-toggle="target: #wrapper ; cls: mobile-active"></span>
+
+    <a href="/" class="logo">
+        <a href="/">
+          <%= image_tag setting.logo_url, width: 150, alt: @tenant&.name %>
+        </a>
+    </a>
+
+    <!-- icon search-->
+    <a class="uk-navbar-toggle uk-invisible"  uk-search-icon uk-toggle="target: .nav-overlay; animation: uk-animation-fade"
+        href="#"></a>
+
+</div>
+
+<!-- search overlay-->
+<div id="searchbox">
+    <div class="search-overlay"></div>
+    <div class="search-input-wrapper">
+        <div class="search-input-container">
+            <div class="search-input-control">
+                <span class="icon-feather-x btn-close uk-animation-scale-up"
+                    uk-toggle="target: #searchbox; cls: is-active"></span>
+                <div class=" uk-animation-slide-bottom">
+                    <input type="text" name="search" autofocus required>
+                    <p class="search-help">Type the name of the Course and book you are looking for</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- overlay seach on mobile-->
+<div class="nav-overlay uk-navbar-left uk-flex-1 bg-grey uk-light p-3" hidden>
+    <div class="uk-navbar-item uk-width-expand">
+        <form class="uk-search uk-search-navbar uk-width-1-1">
+            <input class="uk-search-input" type="search" placeholder="Search..." autofocus>
+        </form>
+    </div>
+    <a class="uk-navbar-toggle" uk-close uk-toggle="target: .nav-overlay; animation: uk-animation-fade"
+        href="#"></a>
+</div>
+
+<!-- menu -->
+<div class="page-menu">
+    <!-- btn close on small devices -->
+    <span class="btn-menu-close" uk-toggle="target: #wrapper ; cls: mobile-active"></span>
+
+    <!-- logo -->
+    <div class="logo uk-visible@s">
+        <a href="/">
+          <%= image_tag setting.logo_url, width: 150, alt: @tenant&.name %>
+        </a>
+    </div>
+    <div class="page-menu-inner" data-simplebar>
+        <ul data-submenu-title="Navigation" class="mt-4">
+            <li class="<%= active_class(:dashboard) %>"><a href="<%= admin_root_path %>"><i class="uil-home-alt"></i> <span> Dashboard</span></a> </li>
+            <li class="<%= active_class(:students) %>"><a href="<%= students_path %>"><i class="uil-users-alt"></i> <span> Students</span></a> </li>
+            <li class="<%= active_class(:staffs) %>"><a href="<%= staffs_path %>"><i class="icon-line-awesome-user-secret"></i> <span> Staff Members</span></a> </li>
+            <li class="<%= active_class(:media_library) %>"><a href="<%= media_library_path %>"> <i class="icon-material-outline-library-add"></i> Media Library </a></li>
+
+            <li class="<%= active_class([:courses, :subjects, :badges]) %> submenu overscroll-y-contain">
+              <a href="#"><i class="icon-line-awesome-graduation-cap"></i> <span> Curriculum</span></a>
+              <ul>
+                <li class="<%= fixed_nav_active_class(:subjects, :index) %>"><a href="<%= subjects_path %>"> <i class="icon-line-awesome-clone"></i> Subjects </a></li>
+                <li class="<%= fixed_nav_active_class(:courses, :index) %>"><a href="<%= courses_path %>"> <i class="icon-line-awesome-graduation-cap"></i> Courses </a></li>
+                <li class="<%= fixed_nav_active_class(:programs, :index) %>"><a href="<%= programs_path %>"> <i class="icon-feather-codepen"></i> Programs </a></li>
+                <li class="<%= fixed_nav_active_class(:badges, :index) %>"><a href="<%= badges_path %>"> <i class="icon-line-awesome-certificate"></i> Badges </a></li>
+              </ul>
+            </li>
+
+            <% if setting.is_membership_portal? && stripe_connect_account.present? %>
+              <li class="<%= active_class([:memberships, :plans, :faqs]) %> submenu overscroll-y-contain">
+                <a href="#"><i class="icon-material-outline-credit-card"></i> <span> Memberships</span></a>
+                <ul>
+
+                  <li class="<%= fixed_nav_active_class(:plans, :index) %>"><a href="<%= plans_path %>"><i class="icon-line-awesome-usd"></i> Plans </a></li>
+                  <li class="<%= fixed_nav_active_class(:faqs, :index) %>"><a href="<%= faqs_path %>"> <i class="icon-line-awesome-question-circle"></i> FAQs </a></li>
+                  <li class="<%= fixed_nav_active_class(:memberships, :subscriptions) %>"><a href="<%= memberships_subscriptions_path %>"> <i class="icon-feather-repeat"></i> Subscriptions </a></li>
+                  <li class="<%= fixed_nav_active_class(:memberships, :payouts) %>"><a href="<%= memberships_payouts_path %>"> <i class="icon-line-awesome-bank"></i> Payouts </a></li>
+                  <li class="<%= fixed_nav_active_class(:memberships, :account) %>"><a href="<%= memberships_account_path %>"> <i class="icon-line-awesome-cc-stripe"></i> Account </a></li>
+
+                </ul>
+              </li>
+            <% end %>
+
+            <li class="<%= active_class(:articles) %>"><a href="<%= articles_path %>"><i class="icon-material-outline-description"></i> <span> Articles</span></a> </li>
+            <li class="<%= active_class(:form_submissions) %>"><a href="<%= form_submissions_path %>"><i class="icon-material-outline-assignment"></i> <span> Form Submissions</span></a> </li>
+        </ul>
+
+        <ul data-submenu-title="Settings">
+            <li class="<%= fixed_nav_active_class(:integrations, :index) %> <%= fixed_nav_active_class(:integrations, :stripe) %>"><a href="<%= integrations_path %>"><i class="icon-feather-zap"></i>  Integrations</a></li>
+            <li hidden class="<%= active_class(:help) %>"><a href="<%= help_path %>"><i class="icon-feather-help-circle"></i> <span> Help Center </span></a> </li>
+            <li><a href="<%= destroy_admin_user_session_path %>"><i class="uil-sign-out-alt"></i> <span> Log Out</span></a> </li>
+        </ul>
+
+    </div>
+</div>

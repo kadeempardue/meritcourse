@@ -1,0 +1,116 @@
+<% if @awarded_badge && @prev_lesson %>
+  <div id="badge-modal" class="uk-flex-top" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical uk-text-center">
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+
+      <span class="uk-modal-title">You earned a badge!</span>
+
+      <div class="badge-placeholder p-4">
+        <img width="200" class="uk-margin-auto" uk-img src="<%= @awarded_badge.badge.image_url %>">
+        <p class="my-1 mb-0 uk-text-meta"><%= @prev_lesson.name %></p>
+      </div>
+      <% if @awarded_students.present? %>
+        <div class="uk-text-center">
+          <h4>So did some of your peers!</h4>
+          <div class="notice-banner-wrapper visible">
+          <div class="notice-content">
+          <div class="notice-marquee-wrapper">
+            <ul class="notice-marquee">
+              <% @awarded_students.each do |student| %>
+                <span class="marquee__seperator"></span>
+                <li><%= student.name %></li>
+              <% end %>
+            </ul>
+          </div>
+            </div>
+          </div>
+        </div>
+        <% end %>
+        <p class="uk-text-center pt-4">
+          <button type="button" class="button primary icon-label uk-modal-close">
+              <span class="inner-icon"><i class="icon-material-outline-star-border icon-small"></i></span>
+              <span class="inner-text">Keep Learning!</span>
+          </button>
+        </p>
+    </div>
+  </div>
+
+  <div id="pyro" class="pyro">
+    <div class="before"></div>
+    <div class="after"></div>
+  </div>
+
+  <% content_for(:extra_js) do %>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        var elem = document.getElementById("badge-modal");
+        UIkit.modal(elem).show();
+
+        $(elem).on({
+          "show.uk.modal": function(){
+              console.log("Modal is visible.");
+          },
+          "hide.uk.modal": function(){
+             $("#pyro").hide();
+          }
+        });
+      });
+    </script>
+  <% end %>
+<% end %>
+
+<% if @unawarded_badge && @prev_lesson %>
+  <div id="badge-modal" class="uk-flex-top" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical uk-text-center">
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+
+      <span class="uk-modal-title">You missed out on a earning a badge.</span>
+
+      <div class="badge-placeholder p-4">
+        <img width="200" class="uk-margin-auto" uk-img src="<%= @unawarded_badge.badge.image_url %>">
+        <p class="my-1 mb-0 uk-text-meta"><%= @prev_lesson.name %></p>
+      </div>
+      <% if @awarded_students.present? %>
+        <div class="uk-text-center">
+          <h4>Look who won this badge!</h4>
+          <div class="notice-banner-wrapper visible">
+          <div class="notice-content">
+          <div class="notice-marquee-wrapper">
+            <ul class="notice-marquee">
+              <% @awarded_students.each do |student| %>
+                <span class="marquee__seperator"></span>
+                <li><%= student.name %></li>
+              <% end %>
+            </ul>
+          </div>
+            </div>
+          </div>
+        </div>
+        <% end %>
+        <p class="uk-text-center pt-4">
+          <button type="button" class="button primary icon-label uk-modal-close">
+              <span class="inner-icon"><i class="icon-material-outline-star-border icon-small"></i></span>
+              <span class="inner-text">I'll Try Harder Next Time!</span>
+          </button>
+        </p>
+    </div>
+  </div>
+
+  <% content_for(:extra_js) do %>
+    <script type="text/javascript">
+      $(document).ready(function() {
+        var elem = document.getElementById("badge-modal");
+        UIkit.modal(elem).show();
+
+        $(elem).on({
+          "show.uk.modal": function(){
+              console.log("Modal is visible.");
+          },
+          "hide.uk.modal": function(){
+             // $("#pyro").hide();
+          }
+        });
+      });
+    </script>
+  <% end %>
+<% end %>

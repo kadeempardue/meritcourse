@@ -1,0 +1,93 @@
+<%= form_for(@program, html: { "uk-grid" => true, class: "uk-grid-small large form #{'error' if flash[:error]} #{'notice' if flash[:notice]}" }) do |f| %>
+<%= f.hidden_field :featured_image_url, class: "uk-input", minlength: 2, maxlength: 255, required: true %>
+
+<div class="uk-width-1-4@m">
+
+    <div class="text-center">
+        <div class="uk-position-relative text-center">
+          <%= cl_image_tag((@program.featured_image_url.presence || "https://via.placeholder.com/1280x720"), { quality: "auto:best", id: "custom-cloudinary-upload" }) %>
+            <div class="uk-position-center">
+                <div uk-form-custom>
+                    <input name="file" type="file" accept=".jpg,.jpeg,.png" class="cloudinary-fileupload" data-cloudinary-field="program[featured_image_url]"
+                        data-form-data="{ &quot;upload_preset&quot;:  &quot;<%= ENV['CLOUDINARY_API_UNSIGNED_UPLOAD_PRESET'] %>&quot;, &quot;callback&quot;: &quot;<%= request.base_url %>/cloudinary_cors.html&quot;}" ></input>
+                    <span class="preview-icon uk-link icon-feather-camera icon-medium text-white">
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+        <span class="uk-text-meta">For best results use 1280px x 720px</span>
+    </div>
+
+</div>
+<div class="uk-width-expand@m">
+  <div uk-grid>
+      <div class="uk-width-expand@m">
+        <div class="uk-width-1-1">
+          <div class="uk-form-label"> Program Name </div>
+          <%= f.text_field :name, class: "uk-input", minlength: 2, maxlength: 255, required: true %>
+        </div>
+        <div class="uk-width-1-1">
+          <div class="uk-form-label"> Description </div>
+          <div class="uk-text-meta"> Tell students what makes this program special. </div>
+          <%= f.text_area :description, class: "uk-textarea", rows: 10, required: true %>
+        </div>
+      </div>
+  </div>
+</div>
+
+<div class="uk-width-1-1">
+    <div class="uk-child-width-1-2@s uk-flex mt-4">
+      <div id="course_plan" class="uk-background uk-background-muted p-4">
+        <h4 uk-tooltip="title: Drag Courses Here ; delay: 500 ; pos: bottom ;" >Course Plan</h4>
+        <div uk-sortable="group: sortable-group" style="min-height: 400px;">
+
+        </div>
+        <hr>
+        <span class="text-muted">Drag courses to this side above the line.</span>
+      </div>
+      <div class="p-4">
+          <div class="p-3 bg-white uk-text-small rounded">
+              <div uk-grid>
+                  <div class="uk-width-auto@m">
+                     <div class="uk-inline">
+                          <span class="uk-form-icon"> <i class="uil-search"></i></span>
+                          <input class="uk-input" type="text" placeholder="Find Course..">
+                      </div>
+                      <button class="button button-primary">Search</button>
+                  </div>
+              </div>
+          </div>
+          <hr class="mb-4">
+          <div uk-sortable="group: sortable-group">
+            <% @courses&.each do |course| %>
+              <div class="uk-card uk-card-default uk-card-body uk-card-small uk-flex-inline uk-flex-middle my-2" uk-alert>
+                <button class="uk-alert-close" type="button" uk-close></button>
+                <div class="uk-width-1-4 course-thumbnail" uk-lightbox>
+                  <a href="<%= course.featured_preview_video_url %>">
+                    <%= cl_image_tag(course.featured_preview_image_url, { quality: "auto:best" }) %>
+                    <i class="play-button-trigger show" ></i>
+                  </a>
+
+                </div>
+                <div class=" ml-2 uk-text-break uk-block">
+                  <span class="uk-width-1-1 uk-block uk-text-left"> <%= course.name %></span>
+                  <span class="uk-width-1-1 uk-block uk-text-left pt-3"> <%= star_rating(course.avg_rating) %></span>
+
+
+                </div>
+
+              </div>
+            <% end %>
+          </div>
+      </div>
+    </div>
+
+
+
+    <div class="uk-width-1-1">
+      <input class="button grey uk-width-1-1@s uk-width-1-4@m mt-3 ml-0 mr-0" type="submit" class="button" value="Save">
+    </div>
+  </div>
+<% end %>

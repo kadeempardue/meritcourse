@@ -1,0 +1,26 @@
+<div class="uk-flex uk-flex-middle">
+  <a href="<%= course_path(@course, anchor: "reviews", page: params[:page], scope: params[:scope]) %>" class="button grey"
+      uk-tooltip="title: Back To Course <%= @course.name %> ; delay: 500 ; pos: top ;">
+      <i class="icon-material-outline-arrow-back"></i> Back To Course: <%= @course.name %>
+  </a>
+</div>
+
+<% @course.reviews&.reverse&.each do |review| %>
+  <% student = review.author %>
+  <div class="mt-4" uk-grid>
+    <div class="uk-width-1-1@m">
+      <div class="uk-card-default rounded">
+        <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+            <h5 class="mb-0"> <%= student.name %> </h5>
+            <a href="<%= edit_course_review_path(@course, review) %>" uk-tooltip="title:Edit Review; pos: left"> <i
+                    class="icon-feather-settings"></i> </a>
+        </div>
+        <hr class="m-0">
+        <div class="uk-child-width-1-1@s uk-grid-small py-3 px-4">
+          <h6 class="uk-text-bold"> <%= star_rating(review.rating) %> </h6>
+          <%= raw(review.comment).html_safe %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

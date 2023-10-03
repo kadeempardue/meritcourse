@@ -1,0 +1,76 @@
+<div class="uk-flex uk-flex-middle">
+  <h3 class="mb-0 mr-3"> <i class="uil-users-alt"></i> Students </h3>
+  <a href="<%= new_student_path %>" class="button grey"
+      uk-tooltip="title: Add New Student ; delay: 500 ; pos: top ;">
+      <i class="icon-feather-plus"></i> Add New
+  </a>
+</div>
+
+<%= render "meritadmin/shared/search" %>
+
+<div class="uk-overflow-auto uk-card uk-card-default pt-3 uk-card-body rounded">
+    <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
+        <thead>
+            <tr class="uk-text-small uk-text-bold">
+                <th>Avatar</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Membership</th>
+                <th>Interval</th>
+                <th>Created</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+          <% @students&.reverse&.each do |student| %>
+            <tr data-row-id="<%= student.id %>">
+                <td>
+                  <%= cl_image_tag(avatar_helper(student), default_image_options(width: 50, class: "uk-preserve-width uk-border-circle user-profile-small")) %>
+                </td>
+                <td> <%= student.name %></td>
+                <td> <%= student.email %> </td>
+                <td> <%= student.membership_status %> </td>
+                <td> <%= student.membership_interval %> </td>
+                <td> <%= friendly_date(student.created_at) %> </td>
+                <td class="uk-flex-inline uk-flex-middle">
+                    <a href="<%= student_path(student) %>" class="button soft-success">
+                        <i class="fas fa-eye uk-visible@m"></i> View
+                    </a>
+                    <a href="<%= edit_student_path(student) %>" class="button soft-primary">
+                        <i class="fas fa-trash uk-visible@m"></i> Edit
+                    </a>
+                    <a href="#" class="button soft-danger delete-button"
+                      data-id="<%= student.id %>"
+                      data-name="<%= student.name %>"
+                      data-action="<%= student_path(student) %>"
+                      data-token="<%= form_authenticity_token %>"
+                      uk-toggle="target: #delete-modal">
+                        <i class="fas fa-trash uk-visible@m"></i> Delete
+                    </a>
+                </td>
+            </tr>
+          <% end %>
+        </tbody>
+    </table>
+</div>
+
+<%= paginate @students %>
+<p class="uk-padding"> <%= total_count(@students) %></p>
+
+<!-- model -->
+<div id="delete-modal" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Delete Student</h2>
+        </div>
+        <div class="uk-modal-body">
+          <p>Are you sure you want to delete <span class="resource_name"></span>?</p>
+          <p class="text-danger">This cannot be undone.</p>
+        </div>
+        <div class="uk-modal-footer">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+          <button class="uk-button uk-button-danger confirm-button" type="button">Delete</button>
+        </div>
+    </div>
+</div>

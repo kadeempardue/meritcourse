@@ -1,0 +1,45 @@
+<% resource  = @course || @student %>
+<% resources = resource&.reviews %>
+
+<% if resources.present? %>
+  <!-- notificiation dropdown -->
+  <div class="dropdown-notifications uk-card-default rounded uk-width-1-1">
+
+
+      <!-- notification contents -->
+      <div class="dropdown-notifications-content">
+
+          <!-- notiviation list -->
+          <ul class="uk-list">
+            <% resources.limit(5)&.each do |review| %>
+              <% student = review.author %>
+              <% course = review.course %>
+              <li>
+                  <a href="<%= course_review_path(course, review) %>">
+                    <%= cl_image_tag(avatar_helper(student), default_image_options(class: "avatar-medium circle")) if resource.is_a?(Course)  %>
+                      <span class="notification-text">
+                          <strong><%= resource.is_a?(Student) ? course.name : student.name %></strong>
+                          <div class="review-star">
+                              <div class="star-rating">
+                                <%= star_rating(review.rating) %>
+                              </div>
+                          </div>
+                          <%= truncate(review.comment, length: 50) %>
+                          <br> <span class="time-ago"> <%= time_ago_in_words(review.created_at) %> ago</span>
+                      </span>
+                  </a>
+              </li>
+              <hr class="my-0">
+            <% end %>
+          </ul>
+
+      </div>
+
+  </div>
+<% else %>
+  <div class="uk-card-default rounded uk-width-1-1">
+    <div class="py-3 px-4">
+      <span>None</span>
+    </div>
+  </div>
+<% end %>

@@ -1,0 +1,79 @@
+<div class="uk-flex uk-flex-middle">
+  <a href="<%= course_path(@course) %>" class="button grey"
+      uk-tooltip="title: Back To Course ; delay: 500 ; pos: top ;">
+      <i class="icon-material-outline-arrow-back"></i> Back To Course: <%= @course.name %>
+  </a>
+</div>
+
+<% if params[:f].blank? %>
+
+  <div class="section-title text-center py-5">
+    <h2>Select Lesson Type</h2>
+    <span class="text-muted">You cannot change this afterwards.</span>
+  </div>
+
+
+  <div uk-grid>
+    <div class="uk-width-1-2@m">
+      <a href="<%= new_course_lesson_path(@course, f: :ondemand) %>">
+        <div class="uk-card-default mt-4 rounded">
+          <div class="uk-card-body">
+            <div class=" uk-text-center" >
+                <div class="uk-width-1-1@m">
+                  <h3>On-Demand</h3>
+                  <div class="iconbox iconbox-xxl button outline-primary circle">
+                    <i class="icon-feather-video icon-large"></i>
+                  </div>
+                  <ul class="uk-list py-3 ">
+                    <li><strong>Pre-recorded:</strong> Lessons and Lectures</li>
+                    <li><strong>Maximum Participants:</strong> Unlimited</li>
+                  </ul>
+                </div>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div class="uk-width-1-2@m">
+      <a href="<%= new_course_lesson_path(@course, f: :livestream) %>">
+        <div class="uk-card-default mt-4 rounded">
+          <div class="uk-card-body">
+            <div class=" uk-text-center" >
+                <div class="uk-width-1-1@m">
+                  <h3>Livestream</h3>
+                  <div class="iconbox iconbox-xxl button outline-primary circle">
+                    <i class="icon-feather-camera icon-large"></i>
+                  </div>
+                  <ul class="uk-list py-3 ">
+                    <li><strong>Maximum Duration:</strong> 4 Hours</li>
+                    <li><strong>Maximum Participants:</strong> 50 (49 students, 1 instructor)</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+<% end %>
+
+<% if params[:f].present? %>
+  <div class="uk-card-default mt-4 rounded">
+      <div class="uk-card-header">
+          <i class="icon-feather-plus mr-2"></i> Setup A New
+          <% if params[:f] == "ondemand" %>
+            On Demand
+          <% elsif params[:f] == "livestream" %>
+            Livestream
+          <% end %>
+           Lesson
+      </div>
+      <div class="uk-card-body">
+          <div uk-grid>
+              <div class="uk-width-expand@m">
+                <%= render "form" %>
+              </div>
+          </div>
+      </div>
+  </div>
+<% end %>

@@ -1,0 +1,18 @@
+<div class="uk-card-default uk-card-small rounded">
+    <div class="uk-card-header py-3">
+        <span id="reviews" class="uk-h5"> Reviews</span>
+        <div class="py-1">
+          <a href="<%= new_course_review_path(@course, Review.new) %>" class="button grey small">
+            <i class="icon-feather-plus uk-visible@m"></i> New
+          </a>
+          <% if @course.reviews.present? %>
+            <a href="<%= course_reviews_path(@course) %>" class="button soft-success small">
+              <i class="icon-feather-eye uk-visible@m"></i> View All
+            </a>
+          <% end %>
+        </div>
+
+    </div>
+
+    <%= render "meritadmin/reviews/collection_list" %>
+</div>

@@ -1,0 +1,64 @@
+<div id="modal-pick-plan-<%= plan.id %>" class="uk-modal-full" uk-modal>
+  <div class="uk-modal-dialog">
+    <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
+    <div class="uk-grid-collapse uk-child-width-1-2@s uk-flex-middle" uk-grid>
+        <div class="pic-underlay uk-background-cover" style="background-image: url('<%= setting.homepage_hero_background_image %>');min-height: calc(120vh)!important;" uk-height-viewport></div>
+        <div class="pic-overlay" uk-height-viewport></div>
+        <div class="uk-padding-small uk-text-center">
+          <img uk-img data-src="<%= setting.logo_icon %>" alt="<%= @tenant&.name %>" width="100" class="pb-4">
+          <h3 id="respMessage" style="color:<%= plan.color %>;">Sign Up For <%= plan.name %>
+
+            <% if plan.paid? %>
+              <span style="color:<%= plan.color %>;text-transform:none;"><%= number_to_currency(plan.amount, precision: 0) %><%= plan.friendly_interval %></span>
+            <% end %>
+          </h3>
+
+          <%= form_tag registration_path, id: "form-new-account-#{plan.id}", class: "form container", method: :post do |f| %>
+            <input type="hidden" name="plan_id" value="<%= plan.id %>">
+            <input type="hidden" name="membership_interval" value="monthly">
+            <div class="uk-grid-small uk-form-width-large uk-margin-auto" uk-grid>
+              <div class="uk-width-1-2@s pl-0">
+                <input class="uk-input  text-black" name="first_name" type="text" autocomplete="new-firstName" placeholder="First Name" data-parsley-minlength="2" data-parsley-maxlength="50" data-parsley-required data-parsley-required-message="First Name is required." />
+              </div>
+              <div class="uk-width-1-2@s">
+                <input class="uk-input  text-black" name="last_name" type="text" autocomplete="new-lastName" placeholder="Last Name" data-parsley-minlength="2" data-parsley-maxlength="50" data-parsley-required data-parsley-required-message="Last Name is required." />
+              </div>
+            </div>
+            <div class="uk-margin">
+              <input class="uk-input uk-form-width-large text-black" name="email" type="email" autocomplete="new-studentEmail" placeholder="Email" data-parsley-minlength="5" data-parsley-maxlength="50" data-parsley-required data-parsley-required-message="Email is required." />
+            </div>
+            <div class="uk-margin">
+              <input class="uk-input uk-form-width-large text-black" name="password" type="password" autocomplete="new-password" placeholder="Password" data-parsley-minlength="8" data-parsley-required data-parsley-required-message="Password is required." />
+            </div>
+            <% if plan.paid? %>
+              <%= render "registrations/form_payment_fields", plan: plan %>
+            <% end %>
+            <div class="uk-margin">
+              <label class="px-2">
+                <input class="uk-checkbox" name="tos_acceptance_date" type="checkbox" required data-parsley-required data-parsley-required-message="You must agree to the Terms of Service and Privacy Policy." />
+                  I agree to the
+                  <a href="terms" class="primary-color text-underline" style="color:<%= plan.color %>;" target="_blank">
+                    Terms of Service
+                  </a>
+                  and
+                  <a href="privacy-policy" class="primary-color text-underline" style="color:<%= plan.color %>;" target="_blank">
+                    Privacy Policy
+                  </a>
+                  .
+              </label>
+            </div>
+            <div class="uk-margin">
+              <input id="payment-button-<%= plan.id %>" class="button grey large uk-text-uppercase" style="background: <%= plan.color %>;color:#FFF;border-color: <%= plan.color %>;1.5px solid <%= plan.color %>;" type="submit" value="Create Account">
+            </div>
+            <div class="uk-width-1-1 mt-3">
+              <div>
+                  Already have an account?
+                  <a class="text-underline" style="color:<%= plan.color %>;"  href="/login">Login</a>
+              </div>
+            </div>
+
+          <% end %>
+        </div>
+    </div>
+  </div>
+</div>

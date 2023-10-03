@@ -1,0 +1,23 @@
+<div uk-grid>
+    <div class="uk-width-1-4@m uk-flex-first@m">
+      <%= render "meritadmin/memberships/fixed_navigation" %>
+    </div>
+
+    <div class="uk-width-expand@m">
+        <div class="my-4">
+            <h4>Tax Settings</h4>
+            <hr>
+            <p>
+              Stripe will issue a Form 1099-K summarizing the gross annual payment volume for your account if you meet the following criteria:
+              <ul>
+                <li>Your organization is based in the United States</li>
+                <li>Your organization received more than $20,000 USD collectively in gross volume in the calendar year</li>
+                <li>Your organization received more than 200 transactions in the calendar year</li>
+              </ul>
+            </p>
+            <p>
+              To learn more please visit <%= link_to "the Stripe Support Center", "https://support.stripe.com/questions/1099-k-forms-issued-by-stripe", target: "_blank" %>.
+            </p>
+        </div>
+    </div>
+</div>

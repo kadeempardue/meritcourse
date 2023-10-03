@@ -1,0 +1,5 @@
+<nav class="responsive-tab mb-4">
+    <li class="<%= 'uk-active' if controller_name == "profiles" %>"><a href="/profile">Profile</a></li>
+    <li class="<%= 'uk-active' if controller_name == "accounts" %>"><a href="/account">Account</a></li>
+    <li class="<%= 'uk-active' if action_name == "billing" %>"><a href="/billing">Billing</a></li>
+</nav>

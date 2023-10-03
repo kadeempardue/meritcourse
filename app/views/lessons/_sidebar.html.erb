@@ -1,0 +1,119 @@
+<div  id="open-side-course"  <%= "uk-offcanvas=overlay:true;" unless setting.lesson_view_with_left_sidebar? && !@lesson.is_livestream? %> class="<%=  setting.lesson_view_with_left_sidebar? && !@lesson.is_livestream? ? 'uk-width-1-3@m vidlist-3-container uk-last-column uk-overflow-hidden' : '' %>">
+  <div class="p-0 <%= 'uk-offcanvas-bar uk-overflow-hidden' unless setting.lesson_view_with_left_sidebar? && !@lesson.is_livestream? %>" <%= "uk-sticky" if setting.lesson_view_with_left_sidebar? && !@lesson.is_livestream? %>>
+    <% unless setting.lesson_view_with_left_sidebar? %>
+      <button class="uk-offcanvas-close uk-icon uk-close text-light" type="button" uk-close=""><svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" data-svg="close-icon"><line fill="none" stroke="#000" stroke-width="1.1" x1="1" y1="1" x2="13" y2="13"></line><line fill="none" stroke="#000" stroke-width="1.1" x1="13" y1="1" x2="1" y2="13"></line></svg></button>
+    <% end %>
+
+    <ul class="bg-semi-light text-dark pt-3 mb-0 ml-0 uk-child-width-expand mb-0 uk-tab min-height-25" uk-switcher="animation: uk-animation-slide-left-small, uk-animation-slide-right-small" uk-tab>
+      <li class="<%= 'uk-active' unless @lesson.is_livestream? %>"><a href="#" aria-expanded="true"> <i class="icon-material-outline-school"></i> Lessons</a></li>
+      <li class><a href="#" aria-expanded="false"> <i class="icon-material-outline-info"></i> Course</a></li>
+    </ul>
+
+    <ul class="uk-switcher uk-overflow-hidden">
+      <li class="<%= 'uk-active' unless @lesson.is_livestream? %>">
+
+        <div class="vidlist-3-content" data-simplebar="init">
+          <div class="simplebar-wrapper">
+            <div class="simplebar-height-auto-observer-wrapper">
+              <div class="simplebar-height-auto-observer"></div>
+            </div>
+            <div class="simplebar-mask">
+              <div class="simplebar-offset">
+                <div class="simplebar-content">
+
+                  <ul class="vidlist-3-section" uk-accordion="multiple: true">
+
+                    <% @course.lesson_modules&.each do |module_name, lessons_grouped_by_module| %>
+                      <li class="uk-open">
+                        <a class="uk-accordion-title bg-soft-white text-dark uk-text-uppercase" href="#">
+                          <%= module_name %>
+                        </a>
+
+                          <div class="uk-accordion-content pb-0">
+                            <ul class="vidlist-3">
+                              <% lessons_grouped_by_module.each do |lesson| %>
+                                <li class="uk-active" data-row-id="<%= lesson.id %>">
+
+                                    <a href="/courses/<%= @course.slug %>/lessons/<%= lesson.id %><%= "?admin_preview=true" if admin_user_signed_in? %>" id="ember702" class="active ember-view uk-width-expand uk-flex uk-flex-between uk-flex-middle">
+                                      <% if lesson.locked? %>
+                                        <i class="icon-line-awesome-lock"></i>
+                                      <% elsif lesson.is_scheduled? %>
+                                        <i class="icon-line-awesome-calendar-o"></i>
+                                      <% end %>
+
+
+                                      <% if lesson.id == @lesson.id %>
+                                        <strong><i class="icon-line-awesome-dot-circle-o"></i> <%= lesson.name %></strong>
+                                      <% else %>
+                                        <%= lesson.name %>
+                                      <% end %>
+
+                                      <% if lesson.duration.positive? %>
+                                        <span>
+                                          <%= friendly_duration_for(lesson.duration) %>
+                                        </span>
+                                      <% end %>
+                                    </a>
+                                </li>
+                              <% end %>
+                            </ul>
+                          </div>
+                      </li>
+                    <% end %>
+                  </ul>
+
+                </div>
+              </div>
+            </div>
+            <div class="simplebar-placeholder"></div>
+          </div>
+          <div class="simplebar-track simplebar-horizontal">
+            <div class="simplebar-scrollbar"></div>
+          </div>
+          <div class="simplebar-track simplebar-vertical">
+            <div class="simplebar-scrollbar"></div>
+          </div>
+        </div>
+
+
+      </li>
+
+      <li>
+
+        <% if @course.featured_preview_image_url.present? %>
+          <img uk-img data-src="<%= @course.featured_preview_image_url %>" alt="<%= @course.name %>" width="100%">
+        <% end %>
+
+        <div class="p-3">
+
+          <h6> Details</h6>
+          <ul class="uk-list">
+            <li> 🕙 <%= @course.full_total_duration %> Duration </li>
+            <li> 🎓 <%= pluralize(@course.enrollments.count, 'Student') %> Enrolled </li>
+            <li> 💡 <%= @course.level %> Level </li>
+          </ul>
+
+          <br>
+
+          <p>
+            <div>
+              <a href="/courses/<%= @course.slug %>" id="ember705" class="active ember-view button grey-with-gold icon-label" type="button">
+                  <span class="inner-icon"><i class="uil-graduation-hat"></i></span>
+                  <span class="inner-text">View Course Details</span>
+              </a>
+            </div>
+          </p>
+        </div>
+
+      </li>
+
+    </ul>
+
+  </div>
+
+  <div class="uk-sticky-placeholder"></div>
+</div>
+
+<%= render "modals/upgrade_membership" %>
+<%= render "modals/choose_a_plan" %>
+<%= render "modals/enroll_now" %>

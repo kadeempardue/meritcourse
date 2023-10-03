@@ -1,0 +1,13 @@
+<%= form_for(@faq, html: { "uk-grid" => true, class: "uk-grid-small large form #{'error' if flash[:error]} #{'notice' if flash[:notice]}" }) do |f| %>
+    <div class="uk-width-1-1">
+      <div class="uk-form-label"> Name </div>
+      <%= f.text_field :name, class: "uk-input", minlength: 2, maxlength: 255, required: true %>
+    </div>
+    <div class="uk-width-1-1">
+      <div class="uk-form-label"> Description </div>
+      <%= f.text_area :description, class: "uk-textarea", rows: 10, required: true %>
+    </div>
+  <div class="uk-width-1-1">
+    <input class="button grey uk-width-1-1@s uk-width-1-4@m mt-3 ml-0 mr-0" type="submit" class="button" value="Save">
+  </div>
+<% end %>

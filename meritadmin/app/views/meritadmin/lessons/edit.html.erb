@@ -1,0 +1,19 @@
+<div class="uk-flex uk-flex-middle">
+  <a href="<%= course_path(@course, anchor: "lessons", page: params[:page], scope: params[:scope]) %>" class="button grey"
+      uk-tooltip="title: View All Lessons ; delay: 500 ; pos: top ;">
+      <i class="icon-material-outline-arrow-back"></i> Back To Course: <%= @course.name %>
+  </a>
+</div>
+
+<div class="uk-card-default rounded mt-4">
+    <div class="uk-card-header">
+        <i class="icon-feather-user mr-2"></i> <%= @lesson.name %>
+    </div>
+    <div class="uk-card-body">
+        <div uk-grid>
+            <div class="uk-width-expand@m">
+              <%= render "form" %>
+            </div>
+        </div>
+    </div>
+</div>

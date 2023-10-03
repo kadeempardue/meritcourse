@@ -1,0 +1,138 @@
+en:
+  messages:
+    send_instructions:              Check your email for your password.
+    send_instructions_admin:        Account setup email sent!
+    successful_login:               Logged In Successfully!
+    successful_logout:              Logged Out Successfully!
+    updated_password:               Updated Password Successfully! Please login now.
+    failed_updated_password:        Could not update password successfully! Please try again.
+    successful_subscribe:           Subscribed! Check your email.
+    failed_subscribe:               We could not subscribe you. Please try again.
+    successful_password_reset_link: Password Reset Link sent to your email.
+    successful_password_reset:      Password updated successfully.
+    failed_password_reset:          Could not update password. Please try again.
+    password_token_expired:         Password Token no longer valid. Please try again.
+    successful_registration:        Signed Up Successfully! Start learning!
+    failed_registration:            >-
+      Could not sign up your account.
+      If you continue experiencing issues reset your password or contact an admin.
+    create_note:                    >-
+      Get started by clicking the +New Note button to create your first note.
+    successful_save:                Succesfully saved.
+    failed_login:                   >-
+      Failed to log in the account.
+      If you continue experiencing issues reset your password or contact an admin.
+    failed_save:                    Failed to save.
+    sign_in_again:                  Session expired. Log in again.
+    successful_create:              Successfully created.
+    successful_destroy:             Successfully deleted.
+    failed_destroy:                 Failed to delete.
+    successful_withdrawn:           Successfully withdrawn.
+    successful_enroll:              Successfully enrolled! Start Learning!
+    successful_form_submission:     Successfully Submitted Form!
+    failed_form_submission:         Could not submit Form. Please try again or contact an administrator.
+    successful_enroll_scheduled:    Successfully enrolled! Come back when the first lesson starts!
+    failed_enroll:                  Could not enroll in course.
+    not_enrolled:                   You must first enroll in the course to view this lesson.
+    successful_upload:              Successfully uploaded file to media library.
+    failed_upload:                  Failed to upload file to media library.
+    connect_stripe_account:         Please connect your Stripe Account to view this page
+    file_too_large:                 File size is larger than 100 MB. Please upload a smaller file.
+    expired_token:                  Token has expired. Please try again.
+    no_lessons:                     This Course does not have lessons at the moment.
+    course_does_not_exist:          This Course does not exist.
+    not_available_yet:              This lesson is scheduled. It is not available right now.
+    list_signup:                    Succesfully signed up for the list!
+    list_fail_signup:               Uh oh! Something went wrong signing up for the list!
+    lesson_locked:                  This is lesson is currently locked.
+    lesson_archived:                This is lesson is archived.
+  enrollment_statuses:
+    - Active
+    - Inactive
+  membership_intervals:
+    - Lump Sum
+    - Monthly
+    - Yearly
+  states:
+    -
+    - Alabama
+    - Alaska
+    - Arizona
+    - Arkansas
+    - California
+    - Colorado
+    - Connecticut
+    - Delaware
+    - Florida
+    - Georgia
+    - Hawaii
+    - Idaho
+    - IllinoisIndiana
+    - Iowa
+    - Kansas
+    - Kentucky
+    - Louisiana
+    - Maine
+    - Maryland
+    - Massachusetts
+    - Michigan
+    - Minnesota
+    - Mississippi
+    - Missouri
+    - MontanaNebraska
+    - Nevada
+    - New Hampshire
+    - New Jersey
+    - New Mexico
+    - New York
+    - North Carolina
+    - North Dakota
+    - Ohio
+    - Oklahoma
+    - Oregon
+    - PennsylvaniaRhode Island
+    - South Carolina
+    - South Dakota
+    - Tennessee
+    - Texas
+    - Utah
+    - Vermont
+    - Virginia
+    - Washington
+    - West Virginia
+    - Wisconsin
+    - Wyoming
+  settings:
+    navigation:                     &navigation
+      -
+        text:                       "Explore"
+        url:                        "/explore"
+        feature:                    "explore"
+      -
+        text:                       "Blog"
+        url:                        "/blog"
+        feature:                    "blog"
+    levels:
+      - Beginner
+      - Intermediate
+      - Advanced
+      - Master
+    lesson_types:
+      - Lecture
+      - Project
+      - Assessment
+      - Interactive Activity
+  post_statuses:
+    - Draft
+    - Published
+  report_types:
+    - Students Online Time
+  report_date_ranges:
+    - Today
+    - Yesterday
+    - Last 7 Days
+    - Last Month
+    - Last 3 Months
+    - Last 6 Months
+    - This Year
+    - All Time

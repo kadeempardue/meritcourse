@@ -1,0 +1,27 @@
+<div id="events_calendar" class="uk-width-5-5" hidden>
+  <div class="uk-form-label"> Schedule </div>
+  <%= render partial: "calendar", locals: { schedules: @schedules } %>
+</div>
+
+<div id="add-schedule-modal" uk-modal>
+    <div class="uk-modal-dialog">
+      <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title"><span class="schedule_name"></span></h2>
+        </div>
+        <div class="uk-modal-body">
+          <div class="uk-width-1-1">
+            <div class="uk-form-label"> Start Date and Time </div>
+            <%= text_field_tag :start_datetime, nil, class: "uk-input timepicker start" %>
+          </div>
+
+          <div class="uk-width-1-1">
+            <div class="uk-form-label"> End Date and Time </div>
+            <%= text_field_tag :end_datetime, nil, class: "uk-input timepicker end" %>
+          </div>
+        </div>
+        <div class="uk-modal-footer">
+          <button class="uk-button schedule-confirm-button" data-day-ref type="button">Save</button>
+        </div>
+    </div>
+</div>

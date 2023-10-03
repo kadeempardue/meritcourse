@@ -1,0 +1,48 @@
+<div>
+  <div class="uk-grid-collapse uk-grid" uk-grid="">
+    <%= render "lessons/sidebar" %>
+    <div class="<%= setting.lesson_view_with_left_sidebar? ? 'uk-width-2-3@m' : 'uk-width-2-3@m' %> bg-white">
+      <%= render "navigation/header", show_header: true %>
+        <div class="header-padding-top">
+
+          <% if @lesson.is_livestream? %>
+            <%= render "twilio/livestream_container" %>
+          <% end %>
+
+          <% if @lesson.lecture? && @lesson.video_url.present? %>
+            <div class="uk-flex uk-flex-center uk-width-expand">
+              <video src="<%= @lesson.video_url %>" poster="<%= @lesson.image_url %>" controls playsinline uk-video="autoplay : false;" class="uk-width-1-1"></video>
+            </div>
+          <% elsif @lesson.lecture? && @lesson.pdf_url.present? %>
+            <div class="section-small bg-white pt-4" style="">
+              <div class="uk-container uk-padding-small uk-margin-auto" style="height: 770px;">
+                <div id="adobe-dc-view" class="pdfviewer" style="height: 100%;">
+                </div>
+                <script type="text/javascript">
+                 document.addEventListener("adobe_dc_view_sdk.ready", function()
+                 {
+                    var adobeDCView = new AdobeDC.View({clientId: "<%= ENV['ADOBE_CLIENT_ID'] %>", divId: "adobe-dc-view"});
+                    adobeDCView.previewFile(
+                   {
+                       content:  {location: {url: "<%= @lesson.pdf_url %>"}},
+                       metaData: {fileName: "<%= @lesson.name %>"}
+                   }, { embedMode: "SIZED_CONTAINER",  defaultViewMode: "FIT_WIDTH", showLeftHandPanel: false, showDownloadPDF: false, showAnnotationTools: true, showFullScreen: true, showPrintPDF: true, showPageControls: true, dockPageControls: true });
+                 });
+                </script>
+              </div>
+            </div>
+          <% end %>
+
+          <% if @lesson.handouts.present? %>
+            <div id="handouts-section" class="<%= 'p-lg-5 p-3' unless @lesson.is_full_width? %>" uk-height-viewport="expand: true">
+              <%= raw @lesson.handouts.html_safe %>
+            </div>
+          <% end %>
+
+        </div>
+      </div>
+
+    <span class="btn-vidlist-3" uk-toggle="target: #wrapper; cls: is-open"></span>
+  </div>
+
+</div>

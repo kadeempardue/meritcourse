@@ -1,0 +1,13 @@
+<%= form_for(@report, html: { "uk-grid" => true, class: "uk-grid-small large form #{'error' if flash[:error]} #{'notice' if flash[:notice]}" }) do |f| %>
+  <div class="uk-width-1-3">
+    <div class="uk-form-label"> Report Type </div>
+    <%= f.select :report_type, options_for_select(t("report_types"), @report&.report_type), { include_blank: false }, class: "uk-select", required: false %>
+  </div>
+  <div class="uk-width-2-3">
+    <div class="uk-form-label"> Date Range </div>
+    <%= select_tag :date_range, options_for_select(t("report_date_ranges")), class: "uk-select", required: false %>
+  </div>
+  <div class="uk-width-1-1">
+    <input class="button grey uk-width-1-1@s uk-width-1-4@m mt-3 ml-0 mr-0" type="submit" class="button" value="Generate">
+  </div>
+<% end %>

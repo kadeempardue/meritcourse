@@ -1,0 +1,41 @@
+<div class="uk-flex uk-flex-middle">
+  <h3 class="mb-0 mr-3"> <i class="icon-feather-pie-chart"></i> Analytics </h3>
+  <a href="<%= course_path(@course) %>" class="button grey"
+      uk-tooltip="title: Back To Course ; delay: 500 ; pos: top ;">
+      <i class="icon-feather-plus"></i> Back To Course: <%= @course.name %>
+  </a>
+</div>
+
+<h4>Enrollments</h4>
+<div class="mt-4 uk-overflow-auto uk-card uk-card-default pt-3 uk-card-body rounded">
+    <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
+        <thead>
+            <tr class="uk-text-small uk-text-bold">
+                <th>Student</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+          <% @reports&.each do |report| %>
+            <tr data-row-id="<%= report.id %>">
+                <td> <%= report.report_type %></td>
+                <td> <%= friendly_date(report.created_at) %> </td>
+                <td>
+                    <a href="#" class="button soft-danger delete-button"
+                      data-id="<%= report.id %>"
+                      data-name="<%= report.report_type %>"
+                      data-action="<%= report_path(report) %>"
+                      data-token="<%= form_authenticity_token %>"
+                      uk-toggle="target: #delete-modal">
+                        <i class="fas fa-trash uk-visible@m"></i> Delete
+                    </a>
+                </td>
+            </tr>
+          <% end %>
+        </tbody>
+    </table>
+</div>
+
+<%= paginate @enrollments %>
+<p class="uk-padding"> <%= total_count(@enrollments) %></p>

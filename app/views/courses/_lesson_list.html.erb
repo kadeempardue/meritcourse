@@ -1,0 +1,61 @@
+<ul class="course-lessons" uk-accordion="multiple: true; collapsible: true;">
+  <% @course.lesson_modules&.each do |module_name, lessons_grouped_by_module| %>
+    <li class="uk-open">
+      <a class="uk-accordion-title uk-heading-divider" href="#">
+        🎓 <%= module_name %>
+        <% module_duration = lessons_grouped_by_module.sum(&:duration) %>
+        <% if module_duration.positive? %>
+          <span class="duration">
+            <%= friendly_duration_for(module_duration) %>
+          </span>
+        <% end %>
+      </a>
+      <div class="uk-accordion-content pt-3" uk-grid>
+
+        <ul class="uk-list uk-list-small pl-0 uk-width-1-1">
+          <% lessons_grouped_by_module.each do |lesson| %>
+            <li>
+              <a href="/courses/<%= @course.slug %>/lessons/<%= lesson.id %><%= "?admin_preview=true" if admin_user_signed_in? %>" class="uk-card uk-block uk-card-default uk-card-body uk-width-1-1@m" data-row-id="<%= lesson.id %>">
+                <span class="uk-card-title">
+                  <% if lesson.locked? %>
+                    <i class="icon-material-outline-lock text-gold"></i>
+                  <% end %>
+                  <%= lesson.name %>
+                </span>
+                <% if lesson.excerpt.present? %>
+                  <p>
+                    <%= sanitize(lesson.excerpt, tags:[]) %>
+                  </p>
+                <% end %>
+
+                <p>
+                  <% if lesson.is_livestream? %>
+                    <span class="tag uk-background-danger"><i class="icon-feather-calendar"></i> Live</span>
+                  <% elsif lesson.is_scheduled? %>
+                    <span class="tag uk-background-info"><i class="icon-feather-calendar"></i> Scheduled</span>
+                  <% end %>
+
+                  <% if lesson.is_preview? %>
+                    <span class="tag uk-background-gold">Preview</span>
+                  <% end %>
+
+
+                  <% if lesson.duration.positive? %>
+                    <span class="uk-text-meta">
+                      <%= friendly_duration_for(lesson.duration) %>
+                    </span>
+                  <% end %>
+                </p>
+
+
+
+
+              </a>
+            </li>
+          <% end %>
+        </ul>
+
+      </div>
+    </li>
+  <% end %>
+</ul>

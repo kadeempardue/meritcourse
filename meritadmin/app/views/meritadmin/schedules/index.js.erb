@@ -1,0 +1,5 @@
+<% if @on_lesson_page %>
+  $("#events_calendar").html("<%= escape_javascript render(partial: 'meritadmin/lessons/calendar', locals: { schedules: @schedules }) %>");
+<% else %>
+  $("#events_calendar").html("<%= escape_javascript render(partial: 'meritadmin/courses/calendar', locals: { schedules: @schedules }) %>");
+<% end %>

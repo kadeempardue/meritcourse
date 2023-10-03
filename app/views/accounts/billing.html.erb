@@ -1,0 +1,56 @@
+<div class="container  header-padding-top mb-5" uk-height-viewport="offset-top: true; offset-bottom: true">
+
+  <div class="section-title text-center pt-5">
+    <h2>My Account</h2>
+  </div>
+
+<%= render "shared/profile_and_accounts" %>
+
+<div uk-grid="" class="uk-grid">
+    <div class="uk-width-1-1@m uk-first-column">
+
+        <div class="uk-card-default rounded">
+            <div class="p-3">
+                <h5 class="mb-0"> Account </h5>
+            </div>
+            <hr class="m-0">
+            <%= form_tag(account_update_path, method: :put) do |f| %>
+              <div class="p-4">
+                <div class="uk-child-width-1-1@s uk-grid-small uk-grid" uk-grid>
+                  <div class="uk-first-column">
+                      <h5 class="uk-text-bold mb-2"> Email </h5>
+                      <span class="text-muted mb-3 uk-inline-block">You will be automatically logged out if you change this.</span>
+                      <%= text_field_tag "student[email]", current_student.email, class: "uk-input", placeholder: "Email", required: true %>
+                  </div>
+                </div>
+                <h4 class="pt-8">Change Password</h4>
+                <span class="text-muted mb-3 uk-inline-block">Leave blank if you do not want to change your password.</span>
+                <span class="text-muted mb-3 uk-inline-block">You will be automatically logged out if you change this.</span>
+                <div class="uk-child-width-1-1@s uk-grid-small uk-grid" uk-grid>
+                  <div class="uk-first-column">
+                      <h5 class="uk-text-bold mb-2"> New Password </h5>
+                      <%= password_field_tag "student[password]", nil, class: "uk-input", placeholder: "********" %>
+                  </div>
+                </div>
+                <div class="uk-child-width-1-1@s uk-grid-small uk-grid" uk-grid>
+                  <div class="uk-first-column">
+                      <h5 class="uk-text-bold mb-2"> Confirm Password </h5>
+                      <%= password_field_tag "student[confirm_password]", nil, class: "uk-input", placeholder: "********" %>
+                  </div>
+                </div>
+
+                <div class="uk-child-width-1-1@s uk-grid-small uk-grid" uk-grid>
+
+                  <div class="uk-flex uk-flex-right p-4">
+                      <button class="button grey">Save Changes</button>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+        </div>
+
+    </div>
+
+</div>
+
+</div>

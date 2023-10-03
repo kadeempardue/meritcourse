@@ -1,0 +1,64 @@
+<% return unless show_footer %>
+
+<div class="page-content footer-container">
+  <div class="container uk-background-cover">
+    <div class="footer mt-0 py-8 px-0">
+      <div class="uk-grid-collapse" uk-grid="uk-grid">
+        <div class="uk-width-expand@s uk-first-column">
+          <p>
+            <img uk-img data-src="<%= setting.logo_icon %>" width="80" alt="Logo Footer">
+            <span style="vertical-align:text-top;">© 2019-<%= Time.now.year %>. All Rights Reserved.</span>
+
+          </p>
+        </div>
+        <div class="uk-width-auto@s">
+          <nav class="footer-nav-icon my-4 mr-5">
+            <ul class="uk-light">
+              <li>
+                <a href="https://timothysmithnetwork.org" id="ember612" class="ember-view">TSN Main Site</a>
+              </li>
+              <li>
+                <a href="/contact" id="ember612" class="ember-view">Contact Us</a>
+              </li>
+              <li>
+                <a href="/terms" id="ember613" class="ember-view">Terms of Service</a>
+              </li>
+              <li>
+                <a href="/privacy-policy" id="ember613" class="ember-view">Privacy Policy</a>
+              </li>
+              <% if setting.social_media_instagram_handle %>
+                <li>
+                  <a target="_blank" href="https://instagram.com/<%= setting.social_media_instagram_handle %>">
+                    <i class="icon-brand-instagram icon-small"></i>
+                  </a>
+                </li>
+              <% end %>
+              <% if setting.social_media_facebook_page_id %>
+                <li>
+                  <a target="_blank" href="https://facebook.com/<%= setting.social_media_facebook_page_id %>">
+                    <i class="icon-brand-facebook icon-small"></i>
+                  </a>
+                </li>
+              <% end %>
+              <% if setting.social_media_youtube_channel_id %>
+                <li>
+                  <a target="_blank" href="https://www.youtube.com/channel/<%= setting.social_media_youtube_channel_id %>">
+                    <i class="icon-brand-youtube icon-small"></i>
+                  </a>
+                </li>
+              <% end %>
+              <% if setting.social_media_twitter_handle %>
+                <li>
+                  <a target="_blank" href="https://twitter.com/<%= setting.social_media_twitter_handle %>">
+                    <i class="icon-brand-twitter icon-small"></i>
+                  </a>
+                </li>
+              <% end %>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

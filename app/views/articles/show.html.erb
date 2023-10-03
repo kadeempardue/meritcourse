@@ -1,0 +1,91 @@
+<div class="blog-article-single home-hero" data-src="<%= setting.homepage_hero_background_image %>" uk-img>
+  <div class="container-small">
+    <div class="blog-article-auther" hidden>
+        <img src="../assets/images/avatars/avatar-3.jpg" alt="">
+        <span class="blog-auther-user-name"> Jonathan Madano </span>
+    </div>
+  </div>
+</div>
+
+<div class="container p-0">
+
+  <div class="container-xsmall blog-article-content-read mb-4">
+    <div class="container-small">
+      <h1> <%= @article.title %> </h1>
+
+      <p class="blog-article-meta mb-3">
+          <span><%= friendly_date(@article.created_at) %></span>
+          <strong> <%= @article.category %> </strong>
+      </p>
+
+
+      <p>
+        <img data-src="<%= @article.featured_image %>" uk-img>
+      </p>
+
+
+    <%= raw @article.body %>
+
+    <% if @article.comments.present? %>
+      <div class="comments mt-4">
+          <h4>Comments
+              <span class="comments-amount"><%= @article.comments.count %></span>
+          </h4>
+
+          <ul>
+              <% @article.comments.each do |article_comment| %>
+                <li>
+                    <div class="avatar"><img src="<%= avatar_helper(article_comment.student) %>" alt="">
+                    </div>
+                    <div class="comment-content">
+                        <div class="comment-by"><%= article_comment.student.name %>
+                        </div>
+                        <p> <%= article_comment.comment %></p>
+                    </div>
+                </li>
+              <% end %>
+
+
+          </ul>
+
+      </div>
+    <% end %>
+
+    <% if student_signed_in? %>
+      <div class="comments">
+          <h4>Leave A Comment </h4>
+          <ul>
+              <li>
+                  <div class="avatar"><img src="<%= avatar_helper(current_student) %>" uk-img alt="">
+                  </div>
+                  <div class="comment-content">
+                      <%= form_for(@article_comment, html: { class: "uk-grid-small uk-grid" }) do |f| %>
+                          <%= f.hidden_field :article_id, value: @article.id %>
+                          <div class="uk-width-1-2@s">
+                              <label class="uk-form-label">Name</label>
+                              <input class="uk-input" type="text" placeholder="Name" value="<%= current_student&.name %>" disabled>
+                          </div>
+                          <div class="uk-width-1-2@s">
+                              <label class="uk-form-label">Email</label>
+                              <input class="uk-input" type="text" placeholder="Email" value="<%= current_student&.email %>" disabled>
+                          </div>
+                          <div class="uk-width-1-1@s">
+                              <label class="uk-form-label">Comment</label>
+                              <%= f.text_area :comment, class: 'uk-textarea large-textarea', required: true, placeholder: "Enter Comment", disabled: !student_signed_in? %>
+                          </div>
+                          <% if student_signed_in? %>
+                            <div class="uk-grid-margin">
+                                <%= f.submit "Add Comment", class: "button grey" %>
+                            </div>
+                          <% end %>
+                      <% end %>
+
+                  </div>
+              </li>
+          </ul>
+      </div>
+    <% end %>
+
+</div>
+
+</div>

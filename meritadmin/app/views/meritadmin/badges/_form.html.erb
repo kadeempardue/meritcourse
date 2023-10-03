@@ -1,0 +1,49 @@
+<%= form_for(@badge, html: { "uk-grid" => true, class: "uk-grid-small large form #{'error' if flash[:error]} #{'notice' if flash[:notice]}" }) do |f| %>
+  <%= f.hidden_field :image_url, class: "uk-input", minlength: 2, maxlength: 255, required: true %>
+  <div class="uk-width-1-4@m">
+
+      <div class="text-center">
+          <div class="uk-position-relative text-center">
+            <%= cl_image_tag((@badge.image_url.presence || "https://via.placeholder.com/1280x720"), { quality: "auto:best", id: "custom-cloudinary-upload" }) %>
+              <div class="uk-position-center">
+                  <div uk-form-custom>
+                      <input name="file" type="file" accept=".svg,.jpg,.jpeg,.png" class="cloudinary-fileupload" data-cloudinary-field="badge[image_url]"
+                          data-form-data="{ &quot;upload_preset&quot;:  &quot;<%= ENV['CLOUDINARY_API_UNSIGNED_UPLOAD_PRESET'] %>&quot;, &quot;callback&quot;: &quot;<%= request.base_url %>/cloudinary_cors.html&quot;}" ></input>
+                      <span class="preview-icon uk-link icon-feather-camera icon-medium text-white">
+                      </span>
+                  </div>
+
+              </div>
+
+          </div>
+          <span class="uk-text-meta">For best results use 500px x 500px</span>
+      </div>
+
+  </div>
+  <div class="uk-width-expand@m">
+    <div class="uk-width-1-1">
+      <div class="uk-form-label"> Badge Name </div>
+      <%= f.text_field :name, class: "uk-input", minlength: 2, maxlength: 255, required: true %>
+    </div>
+    <div class="uk-width-1-1">
+      <div class="uk-form-label"> Issued By </div>
+      <%= f.text_field :issued_by, class: "uk-input", required: true %>
+    </div>
+  </div>
+  <div class="uk-width-1-1">
+    <div class="uk-form-label"> Description </div>
+    <%= f.text_area :description, class: "uk-textarea", rows: 10, required: true %>
+  </div>
+  <div class="uk-width-1-1">
+    <div class="uk-form-label"> Earning Criteria </div>
+    <%= f.text_area :earning_criteria, class: "uk-textarea", rows: 10, required: true %>
+  </div>
+  <div class="uk-width-1-1">
+    <div class="uk-form-label"> Skills </div>
+    <%= f.text_area :skills, class: "uk-textarea", required: true, data: { tagify: true } %>
+  </div>
+
+  <div class="uk-width-1-1">
+    <input class="button grey uk-width-1-1@s uk-width-1-4@m mt-3 ml-0 mr-0" type="submit" class="button" value="Save">
+  </div>
+<% end %>

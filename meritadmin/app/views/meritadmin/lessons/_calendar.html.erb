@@ -1,0 +1,21 @@
+<%= month_calendar events: schedules do |day, events| %>
+  <div data-day="<%= friendly_date(day) %>" style="height:100%;cursor: pointer;">
+    <strong><%= day.strftime("%e") %></strong>
+    <br>
+    <ul uk-accordion>
+      <% events.each do |event| %>
+      <li data-calendar-id="<%= event.id %>">
+        <a class="uk-accordion-title button small soft-grey mb-0" href="#">
+          <button class="uk-alert-close uk-icon schedule-delete-button" data-id="<%= event.id %>" data-name="<%= friendly_date(day) %> <%= event.start_datetime %> - <%= event.end_datetime %>" data-action="<%= schedule_path(event) %>" type="button">
+            X
+          </button>
+          <%= friendly_time(event.start_time) %> - <%= friendly_time(event.end_time) %>
+        </a>
+        <div class="uk-accordion-content">
+            <p>Length: <%= friendly_duration_for((event.end_time - event.start_time) / 60) %></p>
+        </div>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

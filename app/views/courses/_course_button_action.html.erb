@@ -1,0 +1,63 @@
+<% if @course_button_action == "preview" %>
+  <div>
+    <button type="button" class="button secondary disabled icon-label uk-width-1-1" disabled>
+      <span class="inner-icon"><i class="uil-graduation-hat"></i></span>
+      <span class="inner-text">Coming Soon</span>
+    </button>
+  </div>
+<% end %>
+
+<% if @course_button_action == "login" %>
+  <div>
+    <a href="/login?r=<%= course_path(@course) %>" class="button grey-with-gold icon-label uk-width-1-1" type="button">
+      <span class="inner-icon">
+        <i class="uil-graduation-hat"></i>
+      </span>
+      <span class="inner-text">Login</span>
+    </a>
+  </div>
+<% end %>
+
+<% if @course_button_action == "change_plan" %>
+  <div>
+    <a href="/upgrade" class="button grey-with-gold icon-label uk-width-1-1" type="button">
+      <span class="inner-icon">
+        <i class="uil-graduation-hat"></i>
+      </span>
+      <span class="inner-text">Upgrade Plan</span>
+    </a>
+  </div>
+<% end %>
+
+<% if @course_button_action == "no_plan" %>
+  <div>
+    <a href="/upgrade" class="button grey-with-gold icon-label uk-width-1-1" type="button">
+      <span class="inner-icon">
+        <i class="uil-graduation-hat"></i>
+      </span>
+      <span class="inner-text">Select Plan</span>
+    </a>
+  </div>
+<% end %>
+
+<% if @course_button_action == "accessible" %>
+  <% if staff_signed_in? || (student_signed_in? && enrolled_in?(@course)) %>
+    <div>
+      <a href="#lessons" uk-scroll onclick="$('[uk-switcher-item=\'0\']')[0].click();UIkit.switcher('#course-intro-tab').show(0);" class="button grey-with-gold icon-label uk-width-1-1" type="button">
+        <span class="inner-icon">
+          <i class="uil-graduation-hat"></i>
+        </span>
+        <span class="inner-text">Continue</span>
+      </a>
+    </div>
+  <% else %>
+    <div>
+      <button uk-toggle="target: #modal-enroll-now" class="button grey-with-gold icon-label uk-width-1-1" type="button">
+        <span class="inner-icon">
+          <i class="uil-graduation-hat"></i>
+        </span>
+        <span class="inner-text">Start Course</span>
+      </button>
+    </div>
+  <% end %>
+<% end %>

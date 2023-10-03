@@ -1,0 +1,46 @@
+<% content_for(:extra_js) do %>
+<% end %>
+
+<%= form_tag update_password_path, id: "form-password-update", class: "form", method: :put do |f| %>
+  <input type="hidden" name="t" value="<%= params[:t] %>">
+
+    <div class="uk-form-group">
+        <label class="uk-form-label"> Email</label>
+
+        <div class="uk-position-relative w-100">
+            <span class="uk-form-icon">
+                <i class="icon-feather-mail"></i>
+            </span>
+            <input class="uk-input" name="email" type="email" disabled value="<%= @email %>" placeholder="you@gmail.com" data-parsley-minlength="5" data-parsley-maxlength="50" data-parsley-required data-parsley-required-message="Email is required." />
+        </div>
+
+    </div>
+    <div class="uk-form-group">
+        <label class="uk-form-label"> Password</label>
+
+        <div class="uk-position-relative w-100">
+            <span class="uk-form-icon">
+                <i class="icon-feather-lock"></i>
+            </span>
+            <input class="uk-input" id="password" name="password" type="password" placeholder="*******" data-parsley-minlength="8" data-parsley-maxlength="50" data-parsley-required data-parsley-required-message="Password is required." />
+        </div>
+    </div>
+
+    <div class="uk-form-group">
+        <label class="uk-form-label"> Confirm Password</label>
+
+        <div class="uk-position-relative w-100">
+            <span class="uk-form-icon">
+                <i class="icon-feather-lock"></i>
+            </span>
+            <input class="uk-input" name="confirm_password" type="password" placeholder="*******" data-parsley-minlength="8" data-parsley-maxlength="50" data-parsley-required data-parsley-required-message="Password is required." data-parsley-equalto="#password" />
+        </div>
+
+    </div>
+
+    <div class="mt-4 uk-width-1-1 uk-grid-small">
+        <div class="uk-text-center">
+            <button type="submit" class="button grey button-large">Update Password</button>
+        </div>
+    </div>
+<% end %>

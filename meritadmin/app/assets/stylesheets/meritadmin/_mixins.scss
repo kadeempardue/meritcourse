@@ -1,0 +1,23 @@
+// Define a color. Useful for text.
+@mixin define-color($color) {
+  color: $color;
+  &:hover {
+    color: $color;
+  }
+}
+
+//Padding mixin - Useful when we don't want to define a certain side using null.
+@mixin padding($top, $right, $bottom, $left) {
+  padding-top: $top;
+  padding-right: $right;
+  padding-bottom: $bottom;
+  padding-left: $left;
+}
+
+//Margin mixin
+@mixin margin($top, $right, $bottom, $left) {
+  margin-top: $top;
+  margin-right: $right;
+  margin-bottom: $bottom;
+  margin-left: $left;
+}

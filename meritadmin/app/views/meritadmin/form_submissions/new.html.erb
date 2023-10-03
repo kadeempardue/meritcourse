@@ -1,0 +1,32 @@
+<div class="uk-card-default rounded">
+    <div class="uk-card-header">
+        <i class="icon-feather-plus mr-2"></i> Setup A New Article
+    </div>
+    <div class="uk-card-body">
+        <div uk-grid>
+          <div class="uk-width-1-4@m">
+
+              <div class="text-center">
+                  <div class="uk-position-relative text-center">
+                    <%= cl_image_tag("https://via.placeholder.com/1200x600", { quality: "auto:best", id: "custom-cloudinary-upload" }) %>
+                      <div class="uk-position-center">
+                          <div uk-form-custom>
+                              <input name="file" type="file" accept=".jpg,.jpeg,.png" class="cloudinary-fileupload" data-cloudinary-field="article[featured_image]"
+                                  data-form-data="{ &quot;upload_preset&quot;:  &quot;<%= ENV['CLOUDINARY_API_UNSIGNED_UPLOAD_PRESET'] %>&quot;, &quot;callback&quot;: &quot;<%= request.base_url %>/cloudinary_cors.html&quot;}" ></input>
+                              <span class="preview-icon uk-link icon-feather-camera icon-medium text-white">
+                              </span>
+                          </div>
+
+                      </div>
+
+                  </div>
+                  <span class="uk-text-meta">For best results use picture that is 1200px x 600px</span>
+              </div>
+
+          </div>
+            <div class="uk-width-expand@m">
+              <%= render "form" %>
+            </div>
+        </div>
+    </div>
+</div>

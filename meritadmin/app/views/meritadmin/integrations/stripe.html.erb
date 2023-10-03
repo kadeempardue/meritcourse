@@ -1,0 +1,13 @@
+<div uk-grid>
+    <div class="uk-width-expand@m">
+        <div class="my-4">
+            <h4><i class="icon-feather-zap"></i> Integrations - Stripe</h4>
+
+            <div class="section-small">
+              <a href="https://connect.stripe.com/express/oauth/authorize?client_id=<%= ENV["STRIPE_CLIENT_ID"] %>&stripe_user[business_type]=company&suggested_capabilities[]=transfers&suggested_capabilities[]=card_payments&assert_capabilities[]=transfers&assert_capabilities[]=card_payments&state=<%= oauth_state %>" class="stripe-connect"><span>Connect with Stripe</span></a>
+
+            </div>
+
+        </div>
+    </div>
+</div>

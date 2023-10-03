@@ -1,0 +1,49 @@
+<div uk-grid>
+    <div class="uk-width-expand@m">
+        <div class="my-4">
+            <h4><i class="icon-feather-zap"></i> Integrations</h4>
+
+            <div class="section-small">
+
+                <div class="uk-child-width-1-3@m uk-grid" uk-grid="">
+                    <div>
+                        <a href="#">
+                            <div class="course-card episode-card animate-this">
+                                <div class="course-card-thumbnail ">
+                                  <% if @postmark_settings %>
+                                    <span class="item-tag connected">Connected</span>
+                                  <% end %>
+                                    <%= image_tag "postmark.png", "uk-img" => true, class: "#{ 'disabled-image' unless @postmark_settings }" %>
+                                    <span class="play-button-trigger"></span>
+                                </div>
+                                <div class="course-card-body">
+                                    <h4 class="mb-0">Postmark</h4>
+                                    <p class="text-muted">Send Emails From Your Website</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    <div>
+                        <a href="<%= integrations_stripe_path %>">
+                            <div class="course-card episode-card animate-this">
+                                <div class="course-card-thumbnail ">
+                                  <% if @stripe_connect_account %>
+                                    <span class="item-tag connected">Connected</span>
+                                  <% end %>
+                                    <%= image_tag "stripe.png", "uk-img" => true, class: "#{ 'disabled-image' unless @stripe_connect_account }" %>
+                                    <span class="play-button-trigger"></span>
+                                </div>
+                                <div class="course-card-body">
+                                    <h4 class="mb-0">Stripe</h4>
+                                    <p class="text-muted">Get Paid To Sell Courses</p>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

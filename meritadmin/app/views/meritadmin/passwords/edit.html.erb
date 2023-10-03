@@ -1,0 +1,36 @@
+<div uk-height-viewport="offset-top: true; offset-bottom: true" class="uk-flex uk-flex-middle">
+    <div class="uk-width-1-2@m uk-width-1-2@s m-auto">
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put, class: "p-4 form #{'error' if flash[:error]} #{'notice' if flash[:notice]}" }) do |f| %>
+        <%= f.hidden_field :reset_password_token %>
+
+        <div class="uk-flex-center mb-4" uk-grid>
+          <a href="/">
+            <%= image_tag setting.logo_url, width: 400, alt: @tenant&.name  rescue nil %>
+          </a>
+        </div>
+        <h2 class="uk-text-bold uk-text-center"><%= t("menu.forgot_password")%></h2>
+
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <div class="uk-form-label mt-4">
+            Password
+        </div>
+        <div class="uk-width">
+          <span class="uk-form-icon"><i class="icon-feather-lock"></i></span>
+          <%= f.password_field :password, autofocus: true, autocomplete: "new-password", placeholder: "********", class: 'uk-input', required: true %>
+        </div>
+
+        <div class="uk-form-label mt-4">
+            Confirm Password
+        </div>
+        <div class="uk-width">
+          <span class="uk-form-icon"><i class="icon-feather-lock"></i></span>
+          <%= f.password_field :password_confirmation, autofocus: true, autocomplete: "new-password", placeholder: "********", class: 'uk-input', required: true %>
+        </div>
+
+        <div class="actions">
+          <%= f.submit "Change My Password", class: "button grey uk-width-1 mt-3 ml-0 mr-0" %>
+        </div>
+      <% end %>
+    </div>
+</div>

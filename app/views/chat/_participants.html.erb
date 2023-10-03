@@ -1,0 +1,63 @@
+<div class="clearfix">
+  <div class="people-list participant-history" id="people-list">
+    <ul class="list no-list-style-type">
+      <% @hosts&.each do |host| %>
+        <li class="clearfix" data-identity="<%= host.uuid %>">
+          <%= cl_image_tag(avatar_helper(host), { quality: "auto:best", class: "uil-user icon-small host-img", "uk-img" => true }) %>
+          <div class="about">
+            <div class="name"><%= host.name %></div>
+            <div class="uk-child-width-1-2 uk-grid-collapse uk-child-width-expand" uk-grid>
+              <div class="my-control-panel">
+                <i hidden class="icon-small icon-line-awesome-microphone <%= "me cursor" if staff_signed_in? || host.uuid == current_staff&.uuid %> uk-text-warning"></i>
+                <i class="icon-small icon-line-awesome-microphone-slash <%= "me cursor" if  staff_signed_in? || host.uuid == current_staff&.uuid %> uk-text-secondary"></i>
+                <i hidden class="icon-small icon-feather-camera <%= "me cursor" if staff_signed_in? || host.uuid == current_staff&.uuid %> uk-text-warning"></i>
+                <i class="icon-small icon-feather-camera-off  <%= "me cursor" if staff_signed_in? || host.uuid == current_staff&.uuid %> uk-text-secondary"></i>
+              </div>
+            </div>
+          </div>
+        </li>
+      <% end %>
+
+      <% @participants&.each do |participant| %>
+        <li class="clearfix" data-identity="<%= participant.uuid %>">
+          <%= cl_image_tag(avatar_helper(participant), { quality: "auto:best", class: "uil-user icon-small participant-img", "uk-img" => true }) %>
+          <div class="about">
+            <div class="name"><%= participant.name %></div>
+            <div class="uk-child-width-1-2 uk-grid-collapse uk-child-width-expand" uk-grid>
+              <div class="my-control-panel">
+                <i hidden class="icon-small icon-line-awesome-microphone <%= "me cursor" if staff_signed_in? || participant.uuid == current_student&.uuid %> uk-text-warning"></i>
+                <i class="icon-small icon-line-awesome-microphone-slash <%= "me cursor" if  staff_signed_in? || participant.uuid == current_student&.uuid %> uk-text-secondary"></i>
+                <i hidden class="icon-small icon-feather-camera <%= "me cursor" if staff_signed_in? || participant.uuid == current_student&.uuid %> uk-text-warning"></i>
+                <i class="icon-small icon-feather-camera-off  <%= "me cursor" if staff_signed_in? || participant.uuid == current_student&.uuid %> uk-text-secondary"></i>
+              </div>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<script id="message-template" type="text/x-handlebars-template">
+<li class="clearfix">
+  <div class="message-data align-right">
+    <span class="message-data-time" >{{time}}, Today</span> &nbsp; &nbsp;
+    <span class="message-data-name" >Olia</span> <i class="icon-feather-circle me"></i>
+  </div>
+  <div class="message other-message float-right">
+    {{messageOutput}}
+  </div>
+</li>
+</script>
+
+<script id="message-response-template" type="text/x-handlebars-template">
+<li>
+  <div class="message-data">
+    <span class="message-data-name"><i class="icon-feather-circle online"></i> Vincent</span>
+    <span class="message-data-time">{{time}}, Today</span>
+  </div>
+  <div class="message my-message">
+    {{response}}
+  </div>
+</li>
+</script>

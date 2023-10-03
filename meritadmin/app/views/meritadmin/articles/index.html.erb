@@ -1,0 +1,72 @@
+<div class="uk-flex uk-flex-middle">
+  <h3 class="mb-0 mr-3"> <i class="icon-material-outline-description"></i> Articles </h3>
+  <a href="<%= new_article_path %>" class="button grey"
+      uk-tooltip="title: Add New Article ; delay: 500 ; pos: top ;">
+      <i class="icon-feather-plus"></i> Add New
+  </a>
+</div>
+
+<%= render "meritadmin/shared/search" %>
+
+<div class="uk-overflow-auto uk-card uk-card-default pt-3 uk-card-body rounded">
+    <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
+        <thead>
+            <tr class="uk-text-small uk-text-bold">
+                <th>Title</th>
+                <th>Category</th>
+                <th>Featured Image</th>
+                <th>Status</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+          <% @articles&.reverse&.each do |article| %>
+            <tr data-row-id="<%= article.id %>">
+                <td> <%= article.title %></td>
+                <td> <%= article.category %></td>
+                <td> <%= cl_image_tag(article.featured_image, { quality: "auto:best", width: 150, transformation: [{ width: 400, crop: "scale" }] }) %> </td>
+                <td> <%= article.post_status %> </td>
+                <td> <%= friendly_date(article.created_at) %> </td>
+                <td>
+                    <a href="<%= article_path(article) %>" class="button soft-success">
+                        <i class="fas fa-eye uk-visible@m"></i> View
+                    </a>
+                    <a href="<%= edit_article_path(article) %>" class="button soft-primary">
+                        <i class="fas fa-trash uk-visible@m"></i> Edit
+                    </a>
+                    <a href="#" class="button soft-danger delete-button"
+                      data-id="<%= article.id %>"
+                      data-name="<%= article.title %>"
+                      data-action="<%= article_path(article) %>"
+                      data-token="<%= form_authenticity_token %>"
+                      uk-toggle="target: #delete-modal">
+                        <i class="fas fa-trash uk-visible@m"></i> Delete
+                    </a>
+                </td>
+            </tr>
+          <% end %>
+        </tbody>
+    </table>
+</div>
+
+<%= paginate @articles %>
+<p class="uk-padding"> <%= total_count(@articles) %></p>
+
+<!-- model -->
+<div id="delete-modal" uk-modal>
+    <div class="uk-modal-dialog">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+        <div class="uk-modal-header">
+            <h2 class="uk-modal-title">Delete Article</h2>
+        </div>
+        <div class="uk-modal-body">
+          <p>Are you sure you want to delete <span class="resource_name"></span>?</p>
+          <p class="text-danger">This cannot be undone.</p>
+        </div>
+        <div class="uk-modal-footer">
+          <button class="uk-button uk-button-default uk-modal-close" type="button">Cancel</button>
+          <button class="uk-button uk-button-danger confirm-button" type="button">Delete</button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,511 @@
+<%= content_for(:extra_js) do %>
+  <script type="text/javascript">
+    window.addEventListener("unload", function(event) {
+      window.room.disconnect();
+    });
+
+    window.addEventListener("pagehide", function(event) {
+      window.room.disconnect();
+    });
+
+    var host_identity = '<%= @lesson.host&.uuid %>';
+    var my_identity = '<%= current_student_or_staff&.uuid %>';
+
+    var needleInHaystack = function(needle, haystack) {
+      let answer;
+      for (let k of haystack.values()) {
+        if (k.identity === needle) {
+          answer = k
+          break;
+        }
+      }
+      return answer;
+    }
+
+    var handleTrackDisabled = function(publication, participant) {
+      let track = publication.track;
+      if (!track) {
+        return;
+      }
+      let container = $("#participant-container-" + participant.identity);
+
+      track.on('disabled', () => {
+        if (publication.track && publication.kind == "audio") {
+          let elem = container.find(".lesson-participant-audio");
+
+          detachTrackFromElement(elem);
+          handleHideAudio(participant);
+        }
+
+        if (track && publication.kind == "video") {
+          let elem = container.find(".lesson-participant-video");
+
+          detachTrackFromElement(elem);
+          handleHideVideo(participant);
+        }
+      });
+    }
+
+    var handleTrackEnabled = function(publication, participant) {
+      let track = publication.track;
+      if (!track) {
+        return;
+      }
+
+      let container = $("#participant-container-" + participant.identity);
+
+      track.on('enabled', () => {
+        if (publication.track && publication.kind == "audio") {
+          let aud = track.attach();
+          let elem = container.find(".lesson-participant-audio");
+
+          attachTrackToElement(aud, elem);
+          handleShowAudio(participant);
+        }
+
+        if (track && publication.kind == "video") {
+          let vid = track.attach();
+          let elem = container.find(".lesson-participant-video");
+
+          mirrorVid(vid);
+          attachTrackToElement(vid, elem);
+          handleShowVideo(participant);
+        }
+      });
+    }
+
+    var hideVideoShowAvatarToggleCamera = function(participant) {
+      $("#participant-container-" + participant.identity + " .lesson-participant-avatar").removeAttr("hidden");
+      $("#participant-container-" + participant.identity + " .lesson-participant-video").attr("hidden", true);
+      $("[data-identity='" + participant.identity + "'] .icon-feather-camera-off").removeAttr("hidden");
+      $("[data-identity='" + participant.identity + "'] .icon-feather-camera").attr("hidden", true);
+    }
+
+    var showVideoHideAvatarToggleCamera = function(participant) {
+      $("#participant-container-" + participant.identity + " .lesson-participant-avatar").attr("hidden", true);
+      $("#participant-container-" + participant.identity + " .lesson-participant-video").removeAttr("hidden");
+      $("[data-identity='" + participant.identity + "'] .icon-feather-camera").removeAttr("hidden");
+      $("[data-identity='" + participant.identity + "'] .icon-feather-camera-off").attr("hidden", true);
+    }
+
+    var hideAudioToggleMicrophone = function(participant) {
+      $("#participant-container-" + participant.identity + " .lesson-participant-audio").attr("hidden", true);
+      $("[data-identity='" + participant.identity + "'] .icon-line-awesome-microphone-slash").removeAttr("hidden");
+      $("[data-identity='" + participant.identity + "'] .icon-line-awesome-microphone").attr("hidden", true);
+    }
+
+    var showAudioToggleMicrophone = function(participant) {
+      $("#participant-container-" + participant.identity + " .lesson-participant-audio").removeAttr("hidden");
+      $("[data-identity='" + participant.identity + "'] .icon-line-awesome-microphone").removeAttr("hidden");
+      $("[data-identity='" + participant.identity + "'] .icon-line-awesome-microphone-slash").attr("hidden", true);
+    }
+
+    var handleHideVideo = function(participant) {
+      participant.videoTracks.forEach(function (videoTrack) {
+        if (videoTrack.track && typeof videoTrack.track.enable === 'function') {
+          videoTrack.track.disable();
+        }
+        hideVideoShowAvatarToggleCamera(participant);
+      });
+    }
+
+    var handleShowVideo = function(participant) {
+      participant.videoTracks.forEach(function (videoTrack) {
+        if (videoTrack.track && typeof videoTrack.track.enable === 'function') {
+          videoTrack.track.enable();
+        }
+        showVideoHideAvatarToggleCamera(participant);
+      });
+    }
+
+    var handleHideAudio = function(participant) {
+      participant.audioTracks.forEach(function (audioTrack) {
+        if (audioTrack.track && typeof audioTrack.track.disable === 'function') {
+          audioTrack.track.disable();
+        }
+        hideAudioToggleMicrophone(participant);
+      });
+    }
+
+    var handleShowAudio = function(participant) {
+      participant.audioTracks.forEach(function (audioTrack) {
+        if (audioTrack.track && typeof audioTrack.track.disable === 'function') {
+          audioTrack.track.enable();
+        }
+        showAudioToggleMicrophone(participant);
+      });
+    }
+
+    var attachTrackToElement = function(track, element) {
+      element.html(track);
+    }
+
+    var detachTrackFromElement = function(element) {
+      element.html("");
+    }
+
+    var mirrorVid = function(vid) {
+      vid.style.transform = 'scale(-1, 1)';
+    }
+
+    var setAvatar = function(participant, avatarUrl) {
+      $("#participant-container-" + participant.identity + " .lesson-participant-avatar").html("<img class='uil-user icon-small participant-img p-2 large border uk-flex' uk-img src='" + avatarUrl + "'/>");
+      $("#participant-container-" + participant.identity + " .lesson-participant-avatar").html("<img class='uil-user icon-small participant-img p-2 large border uk-flex' uk-img src='" + avatarUrl + "'/>");
+    }
+
+    var addParticipant = function(participant, publication) {
+      $container = $("#participant-container-" + participant.identity);
+
+        if (publication.track && publication.kind == "audio") {
+          let track = publication.track;
+          let aud = track.attach();
+          let elem = $container.find(".lesson-participant-audio");
+
+          attachTrackToElement(aud, elem);
+
+          if (publication.isTrackEnabled) {
+            showAudioToggleMicrophone(participant);
+          } else {
+            hideAudioToggleMicrophone(participant);
+          }
+        }
+
+        if (publication.track && publication.kind == "video") {
+          let track = publication.track;
+          let vid = track.attach();
+          let elem = $container.find(".lesson-participant-video");
+
+          mirrorVid(vid);
+          attachTrackToElement(vid, elem);
+
+          if (publication.isTrackEnabled) {
+            showVideoHideAvatarToggleCamera(participant);
+          } else {
+            let avatarUrl = $("#participant-container-" + participant.identity).data("avatar");
+            setAvatar(participant, avatarUrl);
+            hideVideoShowAvatarToggleCamera(participant);
+          }
+        }
+
+        handleTrackDisabled(publication, participant);
+        handleTrackEnabled(publication, participant);
+      // }
+
+      publication.on('subscribed', handleTrackDisabled);
+      publication.on('subscribed', handleTrackEnabled);
+    }
+
+    var removeParticipantContainer = function(participant) {
+      $container = $("#participant-container-" + participant.identity);
+      $container.remove();
+      $sidebarContainer = $("[data-identity='" + participant.identity + "'] .my-control-panel").html("<span class='text-muted'>Offline</span>");
+    }
+
+    var createContainer = function(participant) {
+      createParticipantContainerElement(participant, function(name, participantContainer, sidebarContainer) {
+        $("[data-identity='" + participant.identity + "']").remove();
+
+        if (host_identity == participant.identity) {
+          $parentContainer = $("#lesson-host-video-container");
+          $parentContainer.append(participantContainer);
+        } else {
+          $parentContainer = $("#lesson-participant-video-container");
+          $parentContainer.append(participantContainer);
+        }
+
+        $("#people-list ul.list").append(sidebarContainer);
+
+        participant.tracks.forEach(publication => {
+          addParticipant(participant, publication);
+        });
+
+        // When they publish whiteboard
+        participant.on('trackSubscribed', publication => {
+          addParticipant(participant, publication);
+        });
+
+        UIkit.notification({message: name + ' has joined the livestream.', pos: 'top-center', status: 'success'})
+      });
+    }
+
+    var createParticipantContainerElement = function(participant, callback) {
+      $("#participant-container-" + participant.identity).remove();
+
+      $.get("/users/" + participant.identity + "/profile").then(function(data) {
+      let controlPanel = '';
+      if (host_identity == my_identity || my_identity == participant.identity) {
+        let additionalClass = 'me cursor ';
+
+        controlPanel = '<div class="uk-child-width-1-2 uk-grid-collapse uk-child-width-expand" uk-grid>' +
+            '<div class="my-control-panel">' +
+              '<i hidden class="icon-small icon-line-awesome-microphone ' + additionalClass +  'uk-text-warning"></i>' +
+              '<i class="icon-small icon-line-awesome-microphone-slash ' + additionalClass +  'uk-text-secondary"></i>' +
+              '<i hidden class="icon-small icon-feather-camera ' + additionalClass +  'uk-text-warning"></i>' +
+              '<i class="icon-small icon-feather-camera-off ' + additionalClass +  'uk-text-secondary"></i>' +
+            '</div>' +
+          '</div>';
+      }
+
+        let hostContainerHtml = '<div id="participant-container-' + participant.identity + '" data-avatar="' +  data.profile_image + '" class="uk-padding-remove height-participant-container mt-0" data-identity="' + participant.identity + '">' +
+           '<div class="uk-position-relative uk-height-1-1 uk-card uk-card-default uk-card-body uk-flex uk-flex-center uk-flex-middle p-0" uk-toggle="target: #participant-' + participant.identity + '; mode: hover; animation: uk-animation-fade;">' +
+              '<div class="uk-text-center uk-width-expand uk-flex uk-height-1-1">' +
+                '<div class="lesson-participant-avatar uk-height-1-1 uk-flex uk-flex-middle uk-width-expand">' +
+                  '<span uk-spinner="ratio: 4.5" class="uk-icon uk-spinner uk-flex uk-flex-center uk-width-expand"></span>' +
+                '</div>' +
+                '<div id="participant-' + participant.identity + '" class="uk-overlay uk-light uk-overlay-primary uk-position-bottom pl-2 pt-2 pb-2 pr-0" hidden>' +
+                  data.name +
+                  controlPanel +
+               '</div>' +
+                '<div class="lesson-participant-video  uk-height-1-1 uk-width-expand" hidden></div>' +
+                '<div class="lesson-participant-audio" hidden></div>' +
+              '</div>' +
+           '</div>' +
+       '</div>';
+
+       let participantContainerHtml = '<div id="participant-container-' + participant.identity + '" data-avatar="' +  data.profile_image + '" class="uk-padding-remove height-participant-container mt-0" data-identity="' + participant.identity + '">' +
+          '<div class="uk-position-relative uk-height-1-1 uk-card uk-card-default uk-card-body uk-flex uk-flex-center uk-flex-middle p-0" uk-toggle="target: #participant-' + participant.identity + '; mode: hover; animation: uk-animation-fade;">' +
+             '<div class="uk-text-center uk-width-expand uk-flex uk-height-1-1">' +
+               '<div class="lesson-participant-avatar uk-height-1-1 uk-flex uk-flex-middle uk-width-expand">' +
+                 '<span uk-spinner="ratio: 4.5" class="uk-icon uk-spinner uk-flex uk-flex-center uk-width-expand"></span>' +
+               '</div>' +
+               '<div id="participant-' + participant.identity + '" class="uk-overlay uk-light uk-overlay-primary uk-position-bottom pl-2 pt-2 pb-2 pr-0" hidden>' +
+                 data.name +
+                 controlPanel +
+              '</div>' +
+               '<div class="lesson-participant-video uk-height-1-1" hidden></div>' +
+               '<div class="lesson-participant-audio" hidden></div>' +
+             '</div>' +
+          '</div>' +
+      '</div>';
+
+       let sidebarHtml = createParticipantSidebarElement(participant, data.profile_image, data.name);
+
+       if (host_identity == participant.identity) {
+         callback(data.name, hostContainerHtml, sidebarHtml);
+       } else {
+         callback(data.name, participantContainerHtml, sidebarHtml);
+       }
+     });
+    }
+
+    var createParticipantSidebarElement = function(participant, avatarUrl, name) {
+      let additionalClass = '';
+
+      if ((host_identity == my_identity) || (my_identity == participant.identity)) {
+        additionalClass = 'me cursor ';
+      }
+
+      return '<li class="clearfix" data-identity="' + participant.identity + '">' +
+        '<img class="uil-user icon-small participant-img" uk-img="true" src="' + avatarUrl  + '" alt="' + name + '">' +
+        '<div class="about">' +
+          '<div class="name">' + name + '</div>' +
+          '<div class="uk-child-width-1-2 uk-grid-collapse uk-child-width-expand" uk-grid>' +
+            '<div class="my-control-panel">' +
+              '<i hidden class="icon-small icon-line-awesome-microphone ' + additionalClass +  'uk-text-warning"></i>' +
+              '<i class="icon-small icon-line-awesome-microphone-slash ' + additionalClass +  'uk-text-secondary"></i>' +
+              '<i hidden class="icon-small icon-feather-camera ' + additionalClass +  'uk-text-warning"></i>' +
+              '<i class="icon-small icon-feather-camera-off ' + additionalClass +  'uk-text-secondary"></i>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</li>';
+    }
+
+    const constraints = {
+      video: true,
+      audio: true
+    };
+
+    try {
+      navigator.mediaDevices
+        .getUserMedia(constraints)
+        .then(stream => {
+          // debugger;
+        })
+        .catch(error => {
+          console.error(error);
+        });
+
+        // Start Twilio
+        navigator.mediaDevices.enumerateDevices().then(devices => {
+          const videoInput = devices.find(device => device.kind === 'videoinput');
+          const audioInput = devices.find(device => device.kind === 'audioinput');
+
+          opts = {}
+
+          if (videoInput) {
+            opts.video = { deviceId: videoInput.deviceId, height: 800, facingMode: 'environment' };
+          }
+
+          if (audioInput) {
+            opts.audio = true
+          }
+
+          return Twilio.Video.createLocalTracks(opts);
+        }).then(localTracks => {
+          localTracks.forEach(function(localTrack) {
+            localTrack.disable();
+          });
+          return Twilio.Video.connect('<%= access_token %>', {
+            name: '<%= @lesson.unique_livestream_name(@tenant&.key) %>',
+            tracks: localTracks,
+            bandwidthProfile: {
+              video: {
+                mode: 'grid',
+                trackSwitchOffMode: 'detected',
+                // maxSubscriptionBitrate: 2400000,
+                dominantSpeakerPriority: 'high',
+                maxTracks: 10,
+                renderDimensions: {
+                  high: {width: 1080, height: 720},
+                  standard: {width: 640, height: 480},
+                  low: {width: 320, height: 240}
+                }
+              }
+            }
+          });
+        }).then(room => {
+          const localParticipant = room.localParticipant;
+          window.room = room;
+          console.log('Connected to the Room as LocalParticipant ' + localParticipant.identity);
+          console.log('I connected to Room ' + room.name + 'that has SID ' + room.sid);
+          console.log(room.isRecording);
+
+          let avatarUrl = $("#participant-container-" + localParticipant.identity).data("avatar");
+          setAvatar(localParticipant, avatarUrl);
+
+          // When I disconnect
+          room.on('disconnected', room => {
+            // Detach the local media elements
+            localParticipant.tracks.forEach(publication => {
+              const attachedElements = publication.track.detach();
+              attachedElements.forEach(element => element.remove());
+            });
+          });
+
+          // When I connect
+          createContainer(room.localParticipant);
+
+          // Setup My Audio and Video but keep them hidden
+          localParticipant.tracks.forEach(publication => {
+            addParticipant(localParticipant, publication);
+          });
+
+          // Whenever I Subscribe To Someone's Tracks
+          localParticipant.on('trackSubscribed', publication => {
+            addParticipant(localParticipant, publication);
+          });
+
+          // Notify the room about a participant
+          room.on('trackSubscribed', function(track, publication, participant) {
+            addParticipant(participant, publication);
+          });
+
+          // When someone else connects
+          room.on('participantConnected', participant => {
+            createContainer(participant);
+            room.participants.set(participant.identity, participant);
+          });
+
+          // Log any Participants already connected to the Room
+          room.participants.forEach(participant => {
+            participant.tracks.forEach(publication => {
+              addParticipant(participant, publication);
+            });
+
+            // When they publish whiteboard
+            participant.on('trackSubscribed', publication => {
+              addParticipant(participant, publication);
+            });
+          });
+
+          // When Dominant Speaker Changes
+          room.on('dominantSpeakerChanged', participant => {
+            console.log('The new dominant speaker in the Room is:', participant);
+          });
+
+          // When Someone Else disconnects
+          room.on('participantDisconnected', participant => {
+            // UIkit.notification({message: participant + ' has left the livestream.', pos: 'top-center', status: 'warning'});
+            removeParticipantContainer(participant);
+            room.participants.delete(participant.identity, participant);
+          });
+
+          // Toggle audio off
+          $(document).on('click', '.my-control-panel .icon-line-awesome-microphone.me', function(e) {
+            e.preventDefault();
+            let mapSet = new Map(room.participants);
+            mapSet.set("me", localParticipant);
+
+            let identity = $(this).parents('li.clearfix').data('identity');
+            if (!identity) {
+              identity = $(this).parents('div.height-participant-container').data('identity');
+            }
+
+            let participant = needleInHaystack(identity, mapSet);
+
+            if (participant) {
+              handleHideAudio(participant);
+            }
+          });
+
+          // Toggle audio on
+          $(document).on('click', '.my-control-panel .icon-line-awesome-microphone-slash.me', function(e) {
+            e.preventDefault();
+            let mapSet = new Map(room.participants);
+            mapSet.set("me", localParticipant);
+
+            let identity = $(this).parents('li.clearfix').data('identity');
+            if (!identity) {
+              identity = $(this).parents('div.height-participant-container').data('identity');
+            }
+
+            let participant = needleInHaystack(identity, mapSet);
+
+            if (participant) {
+              handleShowAudio(participant);
+            }
+          });
+
+          // Toggle video off
+          $(document).on('click', '.my-control-panel .icon-feather-camera.me', function(e) {
+            e.preventDefault();
+            let mapSet = new Map(room.participants);
+            mapSet.set("me", localParticipant);
+
+            let identity = $(this).parents('li.clearfix').data('identity');
+            if (!identity) {
+              identity = $(this).parents('div.height-participant-container').data('identity');
+            }
+
+            let participant = needleInHaystack(identity, mapSet);
+
+            if (participant) {
+              handleHideVideo(participant);
+            }
+          });
+
+          // Toggle video on
+          $(document).on('click', '.my-control-panel .icon-feather-camera-off.me', function(e) {
+            e.preventDefault();
+            let mapSet = new Map(room.participants);
+            mapSet.set("me", localParticipant);
+
+            let identity = $(this).parents('li.clearfix').data('identity');
+            if (!identity) {
+              identity = $(this).parents('div.height-participant-container').data('identity');
+            }
+
+            let participant = needleInHaystack(identity, mapSet);
+
+            if (participant) {
+              handleShowVideo(participant);
+            }
+          });
+        });
+    } catch(e) {
+      console.log("Failed to load");
+      console.error(e);
+    }
+  </script>
+<% end %>

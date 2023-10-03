@@ -1,0 +1,93 @@
+<div id="wrapper">
+  <div class="page-content">
+    <div class="container pt-4 pb-10" uk-height-viewport="expand: true">
+      <%= form_for([@form, @form_submission]) do |f| %>
+        <%= f.hidden_field :first_name %>
+        <%= f.hidden_field :last_name %>
+        <%= f.hidden_field :email %>
+        <div class="m-0 uk-margin-auto p-8 uk-text-left uk-card uk-card-default uk-flex uk-flex-column">
+          <div class="uk-width-expand@m uk-text-left pb-4">
+            <a href="/" class="active logo">
+              <img src="<%= setting.logo_url %>" width="300" alt="<%= @tenant&.name %>">
+            </a>
+          </div>
+          <div class="uk-width-expand@m uk-text-left pb-4">
+            <h4><%= @form.name %></h4>
+          </div>
+          <div class="uk-width-expand@m">
+              <div id="form-wrapper"></div>
+          </div>
+          <div class="uk-width-expand@m">
+            <div class="container">
+              <% if @form.esign? %>
+                <div class="row">
+                  <div class="col-md-12">
+                    <canvas id="sig-canvas" width="620" height="160">
+                      Get a better browser, bro.
+                    </canvas>
+                  </div>
+                </div>
+              <% end %>
+              <div class="row mt-4">
+                <div class="col-md-12">
+                  <% if @form.esign? %>
+                    <button class="button grey" id="sig-submitBtn">Submit Form</button>
+                    <button class="button default" id="sig-clearBtn">Clear Signature</button>
+                  <% else %>
+                    <button class="button grey" id="submitBtn">Submit Form</button>
+                  <% end %>
+                </div>
+              </div>
+              <% if @form.esign? %>
+                <br/>
+                <div class="row">
+                  <div class="col-md-12">
+                    <textarea id="sig-dataUrl" class="form-control" style="display:none" rows="5">Data URL for your signature will go here!</textarea>
+                  </div>
+                </div>
+                <br/>
+                <div class="row">
+                  <div class="col-md-12">
+                    <img id="sig-image" src="" alt="Your signature will go here!" style="display:none" />
+                  </div>
+                </div>
+              <% end %>
+            </div>
+
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+
+  </div>
+</div>
+
+<% content_for(:extra_js) do %>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      var wrap = $('#form-wrapper');
+      var formRender = wrap.formRender();
+
+      wrap.formRender({
+        dataType: 'json',
+        formData: <%= raw add_classes_to_form_fields(@form.data).to_json %>
+      });
+
+      $(".field-participant-first-name input").change(function(e) {
+        $val = e.currentTarget.value;
+        $("#form_submission_first_name").val($val);
+      });
+
+      $(".field-participant-last-name input").change(function(e) {
+        $val = e.currentTarget.value;
+        $("#form_submission_last_name").val($val);
+      });
+
+      $(".field-participant-email input").change(function(e) {
+        $val = e.currentTarget.value;
+        $("#form_submission_email").val($val);
+      });
+    });
+  </script>
+<% end %>

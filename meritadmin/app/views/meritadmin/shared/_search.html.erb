@@ -1,0 +1,25 @@
+<div class="mt-4 mb-4 p-3 bg-white uk-text-small rounded">
+    <div uk-grid>
+        <div class="uk-width-expand@m">
+            <form class="uk-flex-inline uk-flex-middle">
+                <p class="mb-0 mr-2 uk-width-small"> Show Entries : </p>
+                <select class="uk-select uk-width-small" id="scope-filter">
+                    <option value="5" <%= 'selected' if params[:scope] == '5' %>>5 per page </option>
+                    <option value="10" <%= 'selected' if params[:scope] == '10' %>>10 per page </option>
+                    <option value="20" <%= 'selected' if params[:scope] == '20' %>>20 per page </option>
+                    <option value="30" <%= 'selected' if params[:scope] == '30' %>>30 per page </option>
+                    <option value="50" <%= 'selected' if params[:scope] == '50' %>>50 per page </option>
+                </select>
+            </form>
+        </div>
+        <div class="uk-width-auto@m">
+            <form>
+                <div class="uk-inline">
+                    <span class="uk-form-icon"> <i class="uil-search"></i></span>
+                    <input class="uk-input" name="q" value="<%= params[:q] %>" type="text" placeholder="Search..">
+                </div>
+                <button class="button button-grey admin-btn">Go</button>
+            </form>
+        </div>
+    </div>
+</div>

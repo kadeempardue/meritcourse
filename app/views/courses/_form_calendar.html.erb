@@ -1,0 +1,5 @@
+<% if @schedules.present? %>
+  <div id="events_calendar" class="uk-width-5-5 p-4">
+    <%= render partial: "calendar", locals: { schedules: @schedules } %>
+  </div>
+<% end %>

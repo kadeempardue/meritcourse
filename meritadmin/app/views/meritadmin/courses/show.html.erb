@@ -1,0 +1,323 @@
+<div class="uk-flex uk-flex-middle">
+  <a href="<%= courses_path(page: params[:page], scope: params[:scope]) %>" class="button grey"
+      uk-tooltip="title: View All Courses ; delay: 500 ; pos: top ;">
+      <i class="icon-material-outline-arrow-back"></i> Back To All Courses
+  </a>
+</div>
+<div class="mt-4" uk-grid>
+  <div class="uk-width-2-3@m">
+
+    <div class="uk-width-1-1@m">
+      <div class="uk-card-default rounded">
+          <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+              <h5 class="mb-0"> Course Details </h5>
+              <div class="">
+
+                  <a href="<%= course_analytics_path(@course) %>" class="button soft no-underline">
+                      <i class="icon-feather-pie-chart"></i> View Analytics
+                  </a>
+                <a href="<%= edit_course_path(@course) %>" uk-tooltip="title:Edit Course; pos: left"> <i
+                        class="icon-feather-settings"></i> </a>
+              </div>
+          </div>
+          <hr class="m-0">
+          <div class="uk-child-width-1-2@s uk-grid-small p-4" uk-grid>
+              <div class="uk-width-1-1@s">
+                  <h6 class="uk-text-bold"> Name </h6>
+                      <p> <%= @course.name %> </p>
+              </div>
+              <div class="uk-width-1-4@s">
+                  <h6 class="uk-text-bold"> Level </h6>
+                      <p> <%= @course.level %> </p>
+              </div>
+              <div class="uk-width-1-4@s">
+                  <h6 class="uk-text-bold"> Subject </h6>
+                      <p> <%= @course_subject&.name %> </p>
+              </div>
+              <div class="uk-width-1-4@s">
+                  <h6 class="uk-text-bold"> Archived </h6>
+                      <p> <%= @course.archived? ? 'Yes' : 'No' %> </p>
+              </div>
+              <div class="uk-width-1-4@s">
+                  <h6 class="uk-text-bold"> Status </h6>
+                      <p> <%= @course.is_preview? ? 'Draft' : 'Published' %> </p>
+              </div>
+          </div>
+      </div>
+      <div class="my-4">
+        <div class="uk-card-default rounded">
+            <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+                <h5 id="lessons" class="mb-0"> Lessons </h5>
+                <div class="">
+                  <% if @schedules.present? %>
+                    <a href="#modal-schedule" class="button uk-button-default" uk-toggle>
+                        <i class="icon-feather-calendar"></i> View Schedule
+                    </a>
+                  <% end %>
+                  <a href="<%= new_course_lesson_path(@course) %>" class="button grey">
+                      <i class="icon-feather-plus"></i> Add New Lesson
+                  </a>
+                </div>
+            </div>
+            <hr class="m-0">
+            <div class="uk-child-width-1-1@s uk-grid-small p-4" uk-grid>
+              <ul class="course-curriculum uk-accordion" style="overflow:visible;" uk-accordion="multiple: true;">
+                <% @course.lesson_modules&.each do |module_name, lessons_grouped_by_module| %>
+                  <li class="uk-open" style="overflow: visible;">
+                      <a class="uk-accordion-title" style="position:relative;" href="#">
+                        <%= module_name %>
+
+                          <span class="duration">
+                              <%= friendly_duration_for(lessons_grouped_by_module.sum(&:duration)) %>
+                          </span>
+
+                      </a>
+                      <div class="uk-accordion-content" aria-hidden="false">
+
+                          <!-- course-video-list -->
+                          <ul class="course-curriculum-list">
+                            <% lessons_grouped_by_module.each do |lesson| %>
+                              <li style="position:relative;overflow:visible!important;" data-row-id="<%= lesson.id %>">
+                                <a class="uk-width-expand uk-flex uk-flex-between uk-flex-middle" href="<%= course_lesson_path(@course, lesson) %>">
+                                  <div class="uk-flex-inline pl-0 ml-0">
+                                    <%= lesson.name %>
+                                    <span class="tag uk-background-secondary"> <%= friendly_icon_for_lesson_type(lesson.lesson_type) %></span>
+                                    <% if lesson.is_preview? %>
+                                      <span class="tag uk-background-primary"><i class="icon-feather-eye"></i> Preview</span>
+                                    <% end %>
+                                    <% if lesson.is_livestream? %>
+                                      <span class="tag uk-background-danger"><i class="icon-feather-calendar"></i> Scheduled Live</span>
+                                    <% else %>
+                                      <span class="tag uk-background-info"><%= lesson.is_scheduled? ? '<i class="icon-feather-calendar"></i> Scheduled '.html_safe : '<i class="icon-feather-youtube"></i>  '.html_safe %>On Demand</span>
+                                    <% end %>
+                                  </div>
+
+                                  <% if lesson.duration.positive? %>
+                                    <span class="uk-text-meta"><%= friendly_duration_for(lesson.duration) %></span>
+                                  <% end %>
+                                </a>
+
+                                <div class="">
+                                  <span class="btn-option">
+                                      <i class="icon-feather-more-vertical"></i>
+                                  </span>
+                                  <div class="dropdown-option-nav"
+                                      uk-dropdown="pos: bottom-right ;mode : hover">
+                                      <ul>
+                                        <li>
+                                          <a href="<%= course_lesson_analytics_path(@course, lesson) %>">
+                                              <span><i class="icon-feather-pie-chart"></i> View Analytics</span>
+                                          </a>
+                                        </li>
+                                        <li>
+                                            <a href="/courses/<%= @course.slug %>/lessons/<%= lesson.id %>?admin_preview=true" target="_blank">
+                                              <span><i class="icon-brand-slideshare"></i>
+                                              Preview Lesson</span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="<%= edit_course_lesson_path(@course, lesson) %>">
+                                              <span><i class="uil-edit"></i>
+                                              Edit Lesson</span>
+                                            </a>
+                                        </li>
+                                          <li>
+                                            <a href="#">
+                                              <span
+                                                class="delete-button text-danger"
+                                                 data-id="<%= lesson.id %>"
+                                                 data-name="<%= lesson.name %>"
+                                                 data-action="<%= course_lesson_path(@course, lesson) %>"
+                                                 data-token="<%= form_authenticity_token %>"
+                                                 uk-toggle="target: #delete-modal">
+                                                 <i class="icon-feather-trash uk-visible@m"></i> Delete
+                                               </span>
+                                            </a>
+                                          </li>
+                                      </ul>
+                                  </div>
+                                </div>
+                              </li>
+                            <% end %>
+                          </ul>
+
+                      </div>
+                  </li>
+                <% end %>
+            </ul>
+            </div>
+        </div>
+      </div>
+      <% if @course.excerpt.present? %>
+        <div class="mt-4">
+          <div class="uk-card-default rounded">
+              <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+                  <h5 class="mb-0"> Excerpt </h5>
+                      <a href="<%= edit_course_path(@course) %>" uk-tooltip="title:Edit Course; pos: left"> <i
+                              class="icon-feather-settings"></i> </a>
+              </div>
+              <hr class="m-0">
+              <div class="uk-child-width-1-2@s uk-grid-small p-4" uk-grid>
+                  <div class="uk-width-1-1@s">
+                    <%= raw(@course.excerpt) %>
+                  </div>
+              </div>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @course.description.present? %>
+        <div class="mt-4">
+          <div class="uk-card-default rounded">
+              <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+                  <h5 class="mb-0"> Description </h5>
+                      <a href="<%= edit_course_path(@course) %>" uk-tooltip="title:Edit Course; pos: left"> <i
+                              class="icon-feather-settings"></i> </a>
+              </div>
+              <hr class="m-0">
+              <div class="uk-child-width-1-2@s uk-grid-small p-4" uk-grid>
+                  <div class="uk-width-1-1@s">
+                    <%= raw(@course.description) %>
+                  </div>
+              </div>
+          </div>
+        </div>
+      <% end %>
+      <% if @course.avg_rating.to_f.positive? %>
+        <div class="mt-4">
+          <div class="uk-card-default rounded">
+            <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+                <h5 class="mb-0"> Rating </h5>
+            </div>
+            <hr class="m-0">
+            <div class="uk-child-width-1-2@s uk-grid-small p-3" uk-grid>
+              <div class="uk-width-1-1 pl-0 ml-3" uk-lightbox>
+                <%= render "meritadmin/shared/star_ratings" %>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  <div class="uk-width-1-3@m">
+    <% if @course.featured_preview_video_url.present? || @course.featured_preview_image_url.present?  %>
+      <div class="uk-width-1-1@m">
+        <div class="uk-card-default rounded">
+          <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+              <h5 class="mb-0"> Preview </h5>
+              <a href="<%= edit_course_path(@course) %>" uk-tooltip="title:Edit Course; pos: left"> <i
+                      class="icon-feather-settings"></i> </a>
+          </div>
+          <hr class="m-0">
+          <div class="uk-child-width-1-2@s uk-grid-small p-3" uk-grid>
+            <div class="uk-width-1-1 course-thumbnail pl-0 ml-3" <%= 'uk-lightbox' if @course.featured_preview_video_url.present? %>>
+              <a href="<%= @course.featured_preview_video_url.presence || '#' %>">
+                <%= cl_image_tag(@course.featured_preview_image_url, { quality: "auto:best", width: "100%" }) %>
+                <% if @course.featured_preview_video_url.present? %>
+                  <i class="play-button-trigger show" ></i>
+                <% end %>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+    <div class="uk-width-1-1@m <%= 'mt-4' if @course.featured_preview_video_url.present? || @course.featured_preview_image_url.present? %>">
+      <% if @course.objectives.present? || @course.requirements.present? %>
+        <div class="uk-width-1-1">
+          <div class="uk-card-default rounded">
+            <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+                <h5 class="mb-0"> What It Covers </h5>
+                <a href="<%= edit_course_path(@course) %>" uk-tooltip="title:Edit Course; pos: left"> <i
+                        class="icon-feather-settings"></i> </a>
+            </div>
+            <hr class="m-0">
+            <div class="uk-child-width-1-2@s uk-grid-small p-3" uk-grid>
+              <% if @course.objectives.present? %>
+                <div class="uk-width-1-1 ml-3">
+                  <h5>Objectives</h5>
+                      <ul class="uk-list uk-list-bullet">
+                        <%= raw @course.objectives %>
+                      </ul>
+                </div>
+              <% end %>
+              <% if @course.requirements.present? %>
+                <div class="uk-width-1-1 ml-3">
+                  <h5>Requirements</h5>
+                      <ul class="uk-list uk-list-bullet">
+                        <%= raw @course.requirements %>
+                      </ul>
+                </div>
+              <% end %>
+            </div>
+
+          </div>
+        </div>
+
+        <hr class="m-0">
+      <% end %>
+
+      <div class="mt-4">
+        <div class="uk-card-default uk-card-small uk-text-left rounded">
+            <div class="uk-card-header py-3">
+                <span id="enrollments" class="uk-h5"> Students Enrolled</span>
+                <div class="py-1">
+                  <a href="<%= new_course_enrollment_path(@course, Enrollment.new) %>" class="button grey small">
+                    <i class="icon-feather-plus uk-visible@m"></i> New
+                  </a>
+                  <% if @course.enrollments.present? %>
+                    <a href="<%= course_enrollments_path(@course) %>" class="button soft-success small">
+                      <i class="icon-feather-eye uk-visible@m"></i> View All
+                    </a>
+                  <% end %>
+                </div>
+            </div>
+
+            <% if @course.enrollments.present? %>
+              <!-- notificiation dropdown -->
+              <div class="dropdown-notifications uk-card-default rounded uk-width-1-1">
+
+                  <!-- notification contents -->
+                  <div class="dropdown-notifications-content uk-height-large" data-simplebar>
+
+                      <!-- notiviation list -->
+                      <ul>
+                        <% @course.enrollments.limit(5)&.reverse&.each do |enrollment| %>
+                          <% student = enrollment.student %>
+                          <% next unless student.present? %>
+                          <li>
+                              <a href="<%= course_enrollment_path(@course, enrollment) %>">
+                                <%= cl_image_tag(avatar_helper(student), default_image_options(class: "avatar-medium circle")) %>
+                                  <span class="notification-text">
+                                      <strong><%= student.name %></strong> enrolled <span class="time-ago"> <%= time_ago_in_words(enrollment.enrollment_date) %> ago</span>
+                                  </span>
+                              </a>
+                          </li>
+                        <% end %>
+                      </ul>
+
+                  </div>
+
+              </div>
+            <% else %>
+              <div class="uk-card-default rounded uk-width-1-1">
+                <div class="py-3 px-4">
+                  <span>None</span>
+                </div>
+              </div>
+            <% end %>
+        </div>
+      </div>
+
+      <hr class="m-0">
+
+      <div class="mt-4">
+        <%= render "meritadmin/reviews/collection" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%= render "meritadmin/courses/modal_schedule" %>
+<%= render "meritadmin/lessons/modal" %>

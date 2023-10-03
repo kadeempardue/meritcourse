@@ -1,0 +1,45 @@
+<div class="uk-flex uk-flex-middle">
+  <a href="<%= course_path(@course, anchor: "reviews", page: params[:page], scope: params[:scope]) %>" class="button grey"
+      uk-tooltip="title: Back To Course <%= @course.name %> ; delay: 500 ; pos: top ;">
+      <i class="icon-material-outline-arrow-back"></i> Back To Course: <%= @course.name %>
+  </a>
+</div>
+
+<div class="mt-4" uk-grid>
+  <div class="uk-width-expand@m">
+    <div class="uk-card-default rounded">
+        <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+            <h5 class="mb-0"> Review Details </h5>
+                <a href="<%= edit_course_review_path(@course, @review) %>" uk-tooltip="title:Edit Review; pos: left"> <i
+                        class="icon-feather-settings"></i> </a>
+        </div>
+        <hr class="m-0">
+        <div class="uk-child-width-1-1@s uk-grid-small p-4 pb-0" uk-grid>
+          <div class="uk-width-1-1@s">
+              <h6 class="uk-text-bold"> Rating </h6>
+              <p> <%= star_rating(@review.rating) %> </p>
+          </div>
+        </div>
+        <div class="uk-child-width-1-1@s uk-grid-small p-4" uk-grid>
+          <h6 class="uk-text-bold"> Comment </h6>
+            <%= raw(@review.comment).html_safe %>
+        </div>
+    </div>
+  </div>
+  <div class="uk-width-2-5@m">
+
+      <div class="uk-card-default rounded text-center p-4">
+        <%= cl_image_tag(avatar_helper(@student), default_image_options(class: "avatar-xlarge uk-border-circle shadow my-4")) %>
+          <h4 class="mb-2 mt-0"> <%= @student.name %> </h4>
+          <p> Member since <%= friendly_date(@student.created_at) %> </p>
+          <p class="m-0">
+            <a class="button grey" href="<%= student_path(@student.id) %>">
+              <span><i class="icon-feather-eye uk-visible@m"></i>
+              View Student</span>
+            </a>
+          </p>
+
+      </div>
+
+  </div>
+</div>

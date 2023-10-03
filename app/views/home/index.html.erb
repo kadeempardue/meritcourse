@@ -1,0 +1,236 @@
+<div class="home-hero header-padding-top" data-src="<%= setting.homepage_hero_background_image %>" uk-img>
+    <div class="uk-width-1-1 uk-animation-fade">
+        <div class="page-content-inner uk-position-z-index uk-position-relative">
+          <div class="hero-inner-container" style="padding: 2em;display:inline-block;background: rgba(255, 255, 255, 0.90); padding 2em;">
+            <img uk-img data-src="<%= setting.logo_url %>" alt="<%= @tenant&.name %>" width="250">
+            <h1 class="mt-3">
+              <%= raw setting.homepage_hero_background_text %>
+            </h1>
+            <h4 class="my-lg-3">
+              <%= raw setting.homepage_hero_background_subtext %>
+            </h4>
+            <% if setting.registration_enabled? && (!student_signed_in? || !staff_signed_in?) %>
+              <a href="<%= setting.homepage_hero_background_button_url %>" class="button grey large mt-2">
+                <%= setting.homepage_hero_background_button_text %>
+              </a>
+            <% end %>
+          </div>
+        </div>
+    </div>
+</div>
+
+<% if courses.present? %>
+  <div class="pt-4" style="background:#f7f7f7;">
+    <div class="section-small container pt-0">
+        <div class="course-grid-slider uk-slider uk-slider-container" uk-slider="finite: true">
+
+            <div class="grid-slider-header mb-4">
+                <div>
+                    <h4 class="uk-text-truncate"> <%= setting.homepage_courses_headline %> </h4>
+                </div>
+                <div class="grid-slider-header-link">
+
+                  <a href="/explore" id="ember511" class=" text-brown uk-visible@m">View All</a>
+                    <a href="#" class="slide-nav-prev uk-hidden uk-invisible" uk-slider-item="previous"></a>
+                    <a href="#" class="slide-nav-next uk-hidden uk-invisible" uk-slider-item="next"></a>
+
+                </div>
+            </div>
+
+            <div class="uk-slider-items uk-child-width-1-4@m uk-child-width-1-1@s uk-grid" uk-grid="" uk-height-match="target: > .course-container > a > .course-card > .course-card-body" style="transform: translate3d(0px, 0px, 0px);">
+              <% courses.each do |course| %>
+                  <div class="course-container uk-first-column uk-active" tabindex="-1">
+                      <a href="/courses/<%= course.slug %>" id="ember514" class="">
+                          <div class="course-card uk-position-relative uk-animation-fade ">
+                            <!---->
+                              <div class="course-card-thumbnail">
+                                  <img uk-img="" data-src="<%= course.featured_preview_image_url %>" alt="<%= course.name %>">
+                                  <span class="play-button-trigger"></span>
+                              </div>
+                              <div class="course-card-body" style="min-height: 204.562px;">
+                                  <div class="course-card-info">
+                                      <div>
+                                          <span class="catagroy">
+                                            <img uk-img="target: !.uk-slider-items" data-src="<%= course.subject.icon_url %>" width="30" class="mr-1" alt="<%= course.subject.name %>">
+                                              <%= course.subject.name %>
+                                          </span>
+                                      </div>
+                                  </div>
+                                  <h4> <%= course.name %> </h4>
+                              </div>
+                              <div class="course-card-footer">
+                                  <h5> <i class="icon-feather-film"></i> <%= pluralize(course.lessons.count, 'lesson') %> </h5>
+                                  <h5> <i class="icon-feather-clock"></i> <%= friendly_duration_for(course.total_duration) %></h5>
+                              </div>
+                          </div>
+                      </a>
+                  </div>
+              <% end %>
+            </div>
+
+        </div>
+  </div>
+
+  </div>
+<% end %>
+
+<%= raw setting.homepage_callout_banner %>
+
+<% if subjects.present? %>
+  <div class="container">
+    <div class="section-small ">
+      <div class="course-grid-slider uk-slider uk-slider-container" uk-slider="finite: true">
+
+          <div class="grid-slider-header">
+              <div>
+                  <h4 class="uk-text-truncate"> <%= setting.homepage_subjects_headline %> </h4>
+              </div>
+              <div class="grid-slider-header-link">
+
+                <a href="/explore" id="ember522" class=" text-brown uk-visible@m">Explore</a>
+                  <a href="#" class="slide-nav-prev uk-hidden uk-invisible" uk-slider-item="previous"></a>
+                  <a href="#" class="slide-nav-next uk-hidden uk-invisible" uk-slider-item="next"></a>
+              </div>
+          </div>
+
+          <ul class="uk-animation-fade uk-slider-items uk-child-width-1-4@m uk-child-width-1-3@s" uk-grid style="transform: translate3d(0px, 0px, 0px);">
+            <% subjects.each do |subject| %>
+              <li tabindex="-1" class="uk-active">
+                  <a href="/explore/<%= subject.slug %>" id="ember523" class=" skill-card">
+                      <img uk-img data-src="<%= subject.icon_url %>" width="50" class="mr-1" alt="<%= subject.name %>">
+                      <div>
+
+                          <h2 class="skill-card-title">
+                            <%= subject.name %>
+                          </h2>
+                            <p class="skill-card-subtitle"> <%= pluralize(subject.courses.count, 'course') %> </p>
+                      </div>
+                  </a>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+    </div>
+  </div>
+<% end %>
+
+<% if setting.has_blog? && articles.present? %>
+  <div style="background:#f7f7f7;">
+    <div class="section-small container ">
+
+    <div class="course-grid-slider">
+
+      <div class="grid-slider-header">
+        <div>
+          <h4 class="uk-text-truncate">
+            <%= setting.navigation_blog_path_text.presence || "Blog" %>
+          </h4>
+        </div>
+      </div>
+
+      <div class="uk-child-width-1-3@m uk-grid" uk-grid uk-heigh-match="target: > .article-container > .uk-card > .uk-card-body">
+        <% articles[0..5].each do |article| %>
+          <div class="article-container">
+            <div class="uk-card uk-card-default">
+              <div class="uk-card-media-top">
+                <a href="/articles/<%= article.slug %>">
+                  <img data-src="<%= article.featured_image %>" class="uk-width-1-1" style="max-height:220px;" width="" height="" alt="" uk-img />
+                </a>
+              </div>
+              <div class="uk-card-body uk-padding">
+                <h3 class="uk-card-title">
+                  <a href="/articles/<%= article.slug %>">
+                   <i class="icon-brand-readme"></i>  <%= article.title %>
+                  </a>
+                </h3>
+              </div>
+              <div class="uk-card-footer no-border">
+                <span><strong><%= article.category %></strong></span>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+    </div>
+  </div>
+
+  </div>
+<% end %>
+
+<% if setting.has_testimonials? && 1 == 2 %>
+  <div class="bg-white">
+    <div class="swirl-background-pattern py-4">
+      <h1 class="uk-heading-line uk-text-center py-6"><span>Student Testimonials</span></h1>
+
+      <div class="container">
+        <div class="uk-child-width-1-3@m uk-grid" uk-grid="" uk-height-match="target: > .testimonial-container > .uk-card > .uk-card-body">
+
+          <% t("settings.testimonials")&.each do |testimonial| %>
+            <div class="testimonial-container uk-text-center uk-first-column">
+              <div class="uk-card uk-card-default">
+                <div class="header-widget-icon profile-icon">
+                  <img data-src="<%= testimonial[:image_url] %>" class="header-profile-icon large offset" width="100" height="100" alt="" uk-img>
+                </div>
+
+                <div class="uk-card-body uk-padding">
+                  <p><%= testimonial[:text] %></p>
+                </div>
+                <div class="uk-card-footer no-border">
+                  <span><strong><%= testimonial[:name] %></strong></span>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
+
+<%= render "newsletter/form" %>
+
+<% if programs.present? %>
+  <div class="container">
+
+    <div class="section-small">
+        <div class="course-grid-slider uk-slider uk-slider-container" uk-slider="finite: true">
+
+            <div class="grid-slider-header">
+                <div>
+                    <h4 class="uk-text-truncate">
+                      <% t("settings.navigation").each do |link| %>
+                        <% next if link[:feature] != 'explore' %>
+                        <%= link[:alt] || link[:name] %>
+                      <% end %>
+                    </h4>
+                </div>
+                <div class="grid-slider-header-link">
+
+                  <a href="/explore" id="ember537" class=" text-brown uk-visible@m">Explore</a>
+                    <a href="#" class="slide-nav-prev uk-hidden uk-invisible" uk-slider-item="previous"></a>
+                    <a href="#" class="slide-nav-next uk-hidden uk-invisible" uk-slider-item="next"></a>
+                </div>
+            </div>
+
+            <ul class="uk-animation-fade uk-slider-items uk-child-width-1-4@m uk-child-width-1-3@s uk-grid" style="transform: translate3d(0px, 0px, 0px);">
+              <% programs.each do |program| %>
+                <li tabindex="-1" class="uk-active">
+                    <a href="#" class="skill-card">
+                        <img uk-img data-src="<%= program.featured_image_url %>" width="50" class="mr-1" alt="">
+                        <div>
+                            <h2 class="skill-card-title">
+                              <%= program.name %>
+                            </h2>
+                        </div>
+                    </a>
+                </li>
+              <% end %>
+            </ul>
+
+        </div>
+
+    </div>
+
+  </div>
+<% end %>

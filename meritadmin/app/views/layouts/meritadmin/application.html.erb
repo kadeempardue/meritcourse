@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Admin | <%= @tenant&.name %></title>
+    <%= csrf_meta_tags %>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="<%= setting.favicon_url %>" rel="icon" type="image/png">
+    <%= stylesheet_link_tag "meritadmin/application" %>
+  </head>
+
+  <body>
+    <div id="wrapper">
+      <%= render "meritadmin/shared/header" %>
+
+      <div class="page-content">
+        <div class="page-content-inner">
+
+          <%= yield %>
+
+          <%= render "meritadmin/shared/footer" %>
+
+        </div>
+      </div>
+    </div>
+
+    <%= javascript_include_tag 'meritadmin/application' %>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        var ind = 0;
+          $('[data-provider="summernote"]').each(function() {
+            $(this).summernote({
+              minHeight: 200,
+              ace: {
+                aceTheme: 'ace/theme/dawn',
+                aceMode: 'c_cpp',
+                aceLineHeight: '32px',
+                aceFontSize: '16px',
+              },
+              toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview']],
+              ],
+              callbacks: {
+                onBlurCodeview: function(data, elem) {
+                  $(elem.currentTarget).parents(".note-editor").prev().val(data);
+                }
+              }
+            });
+          });
+
+        $.cloudinary.config({ cloud_name: '<%= Meritadmin::CLOUDINARY_CONFIG[:cloud_name] %>', secure: true});
+
+        if($.fn.cloudinary_fileupload !== undefined) {
+          $("input.cloudinary-fileupload[type=file]").cloudinary_fileupload({
+            disableImageResize: false,
+            imageMaxWidth: 800,                   // 800 is an example value - no default
+            imageMaxHeight: 600,                  // 600 is an example value - no default
+            maxFileSize: 1000000,                // 1MB is an example value - no default
+            loadImageMaxFileSize: 1000000,       // default is 1MB
+            acceptFileTypes: /(\.|\/)(jpe?g|png)$/i
+          });
+        }
+
+        $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {
+          $('#custom-cloudinary-upload').attr("src", data.result.secure_url);
+          // $('.preview-icon').fadeOut();
+          // $('.logo').html(
+          //    $.cloudinary.imageTag(data.result.public_id,
+          //        { format: data.result.format, version: data.result.version,
+          //          crop: 'scale', width: 200 }));
+          $('[name="' + $(this).attr("data-cloudinary-field") + '"]').val(data.result.public_id + "." + data.result.format);
+          return true;
+        });
+      });
+    </script>
+    <%= yield(:javascript) %>
+    <% if content_for?(:extra_js) %>
+      <%= yield :extra_js %>
+    <% end %>
+    <%= render "meritadmin/shared/flash" %>
+  </body>
+</html>

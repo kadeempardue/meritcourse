@@ -1,0 +1,34 @@
+<div class="simple-calendar uk-width-1-1">
+  <div class="calendar-heading py-2">
+    <%= link_to "Previous", schedules_path(start_date: (date_range.first - 1.day).iso8601, course_id: @course.slug, on_lesson_page: (controller_name == "lessons" || controller_name == "schedules")), class: "button button-sm", remote: true %>
+    <h5 class="calendar-title uk-inline mb-0"><%= t('date.month_names')[start_date.month] %> <%= start_date.year %></h5>
+
+    <%= link_to "Next", schedules_path(start_date: (date_range.last + 1.day).iso8601, course_id: @course.slug, on_lesson_page: (controller_name == "lessons" || controller_name == "schedules")), class: "button button-sm", remote: true %>
+  </div>
+
+  <table class="table table-striped uk-table uk-table-small uk-table-divider">
+    <thead>
+      <tr>
+        <% date_range.slice(0, 7).each do |day| %>
+          <th><%= t('date.abbr_day_names')[day.wday] %></th>
+        <% end %>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% date_range.each_slice(7) do |week| %>
+        <tr>
+          <% week.each do |day| %>
+            <%= content_tag :td, class: calendar.td_classes_for(day) do %>
+              <% if defined?(Haml) && respond_to?(:block_is_haml?) && block_is_haml?(passed_block) %>
+                <% capture_haml(day, sorted_events.fetch(day, []), &passed_block) %>
+              <% else %>
+                <% passed_block.call day, sorted_events.fetch(day, []) %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

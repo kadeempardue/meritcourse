@@ -1,0 +1,30 @@
+<% content_for(:extra_js) do %>
+<% end %>
+
+<%= form_tag send_password_link_path, id: "form-password-reset", class: "form", method: :post do |f| %>
+
+    <div class="uk-form-group">
+        <label class="uk-form-label"> Email</label>
+
+        <div class="uk-position-relative w-100">
+            <span class="uk-form-icon">
+                <i class="icon-feather-mail"></i>
+            </span>
+            <Input class="uk-input" name="email" type="email" placeholder="you@gmail.com" data-parsley-minlength="5" data-parsley-maxlength="50" data-parsley-required data-parsley-required-message="Email is required." />
+        </div>
+
+    </div>
+
+    <div class="mt-4 uk-width-1-1 uk-grid-small">
+        <div class="uk-text-center">
+            <button type="submit" class="button grey button-large">Send Password Reset</button>
+        </div>
+    </div>
+    <div class="uk-width-1-1 mt-4">
+        <p> Have an account?
+          <a href="/login" class="text-brown">
+            Login
+          </a>
+        </p>
+    </div>
+<% end %>

@@ -1,0 +1,51 @@
+<% return unless show_footer %>
+
+<div class="page-content">
+  <div class="container uk-background-cover bg-gradient-secondary2 max-width-100">
+    <div class="footer mt-0">
+      <div class="uk-grid-collapse" uk-grid="uk-grid">
+        <div class="uk-width-expand@s uk-first-column">
+          <p>
+            <img uk-img data-src="<%= setting.logo_icon %>" width="50" alt="Logo Footer">
+            <span style="vertical-align:text-top;">© 2019-<%= Time.now.year %>. All Rights Reserved.</span>
+
+          </p>
+        </div>
+        <div class="uk-width-auto@s">
+          <nav class="footer-nav-icon mr-5">
+            <ul class="uk-light">
+              <li>
+                <a target="_blank" href="/terms" id="ember612" class="ember-view">Terms of Service</a>
+              </li>
+              <li>
+                <a target="_blank" href="/privacy-policy" id="ember613" class="ember-view">Privacy Policy</a>
+              </li>
+              <% if setting.social_media_facebook_page_id %>
+                <li>
+                  <a target="_blank" href="https://facebook.com/<%= setting.social_media_facebook_page_id %>">
+                    <i class="icon-brand-facebook"></i>
+                  </a>
+                </li>
+              <% end %>
+              <% if setting.social_media_youtube_channel_id %>
+                <li>
+                  <a target="_blank" href="https://www.youtube.com/channel/<%= setting.social_media_youtube_channel_id %>">
+                    <i class="icon-brand-youtube"></i>
+                  </a>
+                </li>
+              <% end %>
+              <% if setting.social_media_twitter_handle %>
+                <li>
+                  <a target="_blank" href="https://twitter.com/<%= setting.social_media_twitter_handle %>">
+                    <i class="icon-brand-twitter"></i>
+                  </a>
+                </li>
+              <% end %>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

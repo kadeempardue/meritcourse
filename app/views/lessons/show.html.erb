@@ -1,0 +1,11 @@
+<%= render "lessons/badge_modal" %>
+
+<% if @lesson.is_livestream? %>
+    <%= render "show_for_livestream" %>
+<% else %>
+  <% if setting.lesson_view_with_left_sidebar? %>
+    <%= render "show" %>
+  <% else %>
+    <%= render "show_for_ondemand" %>
+  <% end %>
+<% end %>

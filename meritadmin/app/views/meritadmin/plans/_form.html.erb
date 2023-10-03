@@ -1,0 +1,92 @@
+<%= form_for(@plan, html: { "uk-grid" => true, class: "uk-grid-small large form #{'error' if flash[:error]} #{'notice' if flash[:notice]}" }) do |f| %>
+  <div class="uk-width-1-1">
+    <div class="uk-form-label"> Name </div>
+    <%= f.text_field :name, class: "uk-input", minlength: 2, maxlength: 30, required: true %>
+  </div>
+  <div class="uk-width-1-1">
+    <div class="uk-form-label"> Description </div>
+    <%= f.text_area :description, class: "uk-textarea", rows: 3, required: true %>
+  </div>
+  <div class="uk-width-1-2@m uk-width-1-1@s">
+    <div class="uk-form-label"> Amount </div>
+    <%= f.number_field :amount, class: "uk-input", max: 99999, min: 0, required: true %>
+  </div>
+  <div class="uk-width-1-2@m uk-flex uk-flex-middle uk-flex-between uk-flex-row  uk-width-1-1@m ">
+    <div class="uk-width-1-2@m uk-width-1-1@s">
+      <div class="uk-form-label"> Currency </div>
+      <%= f.text_field :currency, value: "USD", readonly: true, class: "uk-input", minlength: 2, maxlength: 5, required: true %>
+    </div>
+    <div class="uk-width-1-2@m uk-width-1-1@s">
+      <div class="uk-form-label"> Installment Type </div>
+      <%= f.select :interval, options_for_select(t("membership_intervals"), @plan&.interval || "Monthly"), {}, class: "uk-select" %>
+    </div>
+  </div>
+  <div class="uk-width-1-2@m uk-width-1-1@s">
+    <div class="uk-form-label"> Color </div>
+    <%= f.text_field :color, class: "uk-input colorPicker", required: true %>
+  </div>
+  <div class="uk-width-1-2@m uk-flex uk-flex-middle uk-flex-between uk-flex-row  uk-width-1-1@m ">
+    <div class="uk-width-1-2@m uk-width-1-1@s">
+      <div class="uk-form-label"> Recommended </div>
+      <label><%= f.radio_button :recommended, 1, class: "uk-radio", checked: @plan.recommended? %> Yes </label>
+      <label><%= f.radio_button :recommended, 0, class: "uk-radio", checked: !@plan.recommended? %> No </label>
+    </div>
+    <div class="uk-width-1-2@m uk-width-1-1@s">
+      <div class="uk-form-label"> Order </div>
+      <%= f.select :order, options_for_select([1,2,3], @plan&.order), {}, class: "uk-select" %>
+    </div>
+  </div>
+  <div class="uk-flex uk-flex-middle uk-flex-row uk-flex-between uk-flex-middle uk-width-1-1@m">
+    <div class="uk-width-1-2">
+      <div class="uk-form-label"> Feature 1 </div>
+      <%= f.text_field :feature_1, class: "uk-input" %>
+    </div>
+    <div class="uk-width-1-2">
+      <div class="uk-form-label"> Feature 1 Help Text</div>
+      <%= f.text_field :feature_1_help_text, class: "uk-input" %>
+    </div>
+  </div>
+  <div class="uk-flex uk-flex-middle uk-flex-row uk-flex-between uk-flex-middle uk-width-1-1@m">
+    <div class="uk-width-1-2">
+      <div class="uk-form-label"> Feature 2 </div>
+      <%= f.text_field :feature_2, class: "uk-input" %>
+    </div>
+    <div class="uk-width-1-2">
+      <div class="uk-form-label"> Feature 2 Help Text</div>
+      <%= f.text_field :feature_2_help_text, class: "uk-input" %>
+    </div>
+  </div>
+  <div class="uk-flex uk-flex-middle uk-flex-row uk-flex-between uk-flex-middle uk-width-1-1@m">
+    <div class="uk-width-1-2">
+      <div class="uk-form-label"> Feature 3 </div>
+      <%= f.text_field :feature_3, class: "uk-input" %>
+    </div>
+    <div class="uk-width-1-2">
+      <div class="uk-form-label"> Feature 3 Help Text</div>
+      <%= f.text_field :feature_3_help_text, class: "uk-input" %>
+    </div>
+  </div>
+  <div class="uk-flex uk-flex-middle uk-flex-row uk-flex-between uk-flex-middle uk-width-1-1@m">
+    <div class="uk-width-1-2">
+      <div class="uk-form-label"> Feature 4 </div>
+      <%= f.text_field :feature_4, class: "uk-input" %>
+    </div>
+    <div class="uk-width-1-2">
+      <div class="uk-form-label"> Feature 4 Help Text</div>
+      <%= f.text_field :feature_4_help_text, class: "uk-input" %>
+    </div>
+  </div>
+  <div class="uk-flex uk-flex-middle uk-flex-row uk-flex-between uk-flex-middle uk-width-1-1@m">
+    <div class="uk-width-1-2">
+      <div class="uk-form-label"> Feature 5 </div>
+      <%= f.text_field :feature_5, class: "uk-input" %>
+    </div>
+    <div class="uk-width-1-2">
+      <div class="uk-form-label"> Feature 5 Help Text</div>
+      <%= f.text_field :feature_5_help_text, class: "uk-input" %>
+    </div>
+  </div>
+  <div class="uk-width-1-1">
+    <input class="button grey uk-width-1-1@s uk-width-1-4@m mt-3 ml-0 mr-0" type="submit" class="button" value="Save">
+  </div>
+<% end %>

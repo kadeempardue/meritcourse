@@ -1,0 +1,66 @@
+<div class="uk-flex uk-flex-middle">
+  <a href="<%= course_path(@course, anchor: "lessons", page: params[:page], scope: params[:scope]) %>" class="button grey"
+      uk-tooltip="title: Back To Course <%= @course.name %> ; delay: 500 ; pos: top ;">
+      <i class="icon-material-outline-arrow-back"></i> Back To Course: <%= @course.name %>
+  </a>
+</div>
+
+<div class="mt-4" uk-grid>
+  <div class="<%= @lesson.video? ? 'uk-width-2-3@m' : 'uk-width-1-1@m' %>">
+    <div class="uk-card-default rounded">
+        <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+            <h5 class="mb-0"> Lesson Details </h5>
+            <div class="uk-flex-right">
+              <a href="/courses/<%= @course.slug %>/lessons/<%= @lesson.id %>?admin_preview=true" target="_blank" uk-tooltip="title:Preview Lesson; pos: left"> <i
+                      class="icon-brand-slideshare"></i> </a>
+              <a href="<%= edit_course_lesson_path(@course, @lesson) %>" uk-tooltip="title:Edit Lesson; pos: left"> <i
+                      class="icon-feather-settings"></i> </a>
+            </div>
+
+        </div>
+        <hr class="m-0">
+        <div class="uk-child-width-1-2@s uk-grid-small p-4" uk-grid>
+            <div class="uk-width-2-3@s">
+                <h6 class="uk-text-bold"> Name </h6>
+                    <p> <%= @lesson.name %> </p>
+            </div>
+            <div class="uk-width-1-3@s">
+                <h6 class="uk-text-bold"> Module Name </h6>
+                    <p> <%= @lesson.module_name %> </p>
+            </div>
+            <div class="uk-width-1-3@s">
+                <h6 class="uk-text-bold"> Lesson Type </h6>
+                    <p> <%= @lesson.lesson_type %> </p>
+            </div>
+            <div class="uk-width-1-3@s">
+                <h6 class="uk-text-bold"> Duration </h6>
+                    <p> <%= friendly_duration_for(@lesson.duration) %> </p>
+            </div>
+            <div class="uk-width-1-3@s">
+                <h6 class="uk-text-bold"> Preview </h6>
+                    <p> <%= @lesson.is_preview? ? 'Yes' : 'No' %> </p>
+            </div>
+        </div>
+    </div>
+  </div>
+  <% if @lesson.video? %>
+    <div class="uk-width-1-3@m">
+      <div class="uk-card-default rounded">
+        <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+            <h5 class="mb-0"> Featured Video Preview </h5>
+            <a href="<%= edit_course_lesson_path(@course, @lesson) %>" uk-tooltip="title:Edit Lesson; pos: left"> <i
+                    class="icon-feather-settings"></i> </a>
+        </div>
+        <hr class="m-0">
+        <div class="uk-child-width-1-2@s uk-grid-small p-3" uk-grid>
+          <div class="uk-width-1-1 course-thumbnail pl-0 ml-3" uk-lightbox>
+            <a href="<%= @lesson.video_url %>">
+              <img src="<%= @lesson.image_url %>">
+              <i class="play-button-trigger show" ></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,34 @@
+<div class="uk-overflow-auto uk-card uk-card-default pt-4 uk-card-body rounded">
+    <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
+        <thead>
+            <tr class="uk-text-small uk-text-bold">
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+          <% @programs&.reverse&.each do |program| %>
+            <tr data-row-id="<%= program.id %>">
+                <td> <%= program.name %> </td>
+
+                <td class="uk-flex-inline uk-flex-between">
+                  <a href="<%= program_path(program) %>" class="button soft-success">
+                      <i class="icon-feather-eye uk-visible@m"></i> View
+                  </a>
+                  <a href="<%= edit_program_path(program) %>" class="button soft-primary">
+                      <i class="icon-feather-edit uk-visible@m"></i> Edit
+                  </a>
+                  <a href="#" class="button soft-danger delete-button"
+                     data-id="<%= program.id %>"
+                     data-name="<%= program.name %>"
+                     data-action="<%= program_path(program) %>"
+                     data-token="<%= form_authenticity_token %>"
+                     uk-toggle="target: #delete-modal">
+                      <i class="icon-feather-trash-2 uk-visible@m"></i> Delete
+                  </a>
+                </td>
+            </tr>
+          <% end %>
+        </tbody>
+    </table>
+</div>

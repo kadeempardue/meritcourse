@@ -1,0 +1,15 @@
+<script>
+  var logEvent = function(data, event_type) {
+    $.ajax({
+      type: "POST",
+      url: "/events",
+      data: { event: { message: data, message_type: event_type, uuid: '<%= student_signed_in? ? current_student.uuid : nil %>' } },
+      success: function(results) {
+        console.log(results);
+      },
+      error: function(_event, _xhr, thrownError) {
+        console.error(thrownError);
+      }
+    })
+  }
+</script>

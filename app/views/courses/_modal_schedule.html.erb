@@ -1,0 +1,9 @@
+<% return unless @schedules.present? %>
+
+<div id="modal-schedule" class="uk-modal-full uk-flex-top" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+        <button class="uk-modal-close-default" type="button" uk-close></button>
+
+        <%= render "form_calendar" %>
+    </div>
+</div>

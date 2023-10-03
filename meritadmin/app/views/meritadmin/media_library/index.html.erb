@@ -1,0 +1,39 @@
+<div class="">
+  <h3 class="mb-0 mr-3"> <i class="icon-material-outline-library-add"></i> Media Library </h3>
+  <article class="pt-2 pb-0 mb-0">
+    <p>
+      Here is where you can upload files to reference in your lessons.
+      <br><sub class="text-muted">Acceptable files are .jpg, .jpeg, .png, .gif, .doc, .docx, .xls, .xlsx, .csv, .ppt, .pptx, .mp3 and .txt. Maximum size limit is 100 MB.<sub>
+    </p>
+  </article>
+  <br>
+  <%= form_tag(upload_media_path, method: :post, multipart: true) do |f| %>
+    <div class="uk-margin" uk-margin>
+      <div uk-form-custom="target: true">
+          <input id="mediaLibraryFile" name="file" type="file" accept=".jpg .jpeg, .png, .gif, .csv, audio/mpeg, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel, text/plain, application/msword, application/vnd.ms-excel, application/vnd.ms-powerpoint, application/vnd.openxmlformats-officedocument.presentationml.presentation, text/plain, application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.openxmlformats-officedocument.presentationml.slideshow"></input>
+
+          <input class="uk-input uk-width-1-1 uk-form-width-medium" type="text" placeholder="Select file" disabled>
+      </div>
+      <input id="mediaLibraryUploadBtn" type="submit" class="button grey" value="Upload" disabled="true">
+    </div>
+  <% end %>
+</div>
+
+<div class="uk-grid-medium uk-child-width-1-4@s uk-text-center" uk-grid="masonry: true">
+  <% @files.each_with_index do |file, i| %>
+    <div class="">
+      <a href="<%= s3_url(file.key) %>" target="_blank" class="uk-card uk-card-default uk-card-body uk-block">
+        <%= element_from_url_file_format(s3_url(file.key)) %>
+        <span class="mb-0"> <%= file.key.gsub("#{@tenant&.key}/", "") %> </span>
+        <input type="hidden" id="file_<%= i.to_s %>" value="<%= s3_url(file.key) %>">
+      </a>
+      <div class="uk-card uk-card-default uk-card-footer">
+        <i class="copy-elem icon-material-outline-file-copy" uk-tooltip="title: Copy URL ; delay: 500 ; pos: top ;" data-clipboard-target="#file_<%= i.to_s %>"></i>
+        <i class="icon-material-outline-delete red" uk-tooltip="title: Delete Media ; delay: 500 ; pos: top ;"></i>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<%= paginate @files %>
+<p class="uk-padding"> <%= total_count(@files) %></p>

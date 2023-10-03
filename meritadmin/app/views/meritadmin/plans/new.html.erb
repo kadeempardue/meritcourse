@@ -1,0 +1,19 @@
+<div class="uk-flex uk-flex-middle">
+  <a href="<%= plans_path(page: params[:page], scope: params[:scope]) %>" class="button grey"
+      uk-tooltip="title: View All Plans ; delay: 500 ; pos: top ;">
+      <i class="icon-material-outline-arrow-back"></i> Back To All Plans
+  </a>
+</div>
+
+<div class="uk-card-default mt-4 rounded">
+    <div class="uk-card-header">
+      <i class="icon-feather-plus mr-2"></i> Setup A New Plan
+    </div>
+    <div class="uk-card-body">
+        <div uk-grid>
+            <div class="uk-width-expand@m">
+              <%= render "form" %>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,239 @@
+<%= render "twilio/connect", access_token: @access_token %>
+
+<div id="lesson-navigator" class="uk-margin-left">
+  <div class="uk-visible@m width-auto" uk-sticky="offset: 170 ; left: 20;bottom: true ;media @s">
+      <a href="#" class="iconbox iconbox-lg circle button grey" uk-toggle="target: #open-side-course">
+          <i class="uil-list-ul"></i>
+      </a>
+  </div>
+
+  <%= render "lessons/sidebar" %>
+</div>
+
+    <!-- for mobile  -->
+    <div class="uk-card-default bg-gradient-primary p-4 uk-light uk-hidden@s">
+        <div class="uk-flex uk-flex-between uk-flex-middle">
+            <h4 class="mb-0"> <%= @lesson.name %> </h4>
+            <a href="#" class="iconbox iconbox-lg circle button text-dark" uk-toggle="target: #open-side-course">
+                <i class="icon-feather-list"></i>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="section-small bg-white uk-visible@s">
+        <div class="px-5">
+
+            <div class="uk-flex-middle uk-grid" uk-grid="">
+
+                <div class="uk-width-1-4@m uk-first-column">
+                    <a href="/" class="uk-h5 p-3 rounded">
+                        <img src="<%= setting.logo_icon %>" width="50" alt="<%= @tenant&.name %>">
+                    </a>
+                </div>
+
+                <div class="uk-width-expand@m">
+
+                    <div uk-grid="" class="uk-grid">
+
+                        <div class="uk-width-2-3@m uk-first-column">
+                            <a href="/courses/<%= @course.slug %>" class="uk-text-bold uk-h4"> <%= @course.name %>
+                            </a>
+                            <br>
+                            <a href="/courses/<%= @course.slug %>" class="uk-text-muted">
+                                <i class="icon-line-awesome-long-arrow-left"></i> back
+                            </a>
+                        </div>
+
+                        <div class="uk-width-1-3@m">
+
+                            <div class="mt-lg-3">
+
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <hr>
+
+
+        <!-- course section title -->
+
+        <div class="uk-container uk-margin-auto uk-margin-medium-top">
+            <h3 class=" uk-text-light"> <%= @lesson.module_name %> </h3>
+            <h1 class="uk-text-light"> <%= @lesson.name %> </h1>
+        </div>
+
+    </div>
+
+    <% if @lesson.is_livestream? %>
+      <div class="section-small pt-4">
+        <div class="uk-container uk-margin-auto uk-margin-auto-@m uk-padding-small" uk-grid>
+          <div class="uk-width-2-3@m pl-0">
+            <div id="livestream-iframe">
+
+
+              <div class="uk-child-width-1-1@m uk-grid-collapse uk-grid-match" uk-grid>
+                 <div id="lesson-host-video-container" class="p-0 uk-position-relative">
+                   <% if @lesson.host.present? && @lesson.host&.uuid == current_staff&.uuid %>
+                     <div id="participant-container-<%= @lesson.host&.uuid %>" data-avatar="<%= avatar_helper(@lesson.host) %>" class="uk-padding-remove height-participant-container mt-0" data-identity="<%= @lesson.host&.uuid %>">
+                         <div class="uk-position-relative uk-height-1-1 uk-card uk-card-default uk-card-body uk-flex uk-flex-center uk-flex-middle p-0" uk-toggle="target: #participant-<%= @lesson.host&.uuid %>; mode: hover; animation: uk-animation-fade;">
+                            <div class="uk-text-center uk-width-expand uk-flex uk-height-1-1">
+                              <div class="lesson-participant-avatar uk-height-1-1 uk-flex uk-flex-middle uk-width-expand">
+                                <span uk-spinner="ratio: 4.5" class="uk-icon uk-spinner uk-flex uk-flex-center uk-width-expand"></span>
+                              </div>
+                              <div id="participant-<%= @lesson.host&.uuid %>" class="uk-overlay uk-light uk-overlay-primary uk-position-bottom pl-2 pt-2 pb-2 pr-0" hidden>
+                                <%= @lesson.host&.name %>
+
+                                <% if @lesson.host&.uuid == current_staff&.uuid %>
+                                  <div class="uk-child-width-1-2 uk-grid-collapse uk-child-width-expand" uk-grid>
+                                    <div class="my-control-panel">
+                                      <i hidden class="icon-small icon-line-awesome-microphone <%= "me cursor" if @lesson.host&.uuid == current_staff&.uuid %> uk-text-warning"></i>
+                                      <i class="icon-small icon-line-awesome-microphone-slash <%= "me cursor" if @lesson.host&.uuid == current_staff&.uuid %> uk-text-secondary"></i>
+                                      <i hidden class="icon-small icon-feather-camera <%= "me cursor" if @lesson.host&.uuid == current_staff&.uuid %> uk-text-warning"></i>
+                                      <i class="icon-small icon-feather-camera-off  <%= "me cursor" if @lesson.host&.uuid == current_staff&.uuid %> uk-text-secondary"></i>
+                                    </div>
+                                  </div>
+                                <% end %>
+                             </div>
+                             <div class="lesson-participant-video uk-height-1-1 uk-width-expand" hidden></div>
+                             <div class="lesson-participant-audio" hidden></div>
+                            </div>
+                         </div>
+                     </div>
+                    <% end %>
+                 </div>
+
+              </div>
+              <hr class="my-1">
+              <div>
+                <div class="uk-position-relative">
+                  <div class="">
+                    <div id="lesson-participant-video-container" class="uk-child-width-1-2@s uk-grid-column-collapse" uk-grid>
+                       <% @participants&.each do |participant| %>
+                         <div id="participant-container-<%= participant.uuid %>" data-avatar="<%= avatar_helper(participant) %>" class="uk-padding-remove height-participant-container mt-0" data-identity="<%= participant.uuid %>">
+                             <div class="uk-position-relative uk-height-1-1 uk-card uk-card-default uk-card-body uk-flex uk-flex-center uk-flex-middle p-0" uk-toggle="target: #participant-<%= participant.uuid %>; mode: hover; animation: uk-animation-fade;">
+                                <div class="uk-text-center uk-width-expand uk-flex uk-height-1-1">
+                                  <div class="lesson-participant-avatar uk-height-1-1 uk-flex uk-flex-middle uk-width-expand">
+                                    <span uk-spinner="ratio: 4.5" class="uk-icon uk-spinner uk-flex uk-flex-center uk-width-expand"></span>
+                                  </div>
+                                  <div id="participant-<%= participant.uuid %>" class="uk-overlay uk-light uk-overlay-primary uk-position-bottom pl-2 pt-2 pb-2 pr-0" hidden>
+                                    <%= participant.name %>
+
+                                    <% if staff_signed_in? || participant.uuid == current_student&.uuid %>
+                                      <div class="uk-child-width-1-2 uk-grid-collapse uk-child-width-expand" uk-grid>
+                                        <div class="my-control-panel">
+                                          <i hidden class="icon-small icon-line-awesome-microphone <%= "me cursor" if staff_signed_in? || participant.uuid == current_student&.uuid %> uk-text-warning"></i>
+                                          <i class="icon-small icon-line-awesome-microphone-slash <%= "me cursor" if staff_signed_in? || participant.uuid == current_student&.uuid %> uk-text-secondary"></i>
+                                          <i hidden class="icon-small icon-feather-camera <%= "me cursor" if staff_signed_in? || participant.uuid == current_student&.uuid %> uk-text-warning"></i>
+                                          <i class="icon-small icon-feather-camera-off  <%= "me cursor" if staff_signed_in? || participant.uuid == current_student&.uuid %> uk-text-secondary"></i>
+                                        </div>
+                                      </div>
+                                    <% end %>
+                                 </div>
+                                 <div class="lesson-participant-video uk-height-1-1 uk-width-expand" hidden></div>
+                                 <div class="lesson-participant-audio" hidden></div>
+                                </div>
+                             </div>
+                         </div>
+                       <% end %>
+                       </div>
+                  </div>
+                </div>
+               </div>
+            </div>
+          </div>
+          <div class="uk-width-1-3@m">
+            <nav class="responsive-tab style-4">
+              <ul uk-switcher="connect: #lesson-engagement-tab ;animation: uk-animation-slide-right-medium, uk-animation-slide-left-medium">
+                <li>
+                  <a href="#" class="no-underline" uk-switcher-item="0">Participants</a>
+                </li>
+              </ul>
+            </nav>
+
+            <ul id="lesson-engagement-tab" class="uk-switcher mt-4">
+              <li>
+                <%= render "chat/participants" %>
+              </li>
+
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    <% end %>
+
+    <% if @lesson.lecture? && @lesson.video_url.present? %>
+      <div class="uk-container uk-padding-small uk-margin-auto">
+          <div class="uk-position-relative uk-margin-medium-bottom uk-margin-small-top uk-text-medium ">
+              <div class="embed-video uk-animation-scale-up">
+                <video src="<%= @lesson.video_url %>" poster="<%= @lesson.image_url %>" class="uk-width-1-1" controls playsinline uk-video="autoplay : false;" uk-responsive="" class="uk-responsive-width"></video>
+              </div>
+          </div>
+      </div>
+    <% end %>
+
+    <% if @lesson.lecture? && @lesson.pdf_url.present? %>
+      <div class="section-small bg-white pt-4" style="height:500px;">
+        <div class="uk-container uk-padding-small uk-margin-auto" style="height:500px;">
+          <div id="adobe-dc-view" class="pdfviewer" style="height:500px;">
+          </div>
+          <script type="text/javascript">
+           document.addEventListener("adobe_dc_view_sdk.ready", function()
+           {
+              var adobeDCView = new AdobeDC.View({clientId: "<%= ENV['ADOBE_CLIENT_ID'] %>", divId: "adobe-dc-view"});
+              adobeDCView.previewFile(
+             {
+                 content:  {location: {url: "<%= @lesson.pdf_url %>"}},
+                 metaData: {fileName: "<%= @lesson.name %>"}
+             }, { embedMode: "SIZED_CONTAINER", showDownloadPDF: false, showPrintPDF: true });
+           });
+          </script>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="section-small bg-white <%= @lesson.lecture? && @lesson.pdf_url.present? ? 'pt-4' : 'pt-0' %> pb-8">
+      <div class="uk-container uk-padding-small uk-margin-auto">
+        <% if @lesson.handouts.present? %>
+          <div id="handouts-section" uk-height-viewport="expand: true">
+            <%= raw @lesson.handouts.html_safe %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="uk-container uk-padding-small uk-margin-auto">
+        <div class="uk-child-width-1-2 uk-grid-small uk-text-center uk-position-relative" uk-grid>
+          <div>
+            <% if @prev_lesson.present? %>
+              <div class="uuk-position-left k-animation-slide-bottom">
+                  <a href="/courses/<%= @course.slug %>/lessons/<%= @prev_lesson.id %>?r=<%= @lesson.id %>" class="button grey icon-label">
+                      <span class="inner-icon"><i class="icon-feather-chevron-left"></i></span>
+                      <span class="inner-text">Previous Lesson</span>
+                  </a>
+               </div>
+            <% end %>
+          </div>
+          <div>
+            <% if @next_lesson.present? %>
+              <div class="uk-position-right uk-animation-slide-bottom">
+                  <a href="/courses/<%= @course.slug %>/lessons/<%= @next_lesson.id %>?r=<%= @lesson.id %>" class="button grey icon-label">
+                      <span class="inner-text">Next Lesson</span>
+                      <span class="inner-icon"><i class="icon-feather-chevron-right"></i></span>
+                  </a>
+               </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+
+    </div>

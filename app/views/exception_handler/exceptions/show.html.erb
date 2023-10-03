@@ -1,0 +1,14 @@
+<div id="wrapper">
+  <div uk-height-viewport="expand: true" class="uk-flex uk-flex-middle" data-height-expand="" style="min-height: 364px;">
+      <div class="uk-width-1-2@m uk-width-1-2@s m-auto text-center">
+          <i class="icon-feather-alert-octagon icon-xxlarge text-grey "></i>
+          <h3>Whoops, there was an error.</h3>
+          <p class="mb-0"> We apologize for the inconvenience but we have been notified of the error.</p>
+          <%= content_tag :div, class: "exception pt-2", data: { status: @exception.status, response: @exception.response.to_s.humanize, rails: Rails.version }, onclick: ("location.href=\"#{root_url}\";" if @exception.status.to_s.first == "5" && Rails.application.routes.recognize_path("/")) do %>
+            <%= content_tag :span, @exception.description.html_safe %>
+          <% end %>
+          <a href="/" class="button grey transition-3d-hover my-4 large uk-flex-inline uk-flex-middle uk-flex-justify-center">
+          <i class="icon-feather-home icon-small mr-2 mb-1"></i> Return Home</a>
+      </div>
+  </div>
+</div>

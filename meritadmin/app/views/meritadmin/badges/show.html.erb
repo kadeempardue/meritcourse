@@ -1,0 +1,40 @@
+<div class="uk-flex uk-flex-middle">
+  <a href="<%= badges_path(page: params[:page], scope: params[:scope]) %>" class="button grey"
+      uk-tooltip="title: View All Badges ; delay: 500 ; pos: top ;">
+      <i class="icon-material-outline-arrow-back"></i> Back To All Badges
+  </a>
+</div>
+<div class="mt-4" uk-grid>
+  <div class="uk-width-1-1@m">
+    <div class="uk-width-1-1@m">
+      <div class="uk-card-default rounded">
+          <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+              <h5 class="mb-0">
+                <%= cl_image_tag(@badge.image_url, { width: 80, quality: "auto:best", transformation: [{ width: 80, crop: "scale" }] }) %>
+                Badge Details </h5>
+                  <a href="<%= edit_badge_path(@badge) %>" uk-tooltip="title:Edit Badge; pos: left"> <i
+                          class="icon-feather-settings"></i> </a>
+          </div>
+          <hr class="m-0">
+          <div class="uk-child-width-1-2@s uk-grid-small p-4" uk-grid>
+              <div class="uk-width-1-1@s">
+                  <h6 class="uk-text-bold"> Name </h6>
+                      <p> <%= @badge.name %> </p>
+              </div>
+              <div class="uk-width-1-1@s">
+                  <h6 class="uk-text-bold"> Description </h6>
+                      <p> <%= @badge.description %> </p>
+              </div>
+              <div class="uk-width-1-1@s">
+                  <h6 class="uk-text-bold"> Earning Criteria </h6>
+                      <p> <%= @badge.earning_criteria %> </p>
+              </div>
+              <div class="uk-width-1-1@s">
+                  <h6 class="uk-text-bold"> Skills </h6>
+                      <p> <%= @badge.skills&.join(", ") %> </p>
+              </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

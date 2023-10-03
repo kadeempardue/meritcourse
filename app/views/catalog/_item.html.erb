@@ -1,0 +1,25 @@
+<li class="blog-post uk-position-relative pl-0" <%= "data-program=\"\"" if course_included_in_program?(course, @programs) %> data-level="<%= course.level %>" data-meta="large" data-subject="<%= course.subject.slug %>">
+    <div class="blog-post-thumbnail">
+        <div class="blog-post-thumbnail-inner">
+          <a href="/courses/<%= course.slug %>" id="ember35" class="ember-view">
+            <img uk-img data-src="<%= course.featured_preview_image_url %>" alt="<%= course.name %>">
+          </a>
+        </div>
+    </div>
+    <div class="blog-post-content uk-padding">
+      <a href="/courses/<%= course.slug %>" id="ember36" class="ember-view">
+        <h3><%= course.name %></h3>
+      </a>
+
+      <%= star_rating(course.avg_rating) if course.avg_rating.to_f.positive? %>
+
+      <div class="blog-post-content-info mt-4">
+        <% if course.lessons.count.positive? %>
+          <div class="mb-0"> <i class="icon-feather-film"></i> <%= pluralize(course.lessons.count, 'lesson') %> </div>
+        <% end %>
+        <% if course.total_lesson_duration.positive? %>
+          <div class="mb-0"> <i class="icon-feather-clock"></i> <%= course.full_total_duration %> </div>
+        <% end %>
+      </div>
+  </div>
+</li>

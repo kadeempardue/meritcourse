@@ -1,0 +1,169 @@
+<div class="uk-flex uk-flex-middle">
+  <a href="<%= students_path(page: params[:page], scope: params[:scope]) %>" class="button grey"
+      uk-tooltip="title: View All Students ; delay: 500 ; pos: top ;">
+      Back To All Students
+  </a>
+</div>
+
+<div class="mt-4" uk-grid>
+    <div class="uk-width-2-5@m">
+        <div class="uk-card-default rounded text-center p-4">
+            <%= cl_image_tag(avatar_helper(@student), default_image_options(class: "avatar-xlarge uk-border-circle shadow my-4")) %>
+            <h4 class="mb-2 mt-0"> <%= @student.name %> </h4>
+            <p class="m-0"> Member since <%= friendly_date(@student.created_at) %> </p>
+            <p uk-hidden hidden>
+              <%= form_tag send_reset_password_instructions_for_student_or_staff_path, class: "form #{'error' if flash[:error]} #{'notice' if flash[:notice]}", hidden: true do %>
+                <%= hidden_field_tag :email, @student.email, placeholder: "E-mail address", class: 'uk-input uk-form-width-large', required: true %>
+                <input class="button grey" type="submit" class="button" value="Send Account Setup Email">
+              <% end %>
+            </p>
+        </div>
+
+        <div class="uk-card-default rounded mt-5" uk-hidden hidden>
+            <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+                <h5 class="mb-0"> Progress </h5>
+                    <a href="#"> more </a>
+            </div>
+            <hr class="m-0">
+            <div class="p-3">
+
+                <div class="uk-grid-small uk-flex-middle" uk-grid>
+
+                    <div class="uk-width-auto">
+                        <a href="#" class="button soft-danger icon-only uk-animation-slide-left">
+                            <i class="icon-brand-angular icon-small"></i>
+                        </a>
+                    </div>
+                    <div class="uk-width-expand">
+                        <h5 class="mb-2"> Angular </h5>
+                        <div class="course-progressbar">
+                            <div class="course-progressbar-filler" style="width:100%"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="uk-grid-small uk-flex-middle" uk-grid>
+
+                    <div class="uk-width-auto">
+                        <a href="#" class="button soft-warning icon-only uk-animation-slide-left">
+                            <i class="icon-brand-html5 icon-small"></i>
+                        </a>
+                    </div>
+                    <div class="uk-width-expand">
+                        <h5 class="mb-2"> html5 </h5>
+                        <div class="course-progressbar">
+                            <div class="course-progressbar-filler" style="width:35%"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="uk-grid-small uk-flex-middle" uk-grid>
+
+                    <div class="uk-width-auto">
+                        <a href="#" class="button soft-primary icon-only uk-animation-slide-left">
+                            <i class="icon-brand-css3-alt icon-small"></i>
+                        </a>
+                    </div>
+                    <div class="uk-width-expand">
+                        <h5 class="mb-2"> css3 </h5>
+                        <div class="course-progressbar">
+                            <div class="course-progressbar-filler" style="width:65%"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+    <div class="uk-width-expand@m">
+
+        <div class="uk-card-default rounded">
+            <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+                <h5 class="mb-0"> Account details </h5>
+                    <a href="<%= edit_student_path(@student) %>" uk-tooltip="title:Edit Account; pos: left"> <i
+                            class="icon-feather-settings"></i> </a>
+            </div>
+            <hr class="m-0">
+            <div class="uk-child-width-1-2@s uk-grid-small p-4" uk-grid>
+                <div>
+                    <h6 class="uk-text-bold"> Email Address </h6>
+                        <p> <%= @student.email %> </p>
+                </div>
+                <div>
+                    <h6 class="uk-text-bold"> Location </h6>
+                        <p> <%= @student.location %> </p>
+                </div>
+                <div>
+                    <h6 class="uk-text-bold"> Gender </h6>
+                        <p> <%= @student.gender %> </p>
+                </div>
+                <div>
+                    <h6 class="uk-text-bold"> Ethnicity </h6>
+                        <p> <%= @student.ethnicity %> </p>
+                </div>
+                <div>
+                    <h6 class="uk-text-bold"> Age Range </h6>
+                        <p> <%= @student.age_range %> </p>
+                </div>
+                <div>
+                    <h6 class="uk-text-bold"> Income </h6>
+                        <p> <%= @student.income %> </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4" uk-grid>
+  <div class="uk-width-1-1@m">
+    <div class="uk-card-default rounded mt-4">
+        <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+            <h5 class="mb-0"> Awarded Badges </h5>
+            <a href="#" uk-tooltip="title: Edit Billing address; pos: left"> <i
+                    class="icon-feather-settings"></i> </a>
+        </div>
+        <hr class="m-0">
+        <div class=" uk-grid-small p-4 uk-child-width-1-4" uk-grid>
+          <% if @student.awarded_badges.present? %>
+            <% @student.awarded_badges.each do |awarded_badge| %>
+              <div class="">
+                <img uk-img data-src="<%= awarded_badge.image_url %>" alt="">
+              </div>
+            <% end %>
+          <% else %>
+          <div class="">
+            <h6>None</h6>
+          </div>
+          <% end %>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4" uk-grid>
+  <div class="uk-width-1-1@m">
+    <div class="uk-card-default rounded text-left p-4">
+      <h5> Enrolled Courses </h5>
+      <%= render "meritadmin/courses/collection_table",
+          courses: @student.enrollments.map(&:course),
+          enrollment_actions: true,
+          enrollments: @student.enrollments
+      %>
+    </div>
+  </div>
+</div>
+
+<div class="mt-4" uk-grid>
+  <div class="uk-width-1-1@m">
+    <div class="uk-card-default rounded text-left p-4">
+      <h5> Reviews </h5>
+      <%= render "meritadmin/reviews/collection_list" %>
+    </div>
+  </div>
+</div>
+
+<%= render "modal" %>

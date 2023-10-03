@@ -1,0 +1,92 @@
+<%= form_for(@course, html: { "uk-grid" => true, class: "uk-grid-small large form #{'error' if flash[:error]} #{'notice' if flash[:notice]}" }) do |f| %>
+<%= f.hidden_field :featured_preview_image_url, class: "uk-input", minlength: 2, maxlength: 255, required: true %>
+<div class="uk-width-1-4@m">
+
+    <div class="text-center">
+        <div class="uk-position-relative text-center">
+          <%= cl_image_tag((@course.featured_preview_image_url.presence || "https://via.placeholder.com/1280x720"), { quality: "auto:best", id: "custom-cloudinary-upload" }) %>
+            <div class="uk-position-center">
+                <div uk-form-custom>
+                    <input name="file" type="file" accept=".jpg,.jpeg,.png" class="cloudinary-fileupload" data-cloudinary-field="course[featured_preview_image_url]"
+                        data-form-data="{ &quot;upload_preset&quot;:  &quot;<%= ENV['CLOUDINARY_API_UNSIGNED_UPLOAD_PRESET'] %>&quot;, &quot;callback&quot;: &quot;<%= request.base_url %>/cloudinary_cors.html&quot;}" ></input>
+                    <span class="preview-icon uk-link icon-feather-camera icon-medium text-white">
+                    </span>
+                </div>
+
+            </div>
+
+        </div>
+        <span class="uk-text-meta">For best results use 1280px x 720px</span>
+    </div>
+
+</div>
+<div class="uk-width-expand@m">
+  <div class="uk-width-1-1">
+    <div class="uk-form-label"> Name </div>
+    <%= f.text_field :name, class: "uk-input", minlength: 2, maxlength: 255, required: true %>
+  </div>
+  <div class="mt-2 uk-flex-inline uk-flex-between uk-width-expand@m">
+    <div class="uk-width-1-3 pr-4">
+      <div class="uk-form-label"> Subject </div>
+      <%= f.select :subject_id, options_from_collection_for_select(Subject.all, :id, :name, @course&.subject&.id.to_s), {}, class: "uk-select", required: true %>
+    </div>
+    <div class="uk-width-1-3 pr-4">
+      <div class="uk-form-label"> Level </div>
+      <%= f.select :level, options_for_select(t("settings.levels"), @course&.level), {}, class: "uk-select", required: true %>
+    </div>
+    <div class="uk-width-1-3">
+      <div class="uk-form-label"> Archived </div>
+      <label><%= f.radio_button :archived, 1, class: "uk-radio", checked: @course.archived? %> Yes </label>
+      <label><%= f.radio_button :archived, 0, class: "uk-radio", checked: !@course.archived? %> No </label>
+    </div>
+    <div class="uk-width-1-3">
+      <div class="uk-form-label"> Status </div>
+      <label><%= f.radio_button :is_preview, 1, class: "uk-radio", checked: @course.is_preview? %> Draft </label>
+      <label><%= f.radio_button :is_preview, 0, class: "uk-radio", checked: !@course.is_preview? %> Published </label>
+    </div>
+  </div>
+</div>
+
+<% if setting.is_membership_portal? %>
+  <div class="mt-4 uk-width-1-1">
+    <div class="uk-form-label"> Which Membership Plans Can Access This Course? </div>
+    <% @tenant.plans&.each do |plan| %>
+      <label class="uk-width-1-1 uk-block">
+        <%= f.check_box :plan_access, { multiple: true, class: "uk-checkbox", checked: (@course&.plan_access.include?(plan.id.to_s)) }, plan.id, false %>
+        <%= plan.name %> - <%= plan.free? ? "FREE" : number_to_currency(plan.amount, precision: 0) %><%= plan.friendly_interval %>
+      </label>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="mt-4 uk-width-1-1">
+  <div class="uk-form-label"> Featured Video URL </div>
+  <span class="uk-text-meta">Ex: https://content.jwplatform.com/videos/vuXPeQyH-uFPL45Hc.mp4</span>
+  <%= f.text_field :featured_preview_video_url, value: (@course.featured_preview_video_url.present? ? @course.featured_preview_video_url.split("?")[0] : nil), class: "uk-input", minlength: 2, maxlength: 255 %>
+</div>
+
+<div class="uk-width-1-1">
+  <div class="uk-form-label"> Featured Video Caption </div>
+  <%= f.text_field :video_caption, class: "uk-input", minlength: 2, maxlength: 255 %>
+</div>
+
+  <div class="uk-width-1-1">
+    <div class="uk-form-label"> Excerpt </div>
+    <%= f.text_area :excerpt, class: 'uk-textarea', 'data-provider': :summernote %>
+  </div>
+  <div class="uk-width-1-1">
+    <div class="uk-form-label"> Description </div>
+    <%= f.text_area :description, class: 'uk-textarea', 'data-provider': :summernote %>
+  </div>
+  <div class="uk-width-1-1">
+    <div class="uk-form-label"> Requirements </div>
+    <%= f.text_area :requirements, class: 'uk-textarea', 'data-provider': :summernote %>
+  </div>
+  <div class="uk-width-1-1">
+    <div class="uk-form-label"> What They'll Learn </div>
+    <%= f.text_area :objectives, class: 'uk-textarea', 'data-provider': :summernote %>
+  </div>
+  <div class="uk-width-1-1">
+    <input class="button grey uk-width-1-1@s uk-width-1-4@m mt-3 ml-0 mr-0" type="submit" class="button" value="Save">
+  </div>
+<% end %>

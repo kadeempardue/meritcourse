@@ -1,0 +1,19 @@
+<% return unless setting.registration_enabled? && @enrollment.present? %>
+
+<div id="modal-enroll-now" class="uk-flex-top" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto-vertical">
+
+        <button class="uk-modal-close-default" uk-close type="button"></button>
+
+        <div class="uk-modal-body uk-text-center">
+            <h4 class="text-gold uk-text-lead"><i class="icon-material-outline-lock"></i> One Last Step.</h4>
+            <p class="uk-text-large">Enroll now to access this lesson!</p>
+            <p>
+              <%= form_for(@enrollment, method: :post) do |f| %>
+                <%= hidden_field_tag :course_id, params[:id] %>
+                <input id="enrollBtn" class="button grey mt-2" data-disable-with="Please wait..." value="Enroll Now" type="submit">
+              <% end %>
+            </p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,38 @@
+<div class="uk-flex uk-flex-middle">
+  <a href="<%= staffs_path(page: params[:page], scope: params[:scope]) %>" class="button grey"
+      uk-tooltip="title: View All Students ; delay: 500 ; pos: top ;">
+      Back To All Students
+  </a>
+</div>
+
+<div class="uk-card-default rounded mt-4">
+    <div class="uk-card-header">
+        <i class="icon-feather-user mr-2"></i> <%= @staff.name %>
+    </div>
+    <div class="uk-card-body">
+        <div uk-grid>
+            <div class="uk-width-1-4@m">
+
+                <div class="text-center">
+                    <div class="uk-position-relative">
+                        <%= cl_image_tag(avatar_helper(@staff), default_image_options(id: "custom-cloudinary-upload", class: "avatar-xlarge uk-border-circle shadow")) %>
+                        <div class="uk-position-center">
+                            <div uk-form-custom>
+                              <input name="file" type="file" accept=".jpg,.jpeg,.png" class="cloudinary-fileupload" data-cloudinary-field="staff[profile_image]"
+                                  data-form-data="{ &quot;upload_preset&quot;:  &quot;<%= ENV['CLOUDINARY_API_UNSIGNED_UPLOAD_PRESET'] %>&quot;, &quot;callback&quot;: &quot;<%= request.base_url %>/cloudinary_cors.html&quot;}" ></input>
+                                <span class="uk-link icon-feather-camera icon-medium text-white">
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="uk-width-expand@m">
+              <%= render "form" %>
+            </div>
+        </div>
+    </div>
+</div>

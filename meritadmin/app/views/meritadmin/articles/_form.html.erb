@@ -1,0 +1,37 @@
+<%= form_for(@article, html: { "uk-grid" => true, class: "uk-grid-small large form #{'error' if flash[:error]} #{'notice' if flash[:notice]}" }) do |f| %>
+  <%= f.hidden_field :featured_image, class: "uk-input disabled", minlength: 2, maxlength: 255, required: true, readonly: true %>
+  <div class="uk-width-4-5">
+    <div class="uk-form-label"> Title </div>
+    <%= f.text_field :title, class: "uk-input", minlength: 2, maxlength: 255, required: true %>
+  </div>
+  <div class="uk-width-1-5@m uk-child-width-1-1@s">
+    <div class="uk-form-label"> Status </div>
+
+    <%= f.select :post_status, options_for_select(t("post_statuses"), @article&.post_status), {}, class: "uk-select", required: true %>
+  </div>
+  <div class="uk-width-1-1@m uk-child-width-1-1@s">
+    <div class="uk-form-label"> Category </div>
+
+    <% if @category_names.present? %>
+      <span class="uk-text-meta"> A group of categories. Current Categories Include:
+        <nav class="responsive-tab style-1 pb-3 pl-0">
+            <ul>
+              <% @category_names.each do |category_name| %>
+                <li><a href="#" class="copy_from"><%= category_name %></a></li>
+              <% end %>
+            </ul>
+        </nav>
+      </span>
+    <% else %>
+      <span class="uk-text-meta">A group of categories. Ex: <%= @category_names.present? ? @category_names.join(', ') : 'Mobile App Development' %></span>
+    <% end %>
+    <%= f.text_field :category, class: "uk-input copy_to", minlength: 2, maxlength: 255, required: true %>
+  </div>
+  <div class="uk-width-1-1">
+    <div class="uk-form-label"> Body </div>
+    <%= f.text_area :body, class: 'uk-textarea', required: true, 'data-provider': :summernote %>
+  </div>
+  <div class="uk-width-1-1">
+    <input class="button grey uk-width-1-1@s uk-width-1-4@m mt-3 ml-0 mr-0" type="submit" class="button" value="Save">
+  </div>
+<% end %>

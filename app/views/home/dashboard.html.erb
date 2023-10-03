@@ -1,0 +1,113 @@
+<div class="container  header-padding-top mb-5" uk-height-viewport="offset-top: true; offset-bottom: true">
+
+  <div class="section-title text-center py-5">
+    <h2>Dashboard - My Courses</h2>
+    <% if enrolled_courses.present? %>
+      <span class="text-muted">Continue learning in your enrolled courses.</span>
+    <% end %>
+  </div>
+
+<div class="uk-grid-large uk-grid" uk-grid="">
+  <div class="uk-width-1-4@m uk-first-column">
+      <div class="uk-width-1-1">
+
+          <div class="sidebar-filter-contents">
+
+
+            <div class="">
+
+              <div class="uk-card-default text-center p-4">
+
+                <%= cl_image_tag(avatar_helper(current_student), { quality: "auto:best", class: "avatar-xlarge uk-border-circle shadow my-4" }) %>
+
+                  <h4 class="mb-2 mt-0"> <%= current_student.name %> </h4>
+                  <p class="m-0"> Joined: <%= friendly_date(current_student.created_at) %> </p>
+
+                  <% if current_student.awarded_badges.present? %>
+                    <h6 class="mt-4">Awarded Badges</h6>
+
+                    <div class=" uk-grid-small uk-child-width-1-3" uk-grid>
+                      <% current_student.awarded_badges.each do |awarded_badge| %>
+                        <div uk-lightbox>
+                          <a href="<%= awarded_badge.image_url %>">
+                            <img uk-img data-src="<%= awarded_badge.image_url %>" alt="">
+                            <i class="play-button-trigger show" ></i>
+                          </a>
+                        </div>
+                      <% end %>
+                    </div>
+                  <% end %>
+              </div>
+            </div>
+
+
+          </div>
+
+      </div>
+  </div>
+      <div class="uk-width-expand">
+        <% if enrolled_courses.present? %>
+          <% enrolled_courses&.each do |course| %>
+            <div class="uk-card uk-card-default uk-grid-collapse uk-margin" uk-grid>
+                <% if course.featured_preview_video_url.present? %>
+                  <div class="uk-card-media-left uk-width-2-5@m uk-first-column uk-flex uk-flex-top uk-text-center pl-3 pt-4 uk-flex-column" uk-lightbox="uk-lightbox">
+                    <a href="<%= course.featured_preview_video_url %>">
+                      <img uk-img data-src="<%= course.featured_preview_image_url %>" alt="<%= course.name %>">
+                      <i class="play-button-trigger mini show"></i>
+                    </a>
+                    <% if course.video_caption.present? %>
+                      <div class="uk-text-center uk-width-1-1 mt-1 uk-text-meta uk-text-emphasis"><%= course.video_caption %></div>
+                    <% end %>                  </div>
+                <% else %>
+                  <div class="uk-card-media-left uk-width-2-5@m uk-first-column uk-flex uk-flex-top uk-text-center pl-3 pt-4 uk-flex-column">
+                    <a href="/courses/<%= course.slug %>">
+                      <img uk-img data-src="<%= course.featured_preview_image_url %>" w alt="<%= course.name %>">
+                    </a>
+                    <% if course.video_caption.present? %>
+                      <div class="uk-text-center uk-width-1-1 mt-1 uk-text-meta uk-text-emphasis"><%= course.video_caption %></div>
+                    <% end %>
+                  </div>
+                <% end %>
+
+                <div class="course-card-body uk-width-3-5@m p-4">
+                    <a href="/courses/<%= course.slug %>">
+                        <h4><%= course.name %> </h4>
+                    </a>
+                    <%= sanitize(course.excerpt, tags:[]) %>
+
+                    <div class="course-details-info">
+                        <ul>
+                            <li> <i class="icon-feather-sliders"></i> <%= course.level %> </li>
+                            <li> <a href="/explore/<%= course.subject.slug %>"><%= course.subject.name %> </a> </li>
+                            <li>
+                              <%= star_rating(course.avg_rating) %>
+                            </li>
+                        </ul>
+
+                        <span>
+                          <a href="/courses/<%= course.slug %>" class=" button grey mt-2 ml-0">
+                            Go To Course
+                          </a>
+                        </span>
+                    </div>
+
+                </div>
+            </div>
+          <% end %>
+
+          <!-- pagination menu -->
+          <%= paginate enrolled_courses %>
+        <% else %>
+        <div class="uk-card uk-card-default uk-grid-collapse uk-margin" uk-grid>
+          <div class="course-card">
+            <div class="course-card-body uk-width-1-1@m p-4">
+              <h4><%= link_to "Click Here to Explore our Catalog", explore_path %></h4>
+            </div>
+          </div>
+        </div>
+        <% end %>
+
+      </div>
+
+  </div>
+</div>

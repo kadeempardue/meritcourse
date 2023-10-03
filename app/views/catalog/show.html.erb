@@ -1,0 +1,94 @@
+<div class="py-4">
+  <div class="header-padding-top mb-5" >
+    <div class="course-resume-wrapper outer-container-black topic-1">
+                  <div class="container">
+
+                      <div class="uk-grid-large uk-light mt-lg-3 uk-grid" uk-grid="">
+
+                          <div class="uk-width-1-2@m uk-first-column">
+                              <div class="m-lg-4 p-lg-3">
+                                  <img uk-img data-src="<%= @subject.icon_url %>" alt="<%= @subject.name %>">
+                              </div>
+
+
+                          </div>
+                          <div class="uk-width-1-2@m course ">
+                              <h1><%= @subject.name %></h1>
+                              <p> <%= @subject.description %>
+                              </p>
+
+
+                              <div class="">
+
+                                  <ul class="uk-list">
+                                      <li><i class="icon-line-awesome-graduation-cap"></i> <%= pluralize(@subject.courses.count, "Course") %> Available</li>
+                                      <li><i class="icon-material-outline-supervisor-account"></i> <%= pluralize(@subject.courses.map(&:enrolled_students).flatten.uniq.count, "Student") %> Enrolled</li>
+                                  </ul>
+
+                              </div>
+
+                              <div class="uk-flex uk-flex-between uk-flex-middle">
+                                  <a uk-scroll href="#description" class="btn-course-start-2 my-lg-4 mt-3"> Start Learning
+                                      <i class="icon-feather-chevron-right"></i> </a>
+                              </div>
+
+
+                          </div>
+
+                      </div>
+
+                      <div class="subnav">
+
+                          <ul class="uk-child-width-expand mb-0 uk-tab" uk-switcher="connect: #course-intro-tab ;animation: uk-animation-slide-right-medium, uk-animation-slide-left-medium" uk-tab="">
+                              <li class="uk-active"><a href="#" aria-expanded="true"> <i class="uil-file-alt"></i>
+                                      <span> Curriculum</span> </a>
+                              </li>
+                              <li><a href="#" aria-expanded="false"> <i class="uil-film"></i>
+                                      <span> Programs</span></a>
+                              </li>
+                          </ul>
+
+                      </div>
+
+                  </div>
+              </div>
+
+
+
+  </div>
+  <div id="description" class="container">
+    <ul class="course-lessons" uk-accordion="multiple: true; collapsible: true;">
+      <% @subject.courses&.each do |course| %>
+        <li>
+          <a href="/courses/<%= course.slug %>" class="uk-width-1-1@m course-card course-card-list" data-row-id="<%= course.slug %>">
+            <div class="course-card-thumbnail">
+                <img uk-img data-src="<%= course.featured_preview_image_url %>" alt="<%= course.name %>">
+            </div>
+            <div class="course-card-body">
+              <span class="uk-card-title">
+                <%= course.name %>
+              </span>
+              <% if course.excerpt.present? %>
+                <p>
+                  <%= sanitize(course.excerpt, tags:[]) %>
+                </p>
+              <% end %>
+
+              <p>
+                <% if course.is_preview? %>
+                  <span class="tag uk-background-gold">Coming Soon!</span>
+                <% end %>
+
+                <% if course.total_lesson_duration.positive? %>
+                  <span class="uk-text-meta">
+                    <i class="icon-feather-clock"></i> <%= course.full_total_duration %>
+                  </span>
+                <% end %>
+              </p>
+            </div>
+          </a>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+</div>

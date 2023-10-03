@@ -1,0 +1,30 @@
+<div uk-height-viewport="offset-top: true; offset-bottom: true" class="uk-flex uk-flex-middle">
+    <div class="uk-width-1-2@m uk-width-1-2@s m-auto">
+      <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post, class: "p-4 form #{'error' if flash[:error]} #{'notice' if flash[:notice]}" }) do |f| %>
+        <div class="uk-flex-center mb-4" uk-grid>
+          <a href="/">
+            <%= image_tag setting.logo_url, width: 400, alt: @tenant&.name  rescue nil %>
+          </a>
+        </div>
+        <h2 class="uk-text-bold uk-text-center"><%= t("menu.forgot_password")%></h2>
+
+        <%= render "devise/shared/error_messages", resource: resource %>
+
+        <div class="uk-form-label mt-4">
+            Email Address
+        </div>
+        <div class="uk-width">
+          <span class="uk-form-icon"><i class="icon-feather-user"></i></span>
+          <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "E-mail address", class: 'uk-input', required: true  %>
+        </div>
+
+        <div class="actions">
+          <%= f.submit "Send me reset password instructions", class: "button grey uk-width-1 mt-3 ml-0 mr-0" %>
+        </div>
+
+        <div class="uk-margin-top">
+            <%= link_to "Login", "/admin" %><br />
+        </div>
+      <% end %>
+    </div>
+</div>

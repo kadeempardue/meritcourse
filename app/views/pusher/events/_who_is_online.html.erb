@@ -1,0 +1,59 @@
+<script>
+  var whoIsOnlineChannel = pusher.subscribe('online');
+  var whoIsRefreshedChannel = pusher.subscribe('who-is-refreshed');
+  var whatPageAmIOnChannel = pusher.subscribe('what-page-am-i-on');
+
+  whoIsOnlineChannel.bind('pusher:subscription_succeeded', function(members) {
+  });
+
+  whoIsOnlineChannel.bind('i-am', function(data) {
+    logEvent(data, "online");
+  });
+  whoIsRefreshedChannel.bind('i-am', function(data) {
+    logEvent(data, "online-refresh");
+  });
+  whatPageAmIOnChannel.bind('i-am-here', function(data) {
+    logEvent(data, "pageview");
+  });
+</script>
+
+<script type="text/javascript">
+var poller = new Poller();
+poller
+.intervals([60000])
+.checkback(function() {
+  // could be anything asynchronous
+var deferred = $.Deferred();
+  $.getJSON('/p/amionline') // could return this directly
+    .done(function(response) {
+      deferred.resolve();
+      })
+    .fail(function() {
+      deferred.reject();
+      })
+  return deferred.promise();
+  })
+.callback(function() {
+  // checkback succeded and the end of one interval
+  // stops the poller and callback
+  console.log('Ok')
+  poller.restart()
+  })
+.failback(function() {
+  // after the third attempt, exits calling the failback
+  // function
+  console.log('Failed');
+  });
+
+poller.start() // start the process
+  .done(function() {
+    console.log('Polling ok');
+    })
+  .fail(function() {
+    console.log('Polling failed');
+    });
+
+setTimeout(function(){
+  $.getJSON('/p/amionline') // init
+}, 1000);
+</script>

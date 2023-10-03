@@ -1,0 +1,135 @@
+<% content_for(:extra_js) do %>
+  <script src="https://www.gstatic.com/firebasejs/7.16.1/firebase.js"></script>
+  <script>
+    firebase.initializeApp({
+      apiKey: '<%= ENV["GCP_API_KEY"] %>',
+      authDomain: '<%= ENV["GCP_AUTH_DOMAIN"] %>',
+    });
+
+    firebase.auth().signOut(); // Sign out to avoid session clashes.
+
+    $("#form-login").on('submit', function(e) {
+      e.preventDefault();
+      var form = $(this);
+
+      form.parsley().validate();
+
+      if (form.parsley().isValid()) {
+        var email_or_username = $("#email_or_username").val();
+        var password = $("#password").val();
+
+        firebase.auth().tenantId = '<%= @tenant&.firebase_tenant_id %>';
+
+        firebase.auth().onAuthStateChanged(function(user) {
+          if (user) {
+            $.ajax({
+              url: "<%= create_session_path %>",
+              method: "POST",
+              data: {
+                user: user.xa,
+                refresh_token: user.refreshToken
+              },
+              success: function(data) {
+                if (data.status === true) {
+                  UIkit.notification({ message: '<%= I18n.t("messages.successful_login") %>', pos: 'top-center', status: 'success' })
+                  window.location = "/"
+                }
+              }
+            })
+          }
+        });
+
+        if (email_or_username.indexOf("@") > -1) {
+          firebase.auth().signInWithEmailAndPassword(email_or_username, password).catch(function(error) {
+            UIkit.notification({ message: error.message, pos: 'top-center', status: 'danger' })
+            return false;
+          });
+        } else {
+          $.ajax({
+            url: "/get_token?username=" + email_or_username,
+            method: "GET",
+            success: function(data) {
+              console.log(data)
+              firebase.auth().signInWithCustomToken(data.data.token).catch(function(error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.error(errorMessage);
+                // ...
+              });
+
+              if (data.status === true) {
+                UIkit.notification({ message: '<%= I18n.t("messages.successful_login") %>', pos: 'top-center', status: 'success' })
+                window.location = "/"
+              }
+            }
+          })
+
+          // Set admin privilege on the user corresponding to uid.
+          // admin.auth().setCustomUserClaims(uid, {admin: true}).then(() => {
+          //   // The new custom claims will propagate to the user's ID token the
+          //   // next time a new one is issued.
+          // });
+          // // Verify the ID token first.
+          // admin.auth().verifyIdToken(idToken).then((claims) => {
+          //   if (claims.admin === true) {
+          //     // Allow access to requested admin resource.
+          //   }
+          // });
+          // // Lookup the user associated with the specified uid.
+          // admin.auth().getUser(uid).then((userRecord) => {
+          //   // The claims can be accessed on the user record.
+          //   console.log(userRecord.customClaims.admin);
+          // });
+        }
+      }
+    });
+  </script>
+<% end %>
+
+<%= form_tag create_session_path, id: "form-login", class: "form", method: :post do |f| %>
+    <div class="uk-form-group">
+        <label class="uk-form-label"> Username (This may be your email)</label>
+
+        <div class="uk-position-relative w-100">
+            <span class="uk-form-icon">
+                <i class="icon-feather-mail"></i>
+            </span>
+            <input class="uk-input" id="email_or_username" name="email_or_username" type="text" data-parsley-minlength="5" data-parsley-maxlength="50" data-parsley-required data-parsley-required-message="Username or Email is required." />
+        </div>
+
+    </div>
+
+    <div class="uk-form-group">
+        <label class="uk-form-label"> Password</label>
+
+        <div class="uk-position-relative w-100">
+            <span class="uk-form-icon">
+                <i class="icon-feather-lock"></i>
+            </span>
+            <input class="uk-input" id="password" name="password" type="password" placeholder data-parsley-minlength="8" data-parsley-required data-parsley-required-message="Password is required." />
+        </div>
+
+    </div>
+
+    <div class="mt-4 uk-width-1-1 uk-grid-small">
+        <div class="uk-text-center">
+            <button type="submit" class="button grey button-large">Log In</button>
+        </div>
+    </div>
+    <div class="uk-width-1-1 mt-4">
+
+      <% if setting.registration_enabled? %>
+        <p> Don't have an account?
+          <a href="/register" class="text-brown">
+            Sign Up
+          </a>
+        </p>
+      <% end %>
+        <p> Forgot password?
+          <a href="/reset_password" class="text-brown">
+            Reset Password
+          </a>
+        </p>
+    </div>
+<% end %>

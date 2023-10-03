@@ -1,0 +1,2 @@
+class AwsFile < ApplicationRecord
+end

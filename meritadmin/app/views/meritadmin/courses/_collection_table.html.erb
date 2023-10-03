@@ -1,0 +1,77 @@
+<div class="uk-overflow-auto uk-card uk-card-default pt-4 uk-card-body rounded">
+    <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
+        <thead>
+            <tr class="uk-text-small uk-text-bold">
+                <th>Name</th>
+                <th>Level</th>
+                <% if defined?(enrollment_actions) %>
+                  <th>Status</th>
+                  <th>Date</th>
+                <% else %>
+                  <th>Status</th>
+                <% end %>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+          <% courses&.reverse&.each do |course| %>
+            <% if defined?(enrollment_actions) %>
+              <% enrollment = @student.enrollments.select { |x| x.course.id == course.id }.first %>
+            <% end %>
+            <tr data-row-id="<%= course.id %>">
+                <td class="uk-flex-inline uk-flex-middle">
+                  <div class="uk-width-1-4 course-thumbnail" uk-lightbox>
+                    <a href="<%= course.featured_preview_video_url %>">
+                      <%= cl_image_tag(course.featured_preview_image_url, { quality: "auto:best" }) %>
+                      <i class="play-button-trigger show" ></i>
+                    </a>
+
+                  </div>
+                  <div class=" ml-2 uk-text-break uk-block">
+                    <span class="uk-width-1-1 uk-block uk-text-left"> <%= course.name %></span>
+                    <span class="uk-width-1-1 uk-block uk-text-left pt-3"> <%= star_rating(course.avg_rating) %></span>
+                  </div>
+                </td>
+                <td> <%= course.level %> </td>
+                <% if defined?(enrollment_actions) %>
+                  <td> <%= enrollment.enrollment_status %> </td>
+                  <td> <%= friendly_date(enrollment.enrollment_date) %> </td>
+                <% else %>
+                  <td> <%= course.is_preview? ? 'Draft' : 'Published' %> </td>
+                <% end %>
+
+                <td class="uk-flex-inline uk-flex-between">
+                  <% if defined?(enrollment_actions) %>
+                    <a href="#" class="button soft-danger delete-button"
+                       data-id="<%= course.id %>"
+                       data-name="<%= course.name %>"
+                       data-action="<%= course_enrollment_path(course, enrollment) %>"
+                       data-token="<%= form_authenticity_token %>"
+                       uk-toggle="target: #delete-modal">
+                        <i class="icon-line-awesome-unlink uk-visible@m"></i> Withdraw From Course
+                    </a>
+                  <% else %>
+                    <a href="<%= course_analytics_path(course) %>" class="button soft">
+                        <i class="icon-feather-pie-chart uk-visible@m"></i> Analytics
+                    </a>
+                    <a href="<%= course_path(course) %>" class="button soft-success">
+                        <i class="icon-feather-eye uk-visible@m"></i> View
+                    </a>
+                    <a href="<%= edit_course_path(course) %>" class="button soft-primary">
+                        <i class="icon-feather-edit uk-visible@m"></i> Edit
+                    </a>
+                    <a href="#" class="button soft-danger delete-button"
+                       data-id="<%= course.id %>"
+                       data-name="<%= course.name %>"
+                       data-action="<%= course_path(course) %>"
+                       data-token="<%= form_authenticity_token %>"
+                       uk-toggle="target: #delete-modal">
+                        <i class="icon-feather-trash-2 uk-visible@m"></i> Delete
+                    </a>
+                  <% end %>
+                </td>
+            </tr>
+          <% end %>
+        </tbody>
+    </table>
+</div>

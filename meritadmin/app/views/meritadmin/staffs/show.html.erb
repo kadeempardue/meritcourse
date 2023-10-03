@@ -1,0 +1,47 @@
+<div class="uk-flex uk-flex-middle">
+  <a href="<%= staffs_path(page: params[:page], scope: params[:scope]) %>" class="button grey"
+      uk-tooltip="title: View All Staff Members ; delay: 500 ; pos: top ;">
+      Back To All Staff Members
+  </a>
+</div>
+
+<div class="mt-4" uk-grid>
+    <div class="uk-width-2-5@m">
+        <div class="uk-card-default rounded text-center p-4">
+            <%= cl_image_tag(avatar_helper(@staff), default_image_options(class: "avatar-xlarge uk-border-circle shadow my-4")) %>
+            <h4 class="mb-2 mt-0"> <%= @staff.name %> </h4>
+            <p class="m-0"> Member since <%= friendly_date(@staff.created_at) %> </p>
+            <p uk-hidden hidden>
+              <%= form_tag send_reset_password_instructions_for_student_or_staff_path, class: "form #{'error' if flash[:error]} #{'notice' if flash[:notice]}", hidden: true do %>
+                <%= hidden_field_tag :email, @staff.email, placeholder: "E-mail address", class: 'uk-input uk-form-width-large', required: true %>
+                <input class="button grey" type="submit" class="button" value="Send Account Setup Email">
+              <% end %>
+            </p>
+        </div>
+    </div>
+    <div class="uk-width-expand@m">
+
+        <div class="uk-card-default rounded">
+            <div class="uk-flex uk-flex-between uk-flex-middle py-3 px-4">
+                <h5 class="mb-0"> Account details </h5>
+                    <a href="<%= edit_staff_path(@staff) %>" uk-tooltip="title:Edit Account; pos: left"> <i
+                            class="icon-feather-settings"></i> </a>
+            </div>
+            <hr class="m-0">
+            <div class="uk-child-width-1-2@s uk-grid-small p-4" uk-grid>
+                <div>
+                    <h6 class="uk-text-bold"> Email Address </h6>
+                        <p> <%= @staff.email %> </p>
+                </div>
+                <div>
+                    <h6 class="uk-text-bold"> Location </h6>
+                        <p> <%= @staff.location %> </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<%= render "modal" %>

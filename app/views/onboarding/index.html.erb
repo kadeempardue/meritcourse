@@ -1,0 +1,143 @@
+<div class="container  header-padding-top mb-5" uk-height-viewport="offset-top: true; offset-bottom: true">
+
+  <div class="section-title text-center pt-5 pb-2">
+    <h2>Welcome to <%= @tenant.name %></h2>
+    <p>Please fill our your student profile to get started.</p>
+  </div>
+
+<div class="uk-flex  uk-margin ">
+
+    <div class="uk-margin-auto uk-margin-auto-vertical uk-width-1-2@m uk-text-center">
+
+        <div class="uk-card-default rounded">
+            <div class="p-3">
+                <h5 class="mb-0"> Profile </h5>
+            </div>
+
+            <hr class="m-0">
+
+            <% if @tenant.key == "tsn" %>
+              <%= form_tag(profile_update_path, method: :put) do |f| %>
+                <%= hidden_field_tag :redirect, "/" %>
+                <%= hidden_field_tag "student[onboarding_complete]", true %>
+              <div class="uk-card-default rounded text-center py-4">
+                  <div class="uk-position-relative my-2">
+                    <%= cl_image_tag(avatar_helper(current_student), { quality: "auto:best", id: "custom-cloudinary-upload", class: "avatar-xlarge" }) %>
+                      <div class="uk-position-center">
+                          <div uk-form-custom="" class="uk-form-custom">
+                              <input name="file" type="file" accept=".jpg,.jpeg,.png" class="cloudinary-fileupload" data-cloudinary-field="student[profile_image]"
+                                  data-form-data="{ &quot;upload_preset&quot;:  &quot;<%= ENV['CLOUDINARY_API_UNSIGNED_UPLOAD_PRESET'] %>&quot;, &quot;callback&quot;: &quot;<%= request.base_url %>/cloudinary_cors.html&quot;}" ></input>
+
+                              <span class="uk-link icon-feather-camera icon-medium text-white"> </span>
+                          </div>
+
+                      </div>
+                  </div>
+              </div>
+
+                <div class="p-4">
+                  <div class="uk-child-width-1-2@s uk-grid-small uk-grid" uk-grid>
+                    <div class="uk-first-column">
+                        <h5 class="uk-text-bold mb-2"> First Name </h5>
+                        <%= text_field_tag "student[first_name]", current_student&.first_name, class: "uk-input", placeholder: "First Name", required: true %>
+                    </div>
+                    <div>
+                        <h5 class="uk-text-bold mb-2"> Last Name </h5>
+                        <%= text_field_tag "student[last_name]", current_student&.last_name, class: "uk-input", placeholder: "Last Name", required: true %>
+                    </div>
+                    <div class="uk-grid-margin uk-first-column">
+                        <h5 class="uk-text-bold mb-2"> Gender </h5>
+                        <%= select_tag "student[gender]", options_for_select(["Male", "Female", "Prefer not to say"], current_student&.gender), include_blank: true, class: "uk-select", required: true %>
+                    </div>
+                    <div class="uk-grid-margin">
+                        <h5 class="uk-text-bold mb-2"> Race / Ethnicity </h5>
+                        <%= select_tag "student[ethncity]", options_for_select(["Asian", "Black or African-American", "Hispanic or Latino", "White"], current_student&.ethncity), include_blank: true, class: "uk-select", required: true %>
+                    </div>
+                    <div class="uk-grid-margin uk-width-1-2@s">
+                        <h5 class="uk-text-bold mb-2"> Age Range </h5>
+                        <%= select_tag "student[age_range]", options_for_select(["11-17", "18-21", "22-62", "Over 62"], current_student&.age_range), include_blank: true, class: "uk-select", required: true %>
+                    </div>
+                    <div class="uk-grid-margin uk-width-1-2@s">
+                        <h5 class="uk-text-bold mb-2"> Income </h5>
+                        <%= select_tag "student[income]", options_for_select(["0-15,000", "15,001-$30,000","$30,001-$45,000","$45,001+"], current_student&.income), include_blank: true, class: "uk-select", required: true %>
+                    </div>
+                  </div>
+
+                  <div class="uk-child-width-1-3@s uk-grid-small uk-grid" uk-grid>
+                    <div class="uk-first-column">
+                        <h5 class="uk-text-bold mb-2"> City </h5>
+                        <%= text_field_tag "student[city]", current_student&.city, class: "uk-input", placeholder: "City" %>
+                    </div>
+                    <div>
+                        <h5 class="uk-text-bold mb-2"> State </h5>
+                        <%= select_tag "student[state]", options_for_select(t("states"), current_student&.state), class: "uk-select" %>
+                    </div>
+                    <div class="uk-grid-margin uk-first-column">
+                        <h5 class="uk-text-bold mb-2"> Zip </h5>
+                        <%= text_field_tag "student[zip]", current_student&.zip, class: "uk-input", placeholder: "Zip" %>
+                    </div>
+                  </div>
+
+                  <div class="uk-child-width-1-1@s uk-grid-small uk-grid" uk-grid>
+
+                    <div class="uk-flex uk-flex-right p-4">
+                        <button class="button grey">Save Changes</button>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <% else %>
+              <%= form_tag(profile_update_path, method: :put) do |f| %>
+                <%= hidden_field_tag :redirect, "/" %>
+                <%= hidden_field_tag "student[onboarding_complete]", true %>
+                <div class="p-4">
+                  <div class="uk-child-width-1-2@s uk-grid-small uk-grid" uk-grid>
+                    <div class="uk-first-column">
+                        <h5 class="uk-text-bold mb-2"> First Name </h5>
+                        <%= text_field_tag "student[first_name]", current_student&.first_name, class: "uk-input", placeholder: "First Name", required: true %>
+                    </div>
+                    <div>
+                        <h5 class="uk-text-bold mb-2"> Last Name </h5>
+                        <%= text_field_tag "student[last_name]", current_student&.last_name, class: "uk-input", placeholder: "Last Name", required: true %>
+                    </div>
+                    <div class="uk-grid-margin uk-first-column">
+                        <h5 class="uk-text-bold mb-2"> Title </h5>
+                        <%= text_field_tag "student[title]", current_student&.title, class: "uk-input", placeholder: "Title" %>
+                    </div>
+                    <div class="uk-grid-margin">
+                        <h5 class="uk-text-bold mb-2"> Phone Number </h5>
+                        <%= text_field_tag "student[phone_number]", current_student&.phone_number, class: "uk-input", placeholder: "(555) 555 - 5555" %>
+                    </div>
+                  </div>
+
+                  <div class="uk-child-width-1-3@s uk-grid-small uk-grid" uk-grid>
+                    <div class="uk-first-column">
+                        <h5 class="uk-text-bold mb-2"> City </h5>
+                        <%= text_field_tag "student[city]", current_student&.city, class: "uk-input", placeholder: "City" %>
+                    </div>
+                    <div>
+                        <h5 class="uk-text-bold mb-2"> State </h5>
+                        <%= select_tag "student[state]", options_for_select(t("states"), current_student&.state), class: "uk-select" %>
+                    </div>
+                    <div class="uk-grid-margin uk-first-column">
+                        <h5 class="uk-text-bold mb-2"> Zip </h5>
+                        <%= text_field_tag "student[zip]", current_student&.zip, class: "uk-input", placeholder: "Zip" %>
+                    </div>
+                  </div>
+
+                  <div class="uk-child-width-1-1@s uk-grid-small uk-grid" uk-grid>
+
+                    <div class="uk-flex uk-flex-right p-4">
+                        <button class="button grey">Save Changes</button>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            <% end %>
+        </div>
+
+    </div>
+
+</div>
+
+</div>

@@ -1,0 +1,139 @@
+<div id="lesson-navigator" class="uk-margin-left">
+  <div class="uk-visible@m" uk-sticky="offset: 170 ; left: 20;bottom: true ;media @s">
+      <a href="#" class="iconbox iconbox-lg circle button grey" uk-toggle="target: #open-side-course">
+          <i class="uil-list-ul"></i>
+      </a>
+  </div>
+
+  <%= render "lessons/sidebar" %>
+</div>
+
+    <!-- for mobile  -->
+    <div class="uk-card-default bg-gradient-primary p-4 uk-light uk-hidden@s">
+        <div class="uk-flex uk-flex-between uk-flex-middle">
+            <h4 class="mb-0"> <%= @lesson.name %> </h4>
+            <a href="#" class="iconbox iconbox-lg circle button text-dark" uk-toggle="target: #open-side-course">
+                <i class="icon-feather-list"></i>
+            </a>
+        </div>
+    </div>
+
+
+    <div class="section-small bg-white uk-visible@s">
+        <div class="px-5">
+
+            <div class="uk-flex-middle uk-grid" uk-grid="">
+
+                <div class="uk-width-1-4@m uk-first-column">
+                    <a href="/" class="uk-h5 p-3 rounded">
+                        <img src="<%= setting.logo_icon %>" width="50" alt="<%= @tenant&.name %>">
+                    </a>
+                </div>
+
+                <div class="uk-width-expand@m">
+
+                    <div uk-grid="" class="uk-grid">
+
+                        <div class="uk-width-2-3@m uk-first-column">
+                            <a href="/courses/<%= @course.slug %>" class="uk-text-bold uk-h4"> <%= @course.name %>
+                            </a>
+                            <br>
+                            <a href="/courses/<%= @course.slug %>" class="uk-text-muted">
+                                <i class="icon-line-awesome-long-arrow-left"></i> back
+                            </a>
+                        </div>
+
+                        <div class="uk-width-1-3@m">
+
+                            <div class="mt-lg-3">
+
+
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <hr>
+
+
+        <!-- course section title -->
+
+        <div class="uk-container uk-margin-auto uk-margin-medium-top">
+            <h3 class=" uk-text-light"> <%= @lesson.module_name %> </h3>
+            <h1 class="uk-text-light"> <%= @lesson.name %> </h1>
+        </div>
+
+    </div>
+
+    <% if @lesson.lecture? && @lesson.video_url.present? %>
+      <div class="uk-container uk-padding-small uk-margin-auto">
+          <div class="uk-position-relative uk-margin-medium-bottom uk-margin-small-top uk-text-medium ">
+              <div class="embed-video uk-animation-scale-up">
+                <video src="<%= @lesson.video_url %>" poster="<%= @lesson.image_url %>" class="uk-width-1-1" controls playsinline uk-video="autoplay : false;" uk-responsive="" class="uk-responsive-width"></video>
+              </div>
+          </div>
+      </div>
+    <% end %>
+
+    <% if @lesson.lecture? && @lesson.pdf_url.present? %>
+      <div class="section-small bg-white pt-4" style="">
+        <div class="uk-container uk-padding-small uk-margin-auto" style="height: 770px;">
+          <div id="adobe-dc-view" class="pdfviewer" style="height: 100%;">
+          </div>
+          <script type="text/javascript">
+           document.addEventListener("adobe_dc_view_sdk.ready", function()
+           {
+              var adobeDCView = new AdobeDC.View({clientId: "<%= ENV['ADOBE_CLIENT_ID'] %>", divId: "adobe-dc-view"});
+              adobeDCView.previewFile(
+             {
+                 content:  {location: {url: "<%= @lesson.pdf_url %>"}},
+                 metaData: {fileName: "<%= @lesson.name %>"}
+             }, { embedMode: "SIZED_CONTAINER",  defaultViewMode: "FIT_WIDTH", showLeftHandPanel: false, showDownloadPDF: false, showAnnotationTools: true, showFullScreen: true, showPrintPDF: true, showPageControls: true, dockPageControls: true });
+           });
+          </script>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="section-small bg-white <%= @lesson.lecture? && @lesson.pdf_url.present? ? 'pt-4' : 'pt-0' %> pb-8">
+      <div class="uk-container uk-padding-small uk-margin-auto">
+        <% if @lesson.handouts.present? %>
+          <div id="handouts-section" uk-height-viewport="expand: true">
+            <%= raw @lesson.handouts.html_safe %>
+          </div>
+        <% end %>
+      </div>
+
+      <div class="uk-container uk-padding-small uk-margin-auto">
+        <div class="uk-child-width-1-2 uk-grid-small uk-text-center uk-position-relative" uk-grid>
+          <div>
+            <% if @prev_lesson.present? %>
+              <div class="uuk-position-left k-animation-slide-bottom">
+                  <a href="/courses/<%= @course.slug %>/lessons/<%= @prev_lesson.id %>?r=<%= @lesson.id %>" class="button grey icon-label">
+                      <span class="inner-icon"><i class="icon-feather-chevron-left"></i></span>
+                      <span class="inner-text">Previous Lesson</span>
+                  </a>
+               </div>
+            <% end %>
+          </div>
+          <div>
+            <% if @next_lesson.present? %>
+              <div class="uk-position-right uk-animation-slide-bottom">
+                  <a href="/courses/<%= @course.slug %>/lessons/<%= @next_lesson.id %>?r=<%= @lesson.id %>" class="button grey icon-label">
+                      <span class="inner-text">Next Lesson</span>
+                      <span class="inner-icon"><i class="icon-feather-chevron-right"></i></span>
+                  </a>
+               </div>
+            <% end %>
+          </div>
+        </div>
+        <div class="clear"></div>
+      </div>
+
+    </div>

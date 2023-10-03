@@ -1,0 +1,128 @@
+<div class="uk-flex uk-flex-middle">
+  <h3 class="mb-0 mr-3"> <i class="icon-feather-pie-chart"></i> Analytics </h3>
+  <a href="<%= course_path(@course) %>" class="button grey"
+      uk-tooltip="title: Back To Course ; delay: 500 ; pos: top ;">
+      <i class="icon-feather-plus"></i> Back To Course: <%= @course.name %>
+  </a>
+</div>
+
+<h4 class="py-3">Lesson: <%= @lesson.name %></h4>
+<hr>
+<div class="mt-4 uk-overflow-auto uk-card uk-card-default pt-3 uk-card-body rounded">
+    <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
+        <thead>
+            <tr class="uk-text-small uk-text-bold">
+                <th>Student</th>
+                <th>Grade</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+          <% @enrollments&.each do |enrollment| %>
+            <% student = enrollment.student %>
+            <tr data-row-id="<%= enrollment.id %>">
+                <td> <%= cl_image_tag(avatar_helper(student), default_image_options(width: 50, class: "uk-preserve-width uk-border-circle user-profile-small")) %> <%= student.name %></td>
+                <td> <%= enrollment.analytics[@lesson.id.to_s]&.fetch("grade", nil).presence || "-" %> </td>
+                <td> <%= enrollment.analytics[@lesson.id.to_s]&.fetch("instructor_status", nil) || "Pending" %> </td>
+                <td>
+                    <a href="#" class="button soft-success badge-button"
+                      data-name="<%= student.name %>"
+                      data-email="<%= student.email %>"
+                      data-cc="<%= current_admin_user.email %>"
+                      data-course-id="<%= @course.slug %>"
+                      data-lesson-id="<%= @lesson.id %>"
+                      data-lesson-name="<%= @lesson.name %>"
+                      data-badge-url="<%= image_url("badge.png") %>"
+                      data-action="<%= course_lesson_send_badge_path(@course, @lesson) %>"
+                      uk-toggle="target: #modal-send-badge">
+                        <i class="fas fa-trash uk-visible@m"></i> Award Badge
+                    </a>
+                    <a href="#" class="button soft-danger deny-badge-button"
+                      data-name="<%= student.name %>"
+                      data-email="<%= student.email %>"
+                      data-cc="<%= current_admin_user.email %>"
+                      data-course-id="<%= @course.slug %>"
+                      data-lesson-id="<%= @lesson.id %>"
+                      data-lesson-name="<%= @lesson.name %>"
+                      data-badge-url="<%= image_url("badge.png") %>"
+                      data-action="<%= course_lesson_deny_badge_path(@course, @lesson) %>"
+                      uk-toggle="target: #modal-deny-badge">
+                        <i class="fas fa-trash uk-visible@m"></i> Deny Badge
+                    </a>
+                    <a hidden href="#" class="button delete-button"
+                      data-id="<%= student.id %>"
+                      data-name="<%= student.name %>"
+                      data-action="<%= student_path(student) %>"
+                      data-token="<%= form_authenticity_token %>"
+                      uk-toggle="target: #delete-modal">
+                        <i class="fas fa-trash uk-visible@m"></i> Review Homework / Send Note
+                    </a>
+                    <a hidden href="#" class="button soft-success delete-button"
+                      data-id="<%= student.id %>"
+                      data-name="<%= student.name %>"
+                      data-action="<%= student_path(student) %>"
+                      data-token="<%= form_authenticity_token %>"
+                      uk-toggle="target: #delete-modal">
+                        <i class="fas fa-trash uk-visible@m"></i> Pass
+                    </a>
+                    <a hidden href="#" class="button soft-danger delete-button"
+                      data-id="<%= student.id %>"
+                      data-name="<%= student.name %>"
+                      data-action="<%= student_path(student) %>"
+                      data-token="<%= form_authenticity_token %>"
+                      uk-toggle="target: #delete-modal">
+                        <i class="fas fa-trash uk-visible@m"></i> Fail
+                    </a>
+                </td>
+            </tr>
+          <% end %>
+        </tbody>
+    </table>
+</div>
+
+<div id="modal-send-badge" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto uk-text-center">
+        <h2 class="uk-modal-title">Award Badge To <span class="resource_name"></span></h2>
+        <p>Select the badge you would like sent to <span class="resource_name"></span></p>
+        <p>
+          <input type="hidden" id="lesson_id" value="<%= @lesson.id %>" name="lesson_id" required>
+          <select id="badge-selector" class="uk-select uk-width-1-2" name="awarded_badge[badge]" required>
+            <option value="">--</option>
+            <% Badge.all.each do |badge| %>
+              <option value="<%= badge.id %>" data-image-url="<%= badge.image_url %>"><%= badge.name %></option>
+            <% end %>
+          </select>
+        </p>
+        <p class="badge-placeholder">
+          <img width="200" class="uk-margin-auto">
+        </p>
+        <p class="uk-text-right">
+            <button class="button uk-button-default uk-modal-close" type="button">Cancel</button>
+            <button class="button uk-button-primary sendBadge" type="button">Send Badge</button>
+        </p>
+    </div>
+</div>
+
+<div id="modal-deny-badge" uk-modal>
+    <div class="uk-modal-dialog uk-modal-body uk-margin-auto uk-text-center">
+        <h2 class="uk-modal-title">Deny Badge To <span class="resource_name"></span></h2>
+        <p>Select the badge you would like deny to <span class="resource_name"></span></p>
+        <p>
+          <input type="hidden" id="lesson_id" value="<%= @lesson.id %>" name="lesson_id" required>
+          <select id="deny-badge-selector" class="uk-select uk-width-1-2" name="unawarded_badge[badge]" required>
+            <option value="">--</option>
+            <% Badge.all.each do |badge| %>
+              <option value="<%= badge.id %>" data-image-url="<%= badge.image_url %>"><%= badge.name %></option>
+            <% end %>
+          </select>
+        </p>
+        <p class="badge-placeholder">
+          <img width="200" class="uk-margin-auto">
+        </p>
+        <p class="uk-text-right">
+            <button class="button uk-button-default uk-modal-close" type="button">Cancel</button>
+            <button class="button uk-button-primary denyBadge" type="button">Deny Badge</button>
+        </p>
+    </div>
+</div>

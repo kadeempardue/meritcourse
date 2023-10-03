@@ -1,0 +1,15 @@
+<% if flash[:error] %>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      UIkit.notification({message: '<%= flash[:error] %>', pos: 'top-center', status: 'danger'})
+    });
+  </script>
+<% end %>
+
+<% if flash[:notice] %>
+  <script type="text/javascript">
+    $(document).ready(function(){
+      UIkit.notification({message: '<%= flash[:notice] %>', pos: 'top-center', status: 'success'})
+    });
+  </script>
+<% end %>

@@ -1,0 +1,24 @@
+{
+  "alchemy/admin.js": "/packs/js/alchemy/admin-7c62f9b4e8f0ff9ae78c.js",
+  "alchemy/admin.js.map": "/packs/js/alchemy/admin-7c62f9b4e8f0ff9ae78c.js.map",
+  "application.js": "/packs/js/application-2181adcc3224cdc0c9c1.js",
+  "application.js.map": "/packs/js/application-2181adcc3224cdc0c9c1.js.map",
+  "entrypoints": {
+    "alchemy/admin": {
+      "js": [
+        "/packs/js/alchemy/admin-7c62f9b4e8f0ff9ae78c.js"
+      ],
+      "js.map": [
+        "/packs/js/alchemy/admin-7c62f9b4e8f0ff9ae78c.js.map"
+      ]
+    },
+    "application": {
+      "js": [
+        "/packs/js/application-2181adcc3224cdc0c9c1.js"
+      ],
+      "js.map": [
+        "/packs/js/application-2181adcc3224cdc0c9c1.js.map"
+      ]
+    }
+  }
+}

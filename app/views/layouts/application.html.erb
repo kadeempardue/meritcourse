@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="<%= @tenant&.name %>">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="<%= @tenant&.name %>">
+    <meta name="twitter:site" content="<%= setting.social_media_twitter_handle %>">
+    <meta name="twitter:creator" content="<%= setting.social_media_twitter_handle %>">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <link href="<%= setting.favicon_url %>" rel="icon" type="image/png">
+
+    <%= csrf_meta_tags %>
+
+    <% if content_for?(:social_meta_tags) %>
+      <%= yield :social_meta_tags %>
+    <% else %>
+      <title><%= @tenant&.name %> <%= ["|", @title].join(" ") if @title %></title>
+    <% end %>
+
+    <% if @tenant.setting.custom_css.present? %>
+    <style media="screen">
+      <%= @tenant.setting.custom_css %>
+    </style>
+    <% end %>
+
+    <%= stylesheet_link_tag "application" %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js" integrity="sha512-GZ1RIgZaSc8rnco/8CXfRdCpDxRCphenIiZ2ztLy3XQfCbQUSCuk8IudvNHxkRA3oUg6q0qejgN/qqyG1duv5Q==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/mode-javascript.min.js" integrity="sha512-ZxMbXDxB0Whct+zt+DeW/RZaBv33N5D7myNFtBGiqpDSFRLxn2CNp6An0A1zUAJU/+bl8CMVrwxwnFcpFi3yTQ==" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/theme-monokai.min.js" integrity="sha512-S4i/WUGRs22+8rjUVu4kBjfNuBNp8GVsgcK2lbaFdws4q6TF3Nd00LxqnHhuxS9iVDfNcUh0h6OxFUMP5DBD+g==" crossorigin="anonymous"></script>
+
+    <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+      <% if Rails.env.development? %>
+        <script type="text/javascript">
+          // Enable pusher logging - don't include this in production
+          Pusher.logToConsole = true;
+        </script>
+      <% end %>
+
+    <script>window.twttr = (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0],
+        t = window.twttr || {};
+      if (d.getElementById(id)) return t;
+      js = d.createElement(s);
+      js.id = id;
+      js.src = "https://platform.twitter.com/widgets.js";
+      fjs.parentNode.insertBefore(js, fjs);
+
+      t._e = [];
+      t.ready = function(f) {
+        t._e.push(f);
+      };
+
+      return t;
+    }(document, "script", "twitter-wjs"));</script>
+
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId            : '586745678625318',
+          autoLogAppEvents : true,
+          xfbml            : true,
+          version          : 'v6.0'
+        });
+      };
+    </script>
+    <script async defer src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <script type="text/javascript" src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+
+    <% if content_for?(:before_closing_head_tag) %>
+      <%= yield :before_closing_head_tag %>
+    <% end %>
+
+    <%= raw setting.custom_head_tags %>
+  </head>
+
+  <body>
+    <% if content_for?(:after_opening_body_tag) %>
+      <%= yield :after_opening_body_tag %>
+    <% end %>
+
+    <%= raw setting.custom_before_body_tags %>
+
+    <div id="wrapper">
+      <div class="page-content">
+        <% if admin_user_signed_in? || staff_signed_in? || preview_mode? %>
+          <div class="uk-width-1-1 uk-card uk-card-primary uk-card-body">
+              <ul class="uk-nav-default uk-nav-center uk-nav-parent-icon uk-flex uk-flex-center uk-width-1-1 uk-flex-inline" uk-nav>
+                <% if admin_user_signed_in? %>
+                  <li class="uk-active"><a href="/admin" target="_blank"><strong>You're in Admin Mode</strong></a></li>
+                <% end %>
+                <% if staff_signed_in? %>
+                  <li class="uk-active"><a><strong>You're in Staff Mode</strong></a></li>
+                <% end %>
+                <% if preview_mode? %>
+                  <li class="uk-active"><a><strong>You're in Preview Mode</strong></a></li>
+                <% end %>
+              </ul>
+          </div>
+        <% end %>
+        <%= render "navigation/header", show_header: show_header? %>
+        <%= yield %>
+      </div>
+      <%= render "navigation/footer", show_footer: show_footer? %>
+    </div>
+
+    <%= raw setting.custom_after_body_tags %>
+
+    <script type="text/javascript">
+      window.MeritCourse = {}
+      window.MeritCourse.tenantKey = '<%= @tenant&.key %>';
+    </script>
+
+    <%= javascript_include_tag 'application' %>
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $.cloudinary.config({ cloud_name: '<%= Meritadmin::CLOUDINARY_CONFIG[:cloud_name] %>', secure: true });
+
+        if($.fn.cloudinary_fileupload !== undefined) {
+          $("input.cloudinary-fileupload[type=file]").cloudinary_fileupload({
+            disableImageResize: false,
+            imageMaxWidth: 800,                   // 800 is an example value - no default
+            imageMaxHeight: 600,                  // 600 is an example value - no default
+            maxFileSize: 1000000,                // 1MB is an example value - no default
+            loadImageMaxFileSize: 1000000,       // default is 1MB
+            acceptFileTypes: /(\.|\/)(jpe?g|png)$/i,
+          });
+        }
+
+        $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {
+          $('#custom-cloudinary-upload').attr("src", data.result.secure_url);
+          $('[name="' + $(this).attr("data-cloudinary-field") + '"]').val(data.result.public_id + "." + data.result.format);
+          return true;
+        });
+      });
+    </script>
+
+    <script src="//media.twiliocdn.com/sdk/js/video/releases/2.5.0/twilio-video.min.js"></script>
+
+    <script>
+      var pusher = new Pusher("<%= ENV['PUSHER_KEY'] %>", { cluster: 'us2' });
+    </script>
+    <%= render "pusher/events/core" %>
+    <%= render "pusher/events/who_is_online" %>
+
+    <% if content_for?(:extra_js) %>
+      <%= yield :extra_js %>
+    <% end %>
+    <%= render "shared/flash" %>
+  </body>
+</html>

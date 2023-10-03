@@ -1,0 +1,31 @@
+<%= form_for(@staff, html: { "uk-grid" => true, class: "uk-grid-small large form #{'error' if flash[:error]} #{'notice' if flash[:notice]}" }) do |f| %>
+  <%= f.hidden_field :profile_image, class: "uk-input" %>
+  <%= f.hidden_field :tos_agreement, value: true, class: "uk-input" %>
+  <div class="uk-width-1-2">
+    <div class="uk-form-label"> First Name </div>
+    <%= f.text_field :first_name, class: "uk-input", minlength: 2, maxlength: 30, required: true %>
+  </div>
+  <div class="uk-width-1-2">
+    <div class="uk-form-label"> Last Name </div>
+    <%= f.text_field :last_name, class: "uk-input", minlength: 2, maxlength: 30, required: true %>
+  </div>
+  <div class="uk-width-1-1">
+    <div class="uk-form-label"> Email Address </div>
+    <%= f.email_field :email, class: "uk-input", minlength: 2, maxlength: 30, required: true, disabled: (action_name == "edit") %>
+  </div>
+  <div class="uk-width-1-2">
+    <div class="uk-form-label"> City </div>
+    <%= f.text_field :city, class: "uk-input", minlength: 2, maxlength: 30 %>
+  </div>
+  <div class="uk-width-1-4">
+    <div class="uk-form-label"> State </div>
+    <%= f.select :state, options_for_select(t("states"), @staff&.state), {}, class: "uk-select" %>
+  </div>
+  <div class="uk-width-1-4">
+    <div class="uk-form-label"> Postal Code </div>
+    <%= f.text_field :zip, class: "uk-input", minlength: 2, maxlength: 5 %>
+  </div>
+  <div class="uk-width-1-1">
+    <input class="button grey uk-width-1-1@s uk-width-1-4@m mt-3 ml-0 mr-0" type="submit" class="button" value="Save">
+  </div>
+<% end %>

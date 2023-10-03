@@ -1,0 +1,10 @@
+//= require rails-ujs
+// require twilio.min
+//= require jquery-3.3.1.min
+//= require vendor
+//= require cloudinary
+//= require poller
+//= require review
+//= require form-render.min
+//= require esignature
+//= require init
